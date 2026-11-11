@@ -82,26 +82,28 @@ test("every inline script parses, and the page needs no local file", () => {
   assert.ok(!/<img\b|<link\b|<iframe\b|<audio\b|<video\b/i.test(source));
 });
 
-// The word is assembled from two halves so that this file passes its own
-// search, and a plain text search of the folder comes back empty.
-const TOOL_NAME = new RegExp(["are", "na"].join(""), "i");
-
-test("no file of the examination carries the name of the tool that edited it", () => {
+test("the word “arena” appears nowhere in the source files or in the published page", () => {
+  const self = path.join(EXAM_DIR, "tests", "page.test.mjs"); // this file has to name the word it looks for
   const files = [];
   const walk = dir => {
     for (const name of readdirSync(dir)) {
-      if (name === "node_modules") continue;
+      if (name === "node_modules" || name === "dist") continue;
       const full = path.join(dir, name);
       if (statSync(full).isDirectory()) walk(full);
-      else files.push(full);
+      else if (full !== self) files.push(full);
     }
   };
   walk(EXAM_DIR);
+  assert.ok(files.includes(SOURCE_HTML));
   assert.ok(files.length >= 5);
+
+  execFileSync(process.execPath, ["build.mjs"], { cwd: EXAM_DIR, stdio: "pipe" });
+  files.push(DIST_HTML);
+
   for (const file of files) {
     const shown = path.relative(EXAM_DIR, file);
-    assert.ok(!TOOL_NAME.test(readFileSync(file, "utf8")), "found in " + shown);
-    assert.ok(!TOOL_NAME.test(shown), "found in the name of " + shown);
+    assert.ok(!/arena/i.test(readFileSync(file, "utf8")), "found in " + shown);
+    assert.ok(!/arena/i.test(shown), "found in the name of " + shown);
   }
 });
 
