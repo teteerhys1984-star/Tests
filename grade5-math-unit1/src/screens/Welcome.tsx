@@ -126,7 +126,7 @@ export function Welcome({
               id="student-name" className="field" value={name} autoComplete="name"
               placeholder="مثال: سارة أحمد" onChange={(e) => { setName(e.target.value); setError('') }}
               onKeyDown={(e) => { if (e.key === 'Enter') go() }}
-              aria-required="true" aria-invalid={!!error}
+              aria-required="true" aria-invalid={!!error} aria-describedby="student-name-note"
             />
             {error && (
               <p role="alert" className="mt-2 flex items-start gap-1.5 text-sm font-semibold" style={{ color: 'var(--err)' }}>
@@ -136,6 +136,9 @@ export function Welcome({
                 {error}
               </p>
             )}
+            <p id="student-name-note" className="mt-2 text-[0.85rem]" style={{ color: 'var(--ink-2)' }}>
+              سيتم إرسال نتيجتك إلى معلّمك عند التسليم.
+            </p>
           </div>
 
           <button type="button" className="btn btn-gold mt-4 w-full text-[1.05rem]" onClick={go} disabled={trimmed.length < 3}>

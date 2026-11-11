@@ -1,5 +1,5 @@
 /**
- * إعداد بيئة DOM حقيقية (jsdom) مع اعتراض التنزيل والصوت وBlob.
+ * إعداد بيئة DOM حقيقية (jsdom) مع اعتراض التنزيل والصوت وBlob والشبكة.
  * يجب استيراد هذا الملف قبل أي استيراد لـ react / react-dom،
  * لأن React يقيّم canUseDOM عند تحميل الوحدة.
  */
@@ -89,6 +89,25 @@ class SpyBlob extends OrigBlob {
 }
 win.Blob = SpyBlob
 g.Blob = SpyBlob
+
+/* ---------------- اعتراض الشبكة: لا يُجرى أي اتصال حقيقي في الاختبارات ---------------- */
+export interface NetCall { url: string; init: any; at: number }
+export const net: {
+  calls: NetCall[]
+  /** ردّ الخادم الوهمي: يعيد نص الردّ، أو يرمي خطأً لمحاكاة انقطاع الشبكة. */
+  respond: (call: NetCall) => string | Promise<string>
+} = {
+  calls: [],
+  respond: () => JSON.stringify({ ok: true }),
+}
+const mockFetch = async (url: any, init: any) => {
+  const call: NetCall = { url: String(url), init, at: Date.now() }
+  net.calls.push(call)
+  const body = await net.respond(call)
+  return { ok: true, status: 200, text: async () => body, json: async () => JSON.parse(body) }
+}
+win.fetch = mockFetch
+g.fetch = mockFetch
 
 export const W = win
 export const D = win.document

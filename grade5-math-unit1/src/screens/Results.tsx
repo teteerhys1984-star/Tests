@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { CONTACT, LESSONS, TOTAL_MARKS } from '../exam/types'
 import { gradeLabel, summarize, triggerDownload, type AttemptMeta, type QuestionResult } from '../exam/report'
+import type { SendStatus } from '../exam/submit'
 import { MathText } from '../lib/mathx'
 import { formatDuration, formatDurationWords, formatLong, num, pct } from '../lib/time'
 import { FigureView } from '../exam/figureViews'
@@ -48,14 +49,51 @@ function Stat({ k, v, tone }: { k: string; v: string | number; tone?: string }) 
   )
 }
 
+const SEND_META: Record<Exclude<SendStatus, 'idle'>, { text: string; bg: string; border: string; color: string }> = {
+  sending: {
+    text: 'جارٍ إرسال نتيجتك إلى معلّمك…',
+    bg: 'rgba(255,217,122,0.2)', border: 'rgba(255,217,122,0.45)', color: '#ffd97a',
+  },
+  success: {
+    text: 'تم إرسال نتيجتك إلى معلّمك ✓',
+    bg: 'rgba(20,113,63,0.24)', border: 'rgba(160,230,180,0.45)', color: '#dcf0e2',
+  },
+  failed: {
+    text: 'تعذّر إرسال النتيجة تلقائيًا. حمّل ملف التقرير وأرسله لمعلّمك.',
+    bg: 'rgba(180,71,47,0.26)', border: 'rgba(255,200,180,0.5)', color: '#fde3da',
+  },
+}
+
+/** حالة إرسال النتيجة إلى المعلّم — بنمط صندوق «حالة التنزيل» وألوانه نفسها (والذهبي من شارة النسبة). */
+function SendBanner({ status, onResend }: { status: SendStatus; onResend: () => void }) {
+  if (status === 'idle') return null
+  const m = SEND_META[status]
+  return (
+    <div className="mt-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 rounded-[var(--r-sm)] p-3 text-[0.88rem] leading-relaxed"
+      style={{ background: m.bg, border: `1px solid ${m.border}` }}
+      role="status" aria-live="polite" data-send-status={status}>
+      <p className="min-w-[12rem] flex-1 font-bold" style={{ color: m.color }}>{m.text}</p>
+      {status === 'failed' && (
+        <button type="button" className="btn shrink-0 !px-3 !py-1.5"
+          style={{ background: 'rgba(255,248,232,0.14)', color: '#fff8e8', border: '1px solid rgba(255,248,232,0.3)' }}
+          aria-label="إعادة المحاولة — إرسال النتيجة إلى المعلّم" onClick={onResend}>
+          إعادة المحاولة
+        </button>
+      )}
+    </div>
+  )
+}
+
 export function Results({
-  meta, results, reportText, filename, autoDownloaded, onRetry, onTeacher,
+  meta, results, reportText, filename, autoDownloaded, sendStatus, onResend, onRetry, onTeacher,
 }: {
   meta: AttemptMeta
   results: QuestionResult[]
   reportText: string
   filename: string
   autoDownloaded: boolean | null
+  sendStatus: SendStatus
+  onResend: () => void
   onRetry: () => void
   onTeacher: () => void
 }) {
@@ -102,6 +140,9 @@ export function Results({
                 المدة: <strong>{formatDuration(meta.elapsedMs)}</strong>
               </span>
             </div>
+
+            {/* حالة إرسال النتيجة إلى المعلّم */}
+            <SendBanner status={sendStatus} onResend={onResend} />
 
             {/* حالة التنزيل */}
             <div className="mt-4 rounded-[var(--r-sm)] p-3 text-[0.88rem] leading-relaxed"
@@ -329,7 +370,7 @@ export function Results({
             style={{ color: 'var(--teal)' }}>واتساب</a>
         </p>
         <p className="mt-1 text-xs" style={{ color: 'var(--ink-3)' }}>
-          التقرير محفوظ محلياً على جهازك بصيغة TXT، ولم تُرسل أيّ بيانات إلى أي خادم. رابط واتساب للتواصل فقط.
+          التقرير محفوظ محلياً على جهازك بصيغة TXT، وتُرسَل نسخة من نتيجتك إلكترونياً إلى معلّمك عند التسليم. رابط واتساب للتواصل فقط.
         </p>
       </section>
     </div>

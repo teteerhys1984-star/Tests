@@ -1,10 +1,12 @@
 /**
  * اختبار سير العمل الكامل داخل DOM حقيقي (jsdom):
  * ترحيب ← اسم الطالب ← بدء الاختبار ← الإجابة عن كل الفروع ← تسليم بنقرة واحدة
- * ← تنزيل تلقائي ← صفحة النتيجة ← الزر الاحتياطي ← إعادة المحاولة ← دليل المعلّم.
+ * ← تنزيل تلقائي ← صفحة النتيجة ← الزر الاحتياطي ← إرسال النتيجة إلى المعلّم (خادم وهمي)
+ * ← إعادة المحاولة ← إعادة إرسال المعلّق عند التحميل ← دليل المعلّم.
+ * لا يُجرى أي اتصال حقيقي: fetch مُعترَض في setup-dom.
  */
 import './setup-dom'
-import { D, W, blobTexts, downloads, spies } from './setup-dom'
+import { D, W, blobTexts, downloads, net, spies } from './setup-dom'
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from '../src/App'
@@ -12,6 +14,7 @@ import { QUESTIONS } from '../src/exam/questions'
 import type { Subpart } from '../src/exam/types'
 import { plainMath } from '../src/lib/mathx'
 import type { AnswerValue, TfAnswer } from '../src/exam/grading'
+import { EXAM_ID, SHEETS_TOKEN, SHEETS_URL } from '../src/config'
 
 let failures = 0
 function check(name: string, cond: boolean, extra = '') {
@@ -25,6 +28,23 @@ const byText = (sel: string, txt: string) => qa(sel).find((e) => norm(e.textCont
 const norm = (s: string) => s.replace(/\s+/g, ' ').trim()
 const bodyText = () => D.body.textContent || ''
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+/* ---- أدوات فحص إرسال النتيجة ---- */
+const banner = () => q('[data-send-status]')
+const bannerStatus = () => banner()?.getAttribute('data-send-status') ?? ''
+const bannerText = () => norm(banner()?.querySelector('p')?.textContent || '')
+const sentBody = (i: number) => JSON.parse(String(net.calls[i].init.body))
+const pendingKeys = () =>
+  Array.from({ length: W.localStorage.length }, (_, i) => W.localStorage.key(i) as string).filter((k) => k.startsWith('pending:'))
+const NO_SEND_CLAIM = /دون إرسال أي بيانات|لم تُرسل أيّ بيانات|لم يُرسل أيّ بيانات|لا تُرسل نتائج/
+/** ينتظر داخل act حتى يتحقق الشرط (أو تنتهي المهلة) ثم يدع سلسلة الوعود تكتمل. */
+async function settle(cond: () => boolean, ms: number) {
+  await act(async () => {
+    const t0 = Date.now()
+    while (!cond() && Date.now() - t0 < ms) await sleep(20)
+    await sleep(40)
+  })
+}
 
 function fire(el: any, type: string, Ctor: any = W.Event) {
   el.dispatchEvent(new Ctor(type, { bubbles: true, cancelable: true }))
@@ -153,6 +173,9 @@ async function main() {
   check('رابط واتساب', !!q('a[href="https://wa.me/963930210522"]'))
   check('لم يُنشأ سياق صوتي', spies.audioCtx === 0)
   check('لم يحدث تنزيل', downloads.length === 0)
+  check('إشعار قرب حقل الاسم بإرسال النتيجة إلى المعلّم', norm(q('#student-name-note')?.textContent || '') === 'سيتم إرسال نتيجتك إلى معلّمك عند التسليم.')
+  check('لا نصّ يدّعي أنّ البيانات لا تُرسل', !NO_SEND_CLAIM.test(bodyText()))
+  check('لم يُرسل أي طلب قبل التسليم', net.calls.length === 0)
 
   console.log('\n== ب) بدء الاختبار ==')
   await act(async () => { setInput(q('#student-name')!, 'ليان محمد') })
@@ -214,6 +237,10 @@ async function main() {
   const oscBefore = spies.oscCount
   const clockBefore = (bodyText().match(/\d{2}:\d{2}:\d{2}/g) || []).pop() || ''
   const btnRef = submitBtn()!
+  // الخادم الوهمي يُبقي الطلب الأول بلا ردّ: صفحة النتيجة والتنزيل يجب ألّا ينتظرا الشبكة
+  let failFirstRequest: (e: Error) => void = () => {}
+  net.respond = () => new Promise<string>((_, reject) => { failFirstRequest = reject })
+  check('لم يُرسل أي طلب قبل نقرة التسليم', net.calls.length === 0)
   await act(async () => { click(btnRef) })
   console.log(`  [debug] downloads=${downloads.length} (before=${dBefore}) blobs=${blobTexts.length} objectUrls=${spies.objectUrls} resultsPage=${bodyText().includes('تم تسليم الاختبار وتصحيحه')} stillExam=${!!q('main article') && !bodyText().includes('المراجعة التفصيلية')}`)
   check('نقرة واحدة → تنزيل واحد', downloads.length === dBefore + 1, String(downloads.length - dBefore))
@@ -239,6 +266,7 @@ async function main() {
   check('الحلول ظهرت بعد التسليم فقط', bodyText().includes('الإجابة الصحيحة') && bodyText().includes('الحلّ المفصّل'))
   // «الخطأ الشائع» يُعرض في صفحة النتيجة للفروع غير الصحيحة فقط (والإجابات هنا كلها صحيحة)؛ يُفحص وجوده في ملف التقرير أدناه
   check('القاعدة والهدف والمرجع', bodyText().includes('القاعدة/الخاصة') && bodyText().includes('الهدف / الدرس') && bodyText().includes('المرجع:'))
+  check('لا نصّ يدّعي أنّ البيانات لا تُرسل (صفحة النتيجة)', !NO_SEND_CLAIM.test(bodyText()))
   check('مراجع الصفحات', /ص 3[0-9]|ص 1[0-9]|ص 3 – 4/.test(bodyText()))
 
   console.log('\n== و) محتوى ملف TXT ==')
@@ -250,6 +278,7 @@ async function main() {
   check('إجابة الطالب والإجابة الصحيحة والحلّ والقاعدة', txt.includes('إجابة الطالب') && txt.includes('الإجابة الصحيحة') && txt.includes('الحلّ المفصّل') && txt.includes('القاعدة/الخاصة'))
   check('العلامات الممنوحة والقصوى', /العلامة النهائية\s*: 100 من 100/.test(txt), (txt.match(/العلامة النهائية[^\r\n]+/) || [''])[0])
   check('الخطأ الشائع في الملف', txt.includes('الخطأ الشائع'))
+  check('خاتمة الملف تذكر إرسال النتيجة إلى المعلّم ولا تدّعي عدم الإرسال', txt.includes('وتُرسَل النتيجة أيضاً إلكترونياً إلى المعلّم عند التسليم.') && !NO_SEND_CLAIM.test(txt))
   check('الدروس الثمانية مذكورة', ['شبكة الإحداثيات', 'التمثيلات البيانية بالخطوط', 'الأعداد الطبيعية', 'تقريب الأعداد الطبيعية', 'جمع الأعداد الطبيعية وطرحها', 'قياس الزوايا', 'متوازي الأضلاع', 'المعيّن'].every((t) => txt.includes(t)))
   check('الطوابع الزمنية والمدة', txt.includes('بداية الاختبار') && txt.includes('تسليم الاختبار') && txt.includes('HH:MM:SS'))
   check('العربية سليمة بلا mojibake', !/Ã|â€/.test(txt.replace(/^\uFEFF/, '')))
@@ -267,6 +296,54 @@ async function main() {
   check('المحتوى نفسه حرفياً', blobTexts[blobTexts.length - 1] === txt)
   check('لا تنزيلات إضافية أخرى', downloads.length === dBefore2 + 1)
 
+  console.log('\n== ز2) إرسال النتيجة إلى المعلّم (خادم وهمي) ==')
+  const sent = sentBody(0)
+  const pendingKey = `pending:${EXAM_ID}:${sent.attemptId}`
+  check('طلب واحد فقط إلى SHEETS_URL ما زال بلا ردّ', net.calls.length === 1 && net.calls[0].url === SHEETS_URL)
+  check('النتيجة والتنزيل ظهرا قبل أي ردّ من الخادم', bodyText().includes('تم تسليم الاختبار وتصحيحه') && downloads.length === dBefore2 + 1)
+  check('POST بنوع text/plain;charset=utf-8 و redirect:follow', net.calls[0].init.method === 'POST'
+    && JSON.stringify(net.calls[0].init.headers) === JSON.stringify({ 'Content-Type': 'text/plain;charset=utf-8' })
+    && net.calls[0].init.redirect === 'follow' && net.calls[0].init.mode === undefined)
+  check('الحمولة: الرمز ومعرّف الاختبار ومعرّف المحاولة', sent.token === SHEETS_TOKEN && sent.examId === EXAM_ID && typeof sent.attemptId === 'string' && sent.attemptId.length >= 16, sent.attemptId)
+  check('الحمولة: اسم الطالب والعلامة والتقدير', sent.studentName === 'ليان محمد' && sent.summary.total === 100 && sent.summary.max === 100 && sent.summary.gradeLabel === 'ممتاز')
+  check('الحمولة: مدخل واحد لكل فرع (85)', sent.details.length === 85, String(sent.details.length))
+  check('الحمولة: نص التقرير هو الملف المنزَّل نفسه', sent.reportText === txt)
+  check('الشريط: «جارٍ إرسال نتيجتك إلى معلّمك…»', bannerStatus() === 'sending' && bannerText() === 'جارٍ إرسال نتيجتك إلى معلّمك…', bannerText())
+  check('لا زر في الشريط أثناء الإرسال', !banner()?.querySelector('button'))
+  check('لا شيء معلّق في localStorage أثناء الإرسال', pendingKeys().length === 0)
+
+  // المحاولة 1: انقطاع الشبكة ← المحاولة 2: الخادم يرفض (ok:false) ← المحاولة 3: ردّ ليس JSON
+  net.respond = (call) => (net.calls.indexOf(call) === 1 ? JSON.stringify({ ok: false, error: 'busy' }) : '<!doctype html><title>Error</title>')
+  const tFail = Date.now()
+  await act(async () => { failFirstRequest(new TypeError('Failed to fetch')); await sleep(60) })
+  check('لا إعادة فورية بعد فشل المحاولة الأولى', net.calls.length === 1 && bannerStatus() === 'sending')
+  await settle(() => net.calls.length >= 2, 6000)
+  const gap1 = net.calls.length >= 2 ? net.calls[1].at - tFail : -1
+  check('المحاولة الثانية بعد ثانيتين (لا قبلهما)', net.calls.length === 2 && gap1 >= 1900 && gap1 < 4500, `${gap1}ms`)
+  check('الشريط ما زال «جارٍ الإرسال» ولا شيء معلّق بعد', bannerStatus() === 'sending' && pendingKeys().length === 0)
+  await settle(() => net.calls.length >= 3, 10000)
+  const gap2 = net.calls.length >= 3 ? net.calls[2].at - net.calls[1].at : -1
+  check('المحاولة الثالثة بعد 5 ثوانٍ (لا قبلها)', net.calls.length === 3 && gap2 >= 4900 && gap2 < 9000, `${gap2}ms`)
+  check('المحاولات الثلاث بالمعرّف نفسه والحمولة نفسها', [0, 1, 2].every((i) => String(net.calls[i].init.body) === String(net.calls[0].init.body)))
+  check('الشريط: «تعذّر إرسال النتيجة تلقائيًا…»', bannerStatus() === 'failed' && bannerText() === 'تعذّر إرسال النتيجة تلقائيًا. حمّل ملف التقرير وأرسله لمعلّمك.', bannerText())
+  const resendBtn = banner()?.querySelector('button') as HTMLButtonElement | null
+  check('زر «إعادة المحاولة» داخل الشريط', !!resendBtn && norm(resendBtn.textContent!) === 'إعادة المحاولة')
+  check('حُفظت الحمولة تحت pending:<EXAM_ID>:<attemptId>', pendingKeys().length === 1 && pendingKeys()[0] === pendingKey
+    && W.localStorage.getItem(pendingKey) === String(net.calls[0].init.body), pendingKeys().join(','))
+  await act(async () => { await sleep(300) })
+  check('لا محاولة رابعة تلقائية', net.calls.length === 3)
+  check('فشل الإرسال لم يمسّ النتيجة ولا التنزيل', bodyText().includes('تم تسليم الاختبار وتصحيحه') && qa('article.reveal').length === 20 && downloads.length === dBefore2 + 1)
+
+  // زر الشريط يعيد إرسال المحاولة نفسها؛ الخادم يجيب الآن بأنها مسجّلة من قبل
+  net.respond = () => JSON.stringify({ ok: true, duplicate: true })
+  await act(async () => { click(resendBtn!); await sleep(60) })
+  check('أُعيد الإرسال بالمعرّف نفسه', net.calls.length === 4 && sentBody(3).attemptId === sent.attemptId)
+  check('الشريط: «تم إرسال نتيجتك إلى معلّمك ✓»', bannerStatus() === 'success' && bannerText() === 'تم إرسال نتيجتك إلى معلّمك ✓', bannerText())
+  check('حُذفت الحمولة المعلّقة بعد النجاح', pendingKeys().length === 0)
+  check('زر الشريط لم يُعد الاختبار: صفحة النتيجة باقية', bodyText().includes('تم تسليم الاختبار وتصحيحه') && !q('#student-name'))
+  check('لم يحدث تنزيل إضافي بسبب الإرسال', downloads.length === dBefore2 + 1)
+  net.respond = () => JSON.stringify({ ok: true })
+
   console.log('\n== ح) توقّف المؤقّت ==')
   const readClock = () => (bodyText().match(/\d{2}:\d{2}:\d{2}/g) || []).slice(-1)[0] || ''
   const c1 = readClock()
@@ -283,6 +360,7 @@ async function main() {
   check('لا مؤقّت ظاهراً', !/\d{2}:\d{2}:\d{2}/.test(bodyText()))
   check('زر البدء معطّل مجدداً', (byText('button', 'بدء الاختبار') as HTMLButtonElement)!.disabled)
   check('لم يحدث تنزيل إضافي', downloads.length === dBefore2 + 1)
+  check('لم يُرسل طلب جديد عند إعادة المحاولة', net.calls.length === 4)
   check('أُعيد ضبط المؤثرات الصوتية', spies.audioCtx >= 1)
   await act(async () => { setInput(q('#student-name')!, 'طالب آخر') })
   await act(async () => { click(byText('button', 'بدء الاختبار')!) })
@@ -292,10 +370,23 @@ async function main() {
   check('لا حلول في المحاولة الجديدة', !/الإجابة الصحيحة|الحلّ المفصّل/.test(q('main')!.textContent || ''))
   check('نغمة البدء لم تُعزف مرتين في المحاولة نفسها', spies.oscCount > oscAfterSubmit)
 
-  console.log('\n== ي) دليل المعلّم محمي بكلمة مرور ==')
+  console.log('\n== ط2) عند تحميل التطبيق: إعادة إرسال المعلّق بصمت ==')
   await act(async () => { root.unmount() })
+  // حمولة بقيت معلّقة من جلسة سابقة، ومفتاح يخصّ اختباراً آخر يجب ألّا يُمسّ
+  const stale = { ...sent, attemptId: 'attempt-from-an-earlier-session' }
+  const staleKey = `pending:${EXAM_ID}:${stale.attemptId}`
+  W.localStorage.setItem(staleKey, JSON.stringify(stale))
+  W.localStorage.setItem('pending:another-exam:xyz', '{"attemptId":"xyz"}')
   const root2 = createRoot(D.getElementById('root')!)
-  await act(async () => { root2.render(<App />) })
+  await act(async () => { root2.render(<App />); await sleep(60) })
+  check('أُرسلت الحمولة المعلّقة مرّة واحدة إلى SHEETS_URL', net.calls.length === 5 && net.calls[4].url === SHEETS_URL && sentBody(4).attemptId === stale.attemptId, String(net.calls.length))
+  check('حُذفت بعد تأكيد الخادم', W.localStorage.getItem(staleKey) === null)
+  check('مفاتيح الاختبارات الأخرى لم تُمسّ ولم تُرسل', W.localStorage.getItem('pending:another-exam:xyz') === '{"attemptId":"xyz"}')
+  check('بصمت: شاشة الترحيب كما هي بلا شريط حالة', !!q('#student-name') && !banner())
+  check('كل الطلبات ذهبت إلى الخادم الوهمي على SHEETS_URL فقط', net.calls.every((c) => c.url === SHEETS_URL))
+  W.localStorage.removeItem('pending:another-exam:xyz')
+
+  console.log('\n== ي) دليل المعلّم محمي بكلمة مرور ==')
   await act(async () => { click(byText('button', 'دليل المعلّم ونموذج الإجابات')!) })
   check('بوابة كلمة المرور ظاهرة', bodyText().includes('كلمة المرور'))
   check('لا إجابات قبل كلمة المرور', !bodyText().includes('الإجابة الصحيحة'))
