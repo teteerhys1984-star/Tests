@@ -327,7 +327,9 @@ async function main() {
   check('المحاولات الثلاث بالمعرّف نفسه والحمولة نفسها', [0, 1, 2].every((i) => String(net.calls[i].init.body) === String(net.calls[0].init.body)))
   check('الشريط: «تعذّر إرسال النتيجة تلقائيًا…»', bannerStatus() === 'failed' && bannerText() === 'تعذّر إرسال النتيجة تلقائيًا. حمّل ملف التقرير وأرسله لمعلّمك.', bannerText())
   const resendBtn = banner()?.querySelector('button') as HTMLButtonElement | null
-  check('زر «إعادة المحاولة» داخل الشريط', !!resendBtn && norm(resendBtn.textContent!) === 'إعادة المحاولة')
+  check('زر «إعادة إرسال النتيجة» داخل الشريط', !!resendBtn && norm(resendBtn.textContent!) === 'إعادة إرسال النتيجة')
+  const retakeBtns = qa('button').filter((b) => norm(b.textContent || '') === 'إعادة المحاولة')
+  check('«إعادة المحاولة» زر واحد خارج الشريط (إعادة الاختبار)', retakeBtns.length === 1 && !banner()!.contains(retakeBtns[0]))
   check('حُفظت الحمولة تحت pending:<EXAM_ID>:<attemptId>', pendingKeys().length === 1 && pendingKeys()[0] === pendingKey
     && W.localStorage.getItem(pendingKey) === String(net.calls[0].init.body), pendingKeys().join(','))
   await act(async () => { await sleep(300) })

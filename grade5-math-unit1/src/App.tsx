@@ -68,7 +68,7 @@ export default function App() {
   const [autoDownloaded, setAutoDownloaded] = useState<boolean | null>(null)
   const [sendStatus, setSendStatus] = useState<SendStatus>('idle')
   const startSoundDone = useRef(false)
-  /** حمولة المحاولة المعروضة حالياً (يعيد زر «إعادة المحاولة» إرسالها)، والحمولة الجاري إرسالها الآن. */
+  /** حمولة المحاولة المعروضة حالياً (يعيد زر «إعادة إرسال النتيجة» إرسالها)، والحمولة الجاري إرسالها الآن. */
   const outbox = useRef<SubmissionPayload | null>(null)
   const sending = useRef<SubmissionPayload | null>(null)
 

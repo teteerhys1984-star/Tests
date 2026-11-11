@@ -317,7 +317,7 @@ async function senderTests() {
     check('duplicate:true يُعدّ نجاحاً', ok === true)
     check('صف واحد فقط في الجدول الوهمي', rows.size === 1 && same(rows.get(ATTEMPT), payload))
     check('لا شيء في التخزين', e.storage!.length === 0)
-    const again = await sendWithRetry(payload, e.opts) // مثل زر «إعادة المحاولة» بعد وصول النتيجة فعلاً
+    const again = await sendWithRetry(payload, e.opts) // مثل زر «إعادة إرسال النتيجة» بعد وصول النتيجة فعلاً
     check('إعادة إرسال المحاولة نفسها لاحقاً: نجاح بلا صف جديد', again === true && rows.size === 1 && f.calls.length === 3)
   }
   {

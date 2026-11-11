@@ -76,8 +76,8 @@ function SendBanner({ status, onResend }: { status: SendStatus; onResend: () => 
       {status === 'failed' && (
         <button type="button" className="btn shrink-0 !px-3 !py-1.5"
           style={{ background: 'rgba(255,248,232,0.14)', color: '#fff8e8', border: '1px solid rgba(255,248,232,0.3)' }}
-          aria-label="إعادة المحاولة — إرسال النتيجة إلى المعلّم" onClick={onResend}>
-          إعادة المحاولة
+          onClick={onResend}>
+          إعادة إرسال النتيجة
         </button>
       )}
     </div>
