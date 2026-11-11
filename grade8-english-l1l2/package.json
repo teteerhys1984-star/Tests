@@ -1,0 +1,11 @@
+{
+  "name": "grade8-english-l1l2",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Grade 8 English examination (Unit 1, Lessons 1-2): one self-contained HTML file, copied to dist/index.html for GitHub Pages.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test \"tests/*.test.mjs\""
+  }
+}
