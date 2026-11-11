@@ -135,6 +135,7 @@ async function fillSubpart(sp: Subpart, card: HTMLElement) {
 }
 
 async function main() {
+  process.exitCode = 1 // يبقى فشلاً إن انتهى التشغيل قبل اكتمال الفحوص
   const root = createRoot(D.getElementById('root')!)
   await act(async () => { root.render(<App />) })
 
@@ -236,7 +237,8 @@ async function main() {
   check('رسالة تنزيل صادقة (لا نجاح زائف)', bodyText().includes('بدأ تنزيل التقرير تلقائياً'))
   check('المراجعة التفصيلية 20 سؤالاً', qa('article.reveal').length === 20, String(qa('article.reveal').length))
   check('الحلول ظهرت بعد التسليم فقط', bodyText().includes('الإجابة الصحيحة') && bodyText().includes('الحلّ المفصّل'))
-  check('القاعدة والهدف والخطأ الشائع والمرجع', bodyText().includes('القاعدة/الخاصة') && bodyText().includes('الهدف / الدرس') && bodyText().includes('الخطأ الشائع'))
+  // «الخطأ الشائع» يُعرض في صفحة النتيجة للفروع غير الصحيحة فقط (والإجابات هنا كلها صحيحة)؛ يُفحص وجوده في ملف التقرير أدناه
+  check('القاعدة والهدف والمرجع', bodyText().includes('القاعدة/الخاصة') && bodyText().includes('الهدف / الدرس') && bodyText().includes('المرجع:'))
   check('مراجع الصفحات', /ص 3[0-9]|ص 1[0-9]|ص 3 – 4/.test(bodyText()))
 
   console.log('\n== و) محتوى ملف TXT ==')
@@ -246,7 +248,8 @@ async function main() {
   check('الأسئلة العشرون في الملف', Array.from({ length: 20 }, (_, i) => i + 1).every((n) => txt.includes(`السؤال ${n} —`)))
   check('الفروع أ–هـ في الملف', ['الفرع (أ)', 'الفرع (ب)', 'الفرع (ج)', 'الفرع (د)', 'الفرع (هـ)'].every((t) => txt.includes(t)))
   check('إجابة الطالب والإجابة الصحيحة والحلّ والقاعدة', txt.includes('إجابة الطالب') && txt.includes('الإجابة الصحيحة') && txt.includes('الحلّ المفصّل') && txt.includes('القاعدة/الخاصة'))
-  check('العلامات الممنوحة والقصوى', txt.includes('العلامة: 100 من 100'), (txt.match(/العلامة: [^\r\n]+/) || [''])[0])
+  check('العلامات الممنوحة والقصوى', /العلامة النهائية\s*: 100 من 100/.test(txt), (txt.match(/العلامة النهائية[^\r\n]+/) || [''])[0])
+  check('الخطأ الشائع في الملف', txt.includes('الخطأ الشائع'))
   check('الدروس الثمانية مذكورة', ['شبكة الإحداثيات', 'التمثيلات البيانية بالخطوط', 'الأعداد الطبيعية', 'تقريب الأعداد الطبيعية', 'جمع الأعداد الطبيعية وطرحها', 'قياس الزوايا', 'متوازي الأضلاع', 'المعيّن'].every((t) => txt.includes(t)))
   check('الطوابع الزمنية والمدة', txt.includes('بداية الاختبار') && txt.includes('تسليم الاختبار') && txt.includes('HH:MM:SS'))
   check('العربية سليمة بلا mojibake', !/Ã|â€/.test(txt.replace(/^\uFEFF/, '')))

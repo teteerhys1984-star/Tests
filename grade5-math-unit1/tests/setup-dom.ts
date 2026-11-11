@@ -14,10 +14,13 @@ const g = globalThis as any
 
 g.window = win
 g.document = win.document
-g.navigator = win.navigator
+// في Node 21+ الخاصية navigator معرّفة بقارئ فقط، فالإسناد المباشر يرمي خطأً
+Object.defineProperty(g, 'navigator', { value: win.navigator, configurable: true, writable: true })
 g.self = win
 g.location = win.location
 g.history = win.history
+// التطبيق يستدعي URL.createObjectURL العام؛ يجب أن يكون URL الخاص بـ jsdom (المُعترَض أدناه) لا الخاص بـ Node
+g.URL = win.URL
 g.HTMLElement = win.HTMLElement
 g.HTMLAnchorElement = win.HTMLAnchorElement
 g.HTMLInputElement = win.HTMLInputElement
