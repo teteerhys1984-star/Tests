@@ -1,5 +1,6 @@
 import { EXAM_TITLE, GRADE_LABEL, SUBJECT_LABEL, TOTAL_MARKS } from "../exam/data";
 import { formatDuration, formatTimestamp, marksLabel, statusLabel } from "../exam/grade";
+import type { SendStatus } from "../exam/submit";
 import type { Attempt, GradeResult, GradeStatus } from "../exam/types";
 import { Notice } from "./Chrome";
 
@@ -11,10 +12,44 @@ interface ResultsViewProps {
   downloadStatus: "ok" | "failed" | null;
   downloadError: string | null;
   storageWarning: string | null;
+  sendStatus: SendStatus;
+  onResend: () => void;
 }
 
 function statusClass(status: GradeStatus): string {
   return `status-${status}`;
+}
+
+const SEND_TEXT: Record<Exclude<SendStatus, "idle">, string> = {
+  sending: "جارٍ إرسال نتيجتك إلى معلّمك…",
+  success: "تم إرسال نتيجتك إلى معلّمك ✓",
+  failed: "تعذّر إرسال النتيجة تلقائيًا. حمّل ملف التقرير وأرسله لمعلّمك.",
+};
+
+/** Delivery of the result to the teacher, in the look of the notes already used on this page. */
+function SendBanner({ status, onResend }: { status: SendStatus; onResend: () => void }) {
+  if (status === "idle") return null;
+  const look =
+    status === "success" ? "download-note" : `notice ${status === "failed" ? "notice-warning" : "notice-info"}`;
+  return (
+    <div className={`${look} send-banner`} role="status" aria-live="polite" data-send-status={status}>
+      {status === "success" ? (
+        <span aria-hidden="true">▣</span>
+      ) : (
+        <span className="notice-icon" aria-hidden="true">
+          {status === "failed" ? "!" : "i"}
+        </span>
+      )}
+      <div className="send-banner-body">
+        <p>{SEND_TEXT[status]}</p>
+        {status === "failed" && (
+          <button type="button" className="button button-mini" onClick={onResend}>
+            إعادة إرسال النتيجة
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export function ResultsView({
@@ -25,6 +60,8 @@ export function ResultsView({
   downloadStatus,
   downloadError,
   storageWarning,
+  sendStatus,
+  onResend,
 }: ResultsViewProps) {
   const correctMarks = result.subparts
     .filter((s) => s.status === "correct")
@@ -65,6 +102,8 @@ export function ResultsView({
       </section>
 
       {storageWarning && <Notice tone="warning">{storageWarning}</Notice>}
+
+      <SendBanner status={sendStatus} onResend={onResend} />
 
       {downloadStatus === "failed" && (
         <Notice tone="warning">

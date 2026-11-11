@@ -114,6 +114,7 @@ export function Welcome({ onStart, storageWarning, initialName = "" }: WelcomePr
             <p className="fine-print">
               عند بدء الاختبار تبدأ ساعة العدّ التصاعدي، ويُفعّل حفظ الإجابات تلقائياً عند توفر التخزين المحلي في المتصفح.
             </p>
+            <p className="fine-print">سيتم إرسال نتيجتك إلى معلّمك عند التسليم.</p>
           </form>
         </div>
 

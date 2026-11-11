@@ -47,7 +47,7 @@ export function SiteFooter({ onTeacherKey }: { onTeacherKey: () => void }) {
         <div>
           <div className="footer-brand">آدم والرياضيات</div>
           <ContactLine />
-          <p className="footer-note">جميع الإجابات والتقارير تبقى محليّة على جهازك ولا تُرسل عبر واتساب أو البريد.</p>
+          <p className="footer-note">تُحفظ الإجابات والتقارير محليّاً على جهازك، وتُرسَل نتيجتك إلى معلّمك عند التسليم.</p>
         </div>
         <button type="button" className="teacher-link" onClick={onTeacherKey}>
           <span className="lock-glyph" aria-hidden="true">▣</span>

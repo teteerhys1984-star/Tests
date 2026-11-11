@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { SHEETS_TOKEN } from "./config";
 import {
   EXAM_ID,
   EXAM_VERSION,
@@ -9,7 +10,15 @@ import { gradeAttempt, unansweredSubparts } from "./exam/grade";
 import { buildReport, buildReportFilename, downloadReport, validateReport } from "./exam/report";
 import { clearAttempt, loadAttempt, makeAttemptId, saveAttempt } from "./exam/storage";
 import { playStartSound, playSubmitSound } from "./exam/sounds";
-import type { AnswerValue, Attempt } from "./exam/types";
+import {
+  buildPayload,
+  pendingPayload,
+  retryPending,
+  sendWithRetry,
+  type SendStatus,
+  type SubmissionPayload,
+} from "./exam/submit";
+import type { AnswerValue, Attempt, DeliveryState } from "./exam/types";
 import { SiteFooter, SiteTop } from "./components/Chrome";
 import { ExamView } from "./components/ExamView";
 import { ReviewView } from "./components/ReviewView";
@@ -66,6 +75,16 @@ export default function App() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const submitGuard = useRef(false);
   const storageAvailable = initialLoad.storageAvailable;
+  // Delivery of the result to the teacher. A submitted attempt restored after a refresh shows
+  // "sent" when the server had confirmed it; otherwise it is sent again (see the effect below).
+  const [sendStatus, setSendStatus] = useState<SendStatus>(() => {
+    const restored = initialLoad.attempt;
+    if (!restored || restored.phase !== "results") return "idle";
+    return restored.delivery === "sent" ? "success" : "sending";
+  });
+  // Payload of the attempt on the results page (what "resend" sends), and the one being sent now.
+  const outbox = useRef<SubmissionPayload | null>(null);
+  const sending = useRef<SubmissionPayload | null>(null);
 
   function persist(next: Attempt): void {
     if (!storageAvailable) {
@@ -91,6 +110,61 @@ export default function App() {
   useEffect(() => {
     attemptRef.current = attempt;
   }, [attempt]);
+
+  // Remembers the outcome in the saved attempt, so a refresh of the results page does not send again.
+  function recordDelivery(attemptId: string, delivery: DeliveryState): void {
+    const current = attemptRef.current;
+    if (!current || current.phase !== "results" || current.attemptId !== attemptId) return;
+    if (current.delivery === delivery) return;
+    const next: Attempt = { ...current, delivery };
+    attemptRef.current = next;
+    setAttempt(next);
+    persist(next);
+  }
+
+  // Sends in the background; nothing in the interface waits for it.
+  function sendResult(payload: SubmissionPayload): void {
+    if (sending.current === payload) return;
+    sending.current = payload;
+    outbox.current = payload;
+    setSendStatus("sending");
+    void sendWithRetry(payload).then((ok) => {
+      if (sending.current === payload) sending.current = null;
+      // Ignored if the student has started a new attempt in the meantime.
+      if (outbox.current !== payload) return;
+      recordDelivery(payload.attemptId, ok ? "sent" : "failed");
+      setSendStatus(ok ? "success" : "failed");
+    });
+  }
+
+  // Sends the result of the submitted attempt on screen: the payload kept from an earlier failed
+  // or interrupted delivery if there is one, otherwise one rebuilt from the saved attempt.
+  // Either way it carries the same attemptId.
+  function deliverSubmittedAttempt(): void {
+    try {
+      const current = attemptRef.current;
+      if (!current || current.phase !== "results") return;
+      const stored = pendingPayload(current.attemptId);
+      sendResult(stored ? { ...stored, token: SHEETS_TOKEN } : buildPayload(current));
+    } catch {
+      outbox.current = null;
+      setSendStatus("failed");
+    }
+  }
+
+  function handleResend(): void {
+    if (outbox.current) sendResult(outbox.current);
+    else deliverSubmittedAttempt();
+  }
+
+  useEffect(() => {
+    // A submitted attempt restored after a refresh is sent again unless the server confirmed it.
+    const restored = attemptRef.current;
+    if (restored && restored.phase === "results" && restored.delivery !== "sent") deliverSubmittedAttempt();
+    // Results of earlier attempts that could not be delivered are sent again, quietly.
+    void retryPending();
+    // Runs once, on load.
+  }, []);
 
   useEffect(() => {
     if (!attempt || attempt.phase !== "exam") return;
@@ -149,6 +223,8 @@ export default function App() {
     setDownloadError(null);
     setSubmitError(null);
     submitGuard.current = false;
+    outbox.current = null;
+    setSendStatus("idle");
     setWarning(null);
     persist(next);
     playStartSound();
@@ -240,6 +316,7 @@ export default function App() {
       reportText: report,
       reportFileName: filename,
       submissionSoundPlayed: true,
+      delivery: "pending",
     };
     attemptRef.current = finalAttempt;
     setAttempt(finalAttempt);
@@ -249,6 +326,15 @@ export default function App() {
     setNow(submittedAt);
     persist(finalAttempt);
     window.scrollTo({ top: 0, behavior: "auto" });
+
+    // Delivery to the teacher starts after the download and the results page, and neither waits
+    // for it: a fault here leaves the results and the TXT report untouched.
+    try {
+      sendResult(buildPayload(finalAttempt, result));
+    } catch {
+      outbox.current = null;
+      setSendStatus("failed");
+    }
   }
 
   function handleBackupDownload(): void {
@@ -282,6 +368,8 @@ export default function App() {
     setDownloadError(null);
     setSubmitError(null);
     submitGuard.current = false;
+    outbox.current = null;
+    setSendStatus("idle");
     setWarning(
       storageAvailable
         ? null
@@ -340,6 +428,8 @@ export default function App() {
             downloadStatus={downloadStatus}
             downloadError={downloadError}
             storageWarning={displayWarning}
+            sendStatus={sendStatus}
+            onResend={handleResend}
           />
         )}
       </main>

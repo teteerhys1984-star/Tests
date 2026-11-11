@@ -3586,3 +3586,17 @@ bdi {
     padding: 0;
   }
 }
+
+/* ---------- Result delivery status (results page) ---------- */
+.send-banner {
+  margin: 0;
+}
+
+.send-banner-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+}

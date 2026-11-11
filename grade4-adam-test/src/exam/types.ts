@@ -141,7 +141,12 @@ export interface Attempt {
   submissionSoundPlayed: boolean;
   reportText?: string;
   reportFileName?: string;
+  /** Delivery of the submitted result to the teacher (see exam/submit.ts). */
+  delivery?: DeliveryState;
 }
+
+/** "sent" = the server confirmed receipt; anything else is sent again when the results are reopened. */
+export type DeliveryState = "pending" | "sent" | "failed";
 
 export type GradeStatus = "correct" | "partial" | "incorrect" | "unanswered";
 

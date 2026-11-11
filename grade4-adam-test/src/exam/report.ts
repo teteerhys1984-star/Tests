@@ -87,7 +87,7 @@ export function buildReport(attempt: Attempt, result: GradeResult): string {
   lines.push(`عدد الأسئلة الرئيسة: ${result.questions.length}`);
   lines.push(`نسخة الاختبار: مستوحاة من عالم المكعبات — ${EXAM_VERSION}`);
   lines.push("");
-  lines.push("ملاحظة للمعلم: هذا التقرير محلي ولا يُرسل عبر الشبكة. التصحيح على مستوى الأجزاء، والمجموع الكلي 100 درجة.");
+  lines.push("ملاحظة للمعلم: أُنشئ هذا التقرير محلياً في متصفح الطالب، وتُرسَل النتيجة أيضاً إلكترونياً إلى المعلّم عند التسليم. التصحيح على مستوى الأجزاء، والمجموع الكلي 100 درجة.");
   lines.push("");
 
   result.questions.forEach((qg, qIndex) => {

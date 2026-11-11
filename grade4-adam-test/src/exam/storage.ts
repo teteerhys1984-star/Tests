@@ -84,6 +84,10 @@ export function loadAttempt(): LoadResult {
       submissionSoundPlayed: Boolean(parsed.submissionSoundPlayed),
       reportText: parsed.reportText,
       reportFileName: parsed.reportFileName,
+      delivery:
+        parsed.delivery === "pending" || parsed.delivery === "sent" || parsed.delivery === "failed"
+          ? parsed.delivery
+          : undefined,
     };
     if (restored.phase === "results" && (!restored.reportText || !restored.reportFileName)) {
       return {
