@@ -1,0 +1,78 @@
+ok - welcome title
+ok - no stopwatch on welcome
+ok - contact phone visible
+ok - blank name blocked
+DEBUG input value آدم error undefined
+DEBUG startBtn true submit BUTTON
+DEBUG after start storage {"schema":2,"examId":"adam-math-grade4-minecraft","examVersion":"1.0.0","attempt timer true welcome false
+ok - timer appears with first question
+ok - start sound played once
+ok - start autosaved with name
+ok - 30-question shuffled order saved
+ok - attempt id created once
+ok - subparts visible
+ok - answer change autosaved
+ok - active attempt never returns to welcome
+ok - attempt id preserved after reload
+ok - start timestamp preserved
+ok - timer restored
+ok - start sound not replayed on restore
+ok - current question restored
+ok - review unanswered count
+ok - submit disabled until complete
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - subparts visible
+ok - all subparts answered/autosaved
+ok - review complete message
+ok - submit enabled when complete
+ok - results immediate
+ok - report downloaded once in same click
+ok - report filename correct
+ok - submission sound played once
+ok - submitted report persisted
+ok - report includes required metadata/page refs
+ok - backup download button
+ok - no page reference in student results
+ok - results restored after refresh
+ok - results attempt id preserved
+ok - backup same file and name
+ok - try again returns to welcome
+ok - try again clears active answers
+ok - name requested again
+ok - teacher gate shown
+ok - no key content before password
+ok - wrong key password rejected
+ok - teacher key unlocks with full details
+ok - password not displayed
+ok - fresh attempt gets a new attempt id
+ok - fresh attempt starts at first question
+
+DOM TESTS PASSED
