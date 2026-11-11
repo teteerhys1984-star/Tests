@@ -1,0 +1,169 @@
+name: Deploy exams to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Detect exam projects, build them, and assemble _site
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          rm -rf _site
+          mkdir -p _site
+
+          found=0
+          for dir in */; do
+            name="${dir%/}"
+            case "$name" in
+              .*|.github) continue ;;   # hidden folders (incl. .github)
+            esac
+            if [ ! -f "$name/package.json" ]; then
+              continue                  # not an exam project
+            fi
+            echo "::group::Build exam: $name"
+            (cd "$name" && npm ci && npm run build)
+            if [ ! -f "$name/dist/index.html" ]; then
+              echo "::error::$name/dist/index.html was not produced by npm run build"
+              exit 1
+            fi
+            mkdir -p "_site/$name"
+            cp "$name/dist/index.html" "_site/$name/index.html"
+            echo "::endgroup::"
+            found=1
+          done
+
+          if [ "$found" -eq 0 ]; then
+            echo "::warning::No exam projects found (no top-level folder with a package.json)."
+          fi
+
+      - name: Generate landing page (_site/index.html)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PYEOF'
+          import html
+          import os
+          import re
+          from urllib.parse import quote
+
+          SITE = "_site"
+
+          exams = []
+          for name in sorted(os.listdir(SITE)):
+              folder = os.path.join(SITE, name)
+              page = os.path.join(folder, "index.html")
+              if not os.path.isdir(folder) or not os.path.isfile(page):
+                  continue
+              with open(page, "r", encoding="utf-8", errors="ignore") as fh:
+                  content = fh.read()
+              match = re.search(r"<title>(.*?)</title>", content, re.IGNORECASE | re.DOTALL)
+              title = html.unescape(match.group(1)).strip() if match else ""
+              if not title:
+                  title = name
+              exams.append((name, title))
+
+          if exams:
+              items = "\n".join(
+                  '      <li><a href="./{0}/">{1}</a></li>'.format(quote(name), html.escape(title))
+                  for name, title in exams
+              )
+              listing = '    <ul class="exam-list">\n' + items + '\n    </ul>'
+          else:
+              listing = '    <p class="empty">لا توجد اختبارات متاحة حاليًا.</p>'
+
+          html_page = """<!doctype html>
+          <html lang="ar" dir="rtl">
+          <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <title>الاختبارات</title>
+          <meta name="description" content="قائمة الاختبارات الإلكترونية المتاحة على هذه الصفحة." />
+          <style>
+            * { box-sizing: border-box; }
+            body {
+              margin: 0;
+              font-family: system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+              line-height: 1.7;
+              background: #f4f6f8;
+              color: #1f2933;
+            }
+            .wrap { max-width: 44rem; margin: 0 auto; padding: 3rem 1.25rem 4rem; }
+            h1 { font-size: 1.75rem; margin: 0 0 .25rem; color: #0e2f3a; }
+            .subtitle { margin: 0 0 1.5rem; color: #52616b; }
+            .exam-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; }
+            .exam-list a {
+              display: block;
+              padding: .9rem 1.1rem;
+              background: #ffffff;
+              border: 1px solid #e2e8ee;
+              border-radius: .65rem;
+              color: #0e5a8a;
+              font-weight: 600;
+              text-decoration: none;
+            }
+            .exam-list a:hover { border-color: #0e5a8a; background: #f0f7fc; }
+            .empty { color: #52616b; }
+          </style>
+          </head>
+          <body>
+            <main class="wrap">
+              <header>
+                <h1>الاختبارات</h1>
+                <p class="subtitle">اختر اختبارًا للبدء</p>
+              </header>
+          """ + listing + """
+            </main>
+          </body>
+          </html>
+          """
+
+          with open(os.path.join(SITE, "index.html"), "w", encoding="utf-8") as fh:
+              fh.write(html_page)
+
+          print("Generated _site/index.html listing {0} exam(s): {1}".format(
+              len(exams), ", ".join(name for name, _ in exams)))
+          PYEOF
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload _site artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
