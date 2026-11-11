@@ -7,6 +7,7 @@ import { playStartSound, playSubmitSound, primeAudio, resetSounds } from './lib/
 import { formatDuration, num } from './lib/time'
 import type { Answers, AnswerValue } from './exam/grading'
 import { gradeAll, summarize, buildReport, validateReport, reportFilename, triggerDownload, type AttemptMeta, type QuestionResult } from './exam/report'
+import { buildPayload, newAttemptId, retryPending, sendWithRetry, type SendStatus, type SubmissionPayload } from './exam/submit'
 import { ContactBar, Footer } from './components/Chrome'
 import { Welcome } from './screens/Welcome'
 import { Exam } from './screens/Exam'
@@ -65,7 +66,32 @@ export default function App() {
   const [reportText, setReportText] = useState('')
   const [filename, setFilename] = useState('')
   const [autoDownloaded, setAutoDownloaded] = useState<boolean | null>(null)
+  const [sendStatus, setSendStatus] = useState<SendStatus>('idle')
   const startSoundDone = useRef(false)
+  /** حمولة المحاولة المعروضة حالياً (يعيد زر «إعادة إرسال النتيجة» إرسالها)، والحمولة الجاري إرسالها الآن. */
+  const outbox = useRef<SubmissionPayload | null>(null)
+  const sending = useRef<SubmissionPayload | null>(null)
+
+  /* ---------- عند تحميل التطبيق: إعادة إرسال النتائج المعلّقة من محاولات سابقة، بصمت ---------- */
+  useEffect(() => {
+    void retryPending()
+  }, [])
+
+  /* ---------- إرسال النتيجة إلى المعلّم في الخلفية (لا ينتظره شيء في الواجهة) ---------- */
+  const sendResult = useCallback((payload: SubmissionPayload) => {
+    if (sending.current === payload) return
+    sending.current = payload
+    setSendStatus('sending')
+    void sendWithRetry(payload).then((ok) => {
+      if (sending.current === payload) sending.current = null
+      // تُهمل النتيجة إن بدأ الطالب محاولة جديدة في هذه الأثناء
+      if (outbox.current === payload) setSendStatus(ok ? 'success' : 'failed')
+    })
+  }, [])
+
+  const handleResend = useCallback(() => {
+    if (outbox.current) sendResult(outbox.current)
+  }, [sendResult])
 
   /* ---------- المؤقّت التصاعدي (يعتمد الطوابع الزمنية فيبقى دقيقاً حتى مع خمول التبويب) ---------- */
   useEffect(() => {
@@ -99,6 +125,8 @@ export default function App() {
     setReportText('')
     setFilename('')
     setAutoDownloaded(null)
+    outbox.current = null
+    setSendStatus('idle')
     setElapsedMs(0)
     setOrder(buildOrder())
     setStartAt(new Date())
@@ -110,7 +138,7 @@ export default function App() {
     }
   }, [])
 
-  /* ---------- التسليم: تصحيح + تقرير + تنزيل تلقائي + صوت + صفحة النتيجة، بنقرة واحدة ---------- */
+  /* ---------- التسليم: تصحيح + تقرير + تنزيل تلقائي + صوت + صفحة النتيجة + إرسال النتيجة إلى المعلّم، بنقرة واحدة ---------- */
   const handleSubmit = useCallback(() => {
     if (!startAt) return
     const submit = new Date()
@@ -144,7 +172,18 @@ export default function App() {
     setAutoDownloaded(ok)
     setPhase('results')
     window.scrollTo({ top: 0, behavior: 'auto' })
-  }, [answers, order, startAt, studentName])
+
+    // إرسال النتيجة إلى المعلّم: يبدأ بعد التنزيل وعرض النتيجة ولا ينتظره أيٌّ منهما،
+    // وأي خلل فيه لا يمسّ صفحة النتيجة ولا ملف التقرير الاحتياطي.
+    try {
+      const payload = buildPayload({ attemptId: newAttemptId(), meta: attempt, order, answers: frozen, reportText: report })
+      outbox.current = payload
+      sendResult(payload)
+    } catch {
+      outbox.current = null
+      setSendStatus('failed')
+    }
+  }, [answers, order, sendResult, startAt, studentName])
 
   /* ---------- إعادة المحاولة ---------- */
   const handleRetry = useCallback(() => {
@@ -158,6 +197,8 @@ export default function App() {
     setReportText('')
     setFilename('')
     setAutoDownloaded(null)
+    outbox.current = null
+    setSendStatus('idle')
     setStartAt(null)
     setElapsedMs(0)
     setOrder(buildOrder())
@@ -210,6 +251,8 @@ export default function App() {
           reportText={reportText}
           filename={filename}
           autoDownloaded={autoDownloaded}
+          sendStatus={sendStatus}
+          onResend={handleResend}
           onRetry={handleRetry}
           onTeacher={() => setPhase('teacher')}
         />

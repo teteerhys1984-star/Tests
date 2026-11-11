@@ -34,7 +34,7 @@ function lessonNames(ids: LessonId[]): string {
     .join(' + ')
 }
 
-const STATUS_AR: Record<string, string> = {
+export const STATUS_AR: Record<string, string> = {
   correct: 'إجابة صحيحة',
   partial: 'إجابة صحيحة جزئياً',
   wrong: 'إجابة خاطئة',
@@ -91,6 +91,20 @@ export function summarize(results: QuestionResult[]): Summary {
   }
 }
 
+/** علامات كل درس (السؤال التركيبي يُحتسب في كل درس يشمله) — مصدر واحد للتقرير وللنتيجة المرسلة إلى المعلّم. */
+export function lessonTotals(results: QuestionResult[]): { title: string; awarded: number; max: number }[] {
+  return LESSONS.map((l) => {
+    let aw = 0, mx = 0
+    for (const r of results) {
+      if (r.q.lessons.includes(l.id)) {
+        aw += r.awarded
+        mx += r.max
+      }
+    }
+    return { title: l.title, awarded: Math.round(aw * 100) / 100, max: mx }
+  })
+}
+
 /** بناء نص التقرير الكامل بصيغة نصية صرفة (UTF-8). */
 export function buildReport(meta: AttemptMeta, results: QuestionResult[]): string {
   const sum = summarize(results)
@@ -139,15 +153,8 @@ export function buildReport(meta: AttemptMeta, results: QuestionResult[]): strin
   push(`فروع لم يُجب عنها       : ${num(sum.unansweredSubparts)}`)
   push('')
   push('توزيع العلامات على الدروس:')
-  for (const l of LESSONS) {
-    let aw = 0, mx = 0
-    for (const r of results) {
-      if (r.q.lessons.includes(l.id)) {
-        aw += r.awarded
-        mx += r.max
-      }
-    }
-    push(`  ${l.title.padEnd(28, ' ')} : ${num(Math.round(aw * 100) / 100)} / ${num(mx)}`)
+  for (const l of lessonTotals(results)) {
+    push(`  ${l.title.padEnd(28, ' ')} : ${num(l.awarded)} / ${num(l.max)}`)
   }
   push('  (الأسئلة التركيبية تُحتسب في أكثر من درس، ولذلك قد يتجاوز المجموع 100)')
   push('')
@@ -206,7 +213,7 @@ export function buildReport(meta: AttemptMeta, results: QuestionResult[]): strin
   push(`  واتساب: ${CONTACT.whatsapp}`)
   push('')
   push(`  أُصدر هذا التقرير بتاريخ: ${formatLong(meta.submitAt)}`)
-  push('  تم إنشاء التقرير محلياً داخل متصفح الطالب، ولم يُرسل أيّ بيانات إلى أي خادم.')
+  push('  تم إنشاء التقرير محلياً داخل متصفح الطالب، وتُرسَل النتيجة أيضاً إلكترونياً إلى المعلّم عند التسليم.')
   push(L(78))
 
   return '\uFEFF' + out.join('\r\n')
