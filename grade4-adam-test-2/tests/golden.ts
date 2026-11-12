@@ -16,7 +16,9 @@ export const GOLDEN_FILE = path.join(EXAM_DIR, "tests", "fixtures", "grading-gol
 /**
  * The files that decide marks and the TXT report: the question bank (questions, keys, accepted
  * answers), the marking code, the number normalisation it uses, and the report builder.
- * None of them was changed when result delivery was added.
+ * None of them was changed when result delivery was added. Since then the marking code has been
+ * changed on purpose in one respect (q08a); tests/grading.test.ts requires it to be the original
+ * plus that fix, and the other three files to be the original byte for byte.
  */
 export const ORIGINAL_FILES = ["data/exam.ts", "lib/grade.ts", "lib/text.ts", "lib/report.ts"];
 

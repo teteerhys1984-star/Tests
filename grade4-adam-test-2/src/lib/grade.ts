@@ -34,7 +34,9 @@ export function isAnswered(sub: Sub, a: Ans): boolean {
     case "tfc": {
       const v = a as { c: string; corr: string };
       if (!v || !v.c) return false;
-      return v.c === "T" || (v.corr ?? "").trim() !== "";
+      // «خاطئة» needs a written correction only where the part has a correction box (tf.corrLabel).
+      // A part without one — q08a, whose statement is true — is complete with either choice.
+      return v.c === "T" || (v.c === "F" && !sub.tf?.corrLabel) || (v.corr ?? "").trim() !== "";
     }
   }
   return false;
@@ -66,7 +68,10 @@ export function describeStudent(sub: Sub, a: Ans): string {
         .join(" | ");
     case "tfc": {
       const v = a as { c: string; corr: string };
-      return v.c === "T" ? "صحيحة" : `خاطئة — التصحيح: ${w(v.corr.trim())}`;
+      if (v.c === "T") return "صحيحة";
+      // «خاطئة» alone where nothing was written (possible only without a correction box).
+      const corr = w((v.corr ?? "").trim());
+      return corr ? `خاطئة — التصحيح: ${corr}` : "خاطئة";
     }
   }
   return "";

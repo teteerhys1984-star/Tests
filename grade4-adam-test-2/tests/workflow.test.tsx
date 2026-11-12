@@ -180,7 +180,8 @@ async function answerPart(sub: Sub, value: Ans): Promise<void> {
       const chosen = value as { c: "T" | "F"; corr: string };
       const word = chosen.c === "T" ? "صحيحة" : "خاطئة";
       await act(async () => click(qa('button.mc-opt[role="radio"]', partCard(sub)).find((button) => norm(button.textContent).endsWith(word))));
-      if (chosen.c === "F") await act(async () => typeInto(q("input.mc-input", partCard(sub)), chosen.corr));
+      // The correction is typed where the part has a correction box; q08a has none.
+      if (chosen.c === "F" && sub.tf!.corrLabel) await act(async () => typeInto(q("input.mc-input", partCard(sub)), chosen.corr));
       break;
     }
   }
@@ -225,14 +226,19 @@ async function reload(): Promise<void> {
 /* ------------------------------------------------------------------ */
 /* Answer plans                                                        */
 /* ------------------------------------------------------------------ */
-/** The first statement of the true/false question is true and offers no correction box, so the interface accepts only «صحيحة» for it. */
-const canBeWrongOnScreen = (sub: Sub) => !(sub.kind === "tfc" && sub.tf!.isTrue);
+/**
+ * A complete answer that earns nothing, as the interface stores it. The first statement of the
+ * true/false question (q08a) is true and has no correction box: it is wrong with «خاطئة» alone,
+ * while wrongValue() adds a correction text there that no control on the page can enter.
+ */
+const wrongOnScreen = (sub: Sub): Ans => (sub.kind === "tfc" && !sub.tf!.corrLabel ? { c: "F", corr: "" } : wrongValue(sub));
 const shape = (sub: Sub) => sub.kind + (sub.kind === "fields" ? ":" + (sub.template ? "template" : sub.layout ?? "plain") : "");
 
 /**
- * Mostly right; a few wrong; one part of every kind that gives partial credit is partly right
- * (several choices, ordering, each layout of number boxes, the point on the grid, true/false
- * with a correction); some numbers are typed in Arabic digits.
+ * Mostly right; a few wrong, among them «خاطئة» on the true statement that has no correction box
+ * (q08a); one part of every kind that gives partial credit is partly right (several choices,
+ * ordering, each layout of number boxes, the point on the grid, true/false with a correction);
+ * some numbers are typed in Arabic digits.
  */
 function mixedPlan(): Answers {
   const plan: Answers = {};
@@ -242,8 +248,9 @@ function mixedPlan(): Answers {
     if (partial.length && !partlyRight.has(shape(sub))) {
       partlyRight.add(shape(sub));
       plan[sub.id] = partial[0];
-    } else if (index % 9 === 4 && canBeWrongOnScreen(sub)) {
-      plan[sub.id] = wrongValue(sub);
+    } else if (index % 9 === 4 || sub.id === "q08a") {
+      // q08a is always answered «خاطئة»: the choice that used to make the paper impossible to submit.
+      plan[sub.id] = wrongOnScreen(sub);
     } else if (index % 5 === 0) {
       plan[sub.id] = formatted(sub, NUMBER_FORMATS["arabic-digits"]);
     } else {
@@ -290,6 +297,7 @@ async function main(): Promise<void> {
     const partly = savedAttempt()!;
     check("66 of 67 parts answered and saved exactly as entered", ALL_SUBS.every((sub) => (sub.id === skipped.id ? partly.answers[sub.id] === undefined : same(partly.answers[sub.id], plan[sub.id]))));
     check("the progress line counts 66 of 67", bodyText().includes("تمت الإجابة عن " + toAr(66) + " من " + toAr(67) + " فرعاً"));
+    check("q08a, a true statement without a correction box, was answered «خاطئة» on screen and is one of the 66", same(plan.q08a, { c: "F", corr: "" }) && same(partly.answers.q08a, plan.q08a));
 
     await reload();
     check(
@@ -327,6 +335,8 @@ async function main(): Promise<void> {
       [expected.correct, expected.partial, expected.incorrect, expected.unanswered].join("/") + " · " + expected.total + " / 100"
     );
     check("the marking stored with the attempt is the marking of the entered answers", same(done.result, expected));
+    const q08aMarked = done.result!.items.find((item) => item.subId === "q08a")!;
+    check("q08a, answered «خاطئة», is marked wrong with 0 of 1", q08aMarked.status === "incorrect" && q08aMarked.awarded === 0 && q08aMarked.marks === 1 && q08aMarked.studentText === "خاطئة");
     check("the score on screen is that marking", shownScore === toAr(fmtNum(expected.total)) + " / " + toAr(100) && percentLine(expected.percent), shownScore + " · " + fmtNum(expected.percent) + "%");
     check(
       "the counters on screen match",

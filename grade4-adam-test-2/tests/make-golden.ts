@@ -3,7 +3,8 @@
  *
  * The committed fixture (tests/fixtures/grading-golden.json) was recorded from the exam exactly
  * as it was uploaded, BEFORE the folder was renamed and result delivery was added, so
- * tests/grading.test.ts proves that marking is unchanged. To record it again from that original:
+ * tests/grading.test.ts proves that marking is unchanged (apart from the q08a fix, which that file
+ * describes and which needed no new recording). To record it again from that original:
  *
  *   mkdir -p /tmp/original
  *   git archive bac5d92846fa29bd6d8e82d8886970e4b68fac9d Adam_Test_2/src | tar -x -C /tmp/original

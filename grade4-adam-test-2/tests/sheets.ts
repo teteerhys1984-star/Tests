@@ -80,6 +80,9 @@ export function wrongValue(sub: Sub): Ans {
       return ((sub.plot!.x + 1) % (fig.maxX + 1)) + "," + ((sub.plot!.y + 1) % (fig.maxY + 1));
     }
     case "tfc":
+      // A true statement is wrong with «خاطئة». The correction text added here cannot be entered
+      // where the part has no correction box (q08a): the interface stores { c: "F", corr: "" }
+      // there, which is among unansweredValues() below and is the subject of tests/q08a.test.tsx.
       return sub.tf!.isTrue ? { c: "F", corr: "1" } : { c: "T", corr: "" };
   }
 }
@@ -122,7 +125,12 @@ export function partialValues(sub: Sub): Ans[] {
   }
 }
 
-/** Values the interface can hold for a part the student has not really answered (undefined = nothing stored). */
+/**
+ * Values the interface can hold for a part the student has not really answered (undefined = nothing stored).
+ * The list is as it was when the fixture was recorded from the original exam. Since the q08a fix one
+ * of them is an answer: «خاطئة» with nothing written, { c: "F", corr: "" }, on the true/false part
+ * that has no correction box (q08a) — complete, wrong, 0 marks. See tests/grading.test.ts, section 3.
+ */
 export function unansweredValues(sub: Sub): Ans[] {
   switch (sub.kind) {
     case "mcq":
