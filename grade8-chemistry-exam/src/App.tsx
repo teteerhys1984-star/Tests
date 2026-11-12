@@ -8,6 +8,8 @@ import { countUnanswered, gradeExam, isPartAnswered } from "./lib/grading";
 import type { AttemptState } from "./lib/storage";
 import { clearAttempt, loadAttempt, saveAttempt } from "./lib/storage";
 import { buildReport, downloadTextFile, formatDuration, reportFilename, validateReport } from "./lib/report";
+import { buildPayload, newAttemptId, retryPending, sendWithRetry } from "./lib/submit";
+import type { SendStatus, SubmissionPayload } from "./lib/submit";
 import { playStartSound, playSubmissionSound } from "./lib/sound";
 
 const TOTAL_SUBPARTS = QUESTIONS.reduce((s, q) => s + q.parts.length, 0);
@@ -37,15 +39,6 @@ const shuffled = <T,>(items: T[], rand: () => number): T[] => {
     [copy[i], copy[j]] = [copy[j], copy[i]];
   }
   return copy;
-};
-
-const makeAttemptId = (): string => {
-  try {
-    if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
-  } catch {
-    /* fall through */
-  }
-  return `attempt-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 };
 
 /** Interleaves the two lessons so no lesson is presented as a block. */
@@ -120,6 +113,10 @@ export default function App() {
   const [teacherOpen, setTeacherOpen] = useState(false);
   const [downloadNote, setDownloadNote] = useState<string | null>(null);
   const [submitWarning, setSubmitWarning] = useState("");
+  const [sendStatus, setSendStatus] = useState<SendStatus>("idle");
+  /** حمولة المحاولة المعروضة حالياً (يعيد زر «إعادة إرسال النتيجة» إرسالها)، والحمولة الجاري إرسالها الآن. */
+  const outbox = useRef<SubmissionPayload | null>(null);
+  const sending = useRef<SubmissionPayload | null>(null);
 
   const isExam = attempt?.status === "active";
   const isResults = attempt?.status === "submitted";
@@ -200,6 +197,27 @@ export default function App() {
     setAttempt(next);
   }, [attempt]);
 
+  /* ---------- عند تحميل التطبيق: إعادة إرسال النتائج المعلّقة من محاولات سابقة، بصمت ---------- */
+  useEffect(() => {
+    void retryPending();
+  }, []);
+
+  /* ---------- إرسال النتيجة إلى المعلّم في الخلفية (لا ينتظره شيء في الواجهة) ---------- */
+  const sendResult = useCallback((payload: SubmissionPayload) => {
+    if (sending.current === payload) return;
+    sending.current = payload;
+    setSendStatus("sending");
+    void sendWithRetry(payload).then((ok) => {
+      if (sending.current === payload) sending.current = null;
+      // تُهمل النتيجة إن بدأ الطالب محاولة جديدة في هذه الأثناء
+      if (outbox.current === payload) setSendStatus(ok ? "success" : "failed");
+    });
+  }, []);
+
+  const handleResend = useCallback(() => {
+    if (outbox.current) sendResult(outbox.current);
+  }, [sendResult]);
+
   const commit = useCallback((next: AttemptState) => {
     attemptRef.current = next;
     setAttempt(next);
@@ -226,7 +244,7 @@ export default function App() {
     const next: AttemptState = {
       examId: EXAM_META.examId,
       version: EXAM_META.version,
-      attemptId: makeAttemptId(),
+      attemptId: newAttemptId(),
       studentName: trimmed,
       status: "active",
       startedAt: Date.now(),
@@ -309,6 +327,27 @@ export default function App() {
     };
     commit(next);
     playSubmissionSound();
+
+    // إرسال النتيجة إلى المعلّم: يبدأ بعد عرض النتيجة ولا ينتظره أي شيء،
+    // وأي خلل فيه لا يمسّ صفحة النتيجة ولا ملف التقرير الاحتياطي.
+    try {
+      const payload = buildPayload({
+        attemptId: state.attemptId,
+        studentName: state.studentName,
+        startedAt: state.startedAt,
+        submittedAt,
+        elapsedSeconds: elapsed,
+        questions: qs,
+        answers: frozenAnswers,
+        reportText: text,
+      });
+      outbox.current = payload;
+      sendResult(payload);
+    } catch {
+      outbox.current = null;
+      setSendStatus("failed");
+    }
+
     let note: string;
     if (valid) {
       const triggered = downloadTextFile(text, filename);
@@ -338,6 +377,8 @@ export default function App() {
   const tryAgain = () => {
     clearAttempt();
     attemptRef.current = null;
+    outbox.current = null;
+    setSendStatus("idle");
     setAttempt(null);
     setName("");
     setNameError("");
@@ -460,7 +501,7 @@ export default function App() {
                 <ul>
                   <li>مؤقّت تصاعدي يحفظ زمن البدء الفعلي حتى بعد تحديث الصفحة.</li>
                   <li>تُنزَّل نسخة TXT من التقرير بدءًا من لحظة التسليم.</li>
-                  <li>لا تُرسل إجاباتك أو نتيجتك إلى أي خدمة خارجية.</li>
+                  <li>تُرسل نتيجتك وتقريرك إلى معلّمك عند التسليم، وتُحفظ نسخة محليًا في متصفحك.</li>
                   <li>تُستعاد المحاولة تلقائيًا إذا حدّثت الصفحة قبل التسليم.</li>
                 </ul>
               </div>
@@ -598,6 +639,8 @@ export default function App() {
             elapsedSeconds={attempt.result.elapsedSeconds}
             submittedAt={attempt.result.submittedAt}
             downloadNote={downloadNote}
+            sendStatus={sendStatus}
+            onResend={handleResend}
             onDownloadReport={downloadBackup}
             onTryAgain={tryAgain}
             onTeacher={() => setTeacherOpen(true)}
@@ -623,7 +666,7 @@ export default function App() {
           )}
         </div>
         <p className="footer-note">
-          اختبار إلكتروني يعمل محليًا في المتصفح. لا تُرسل البيانات إلى خوادم خارجية. مجموع الدرجات 100.
+          اختبار إلكتروني يعمل في المتصفح، وتُرسل النتيجة إلى معلّمك عند التسليم. مجموع الدرجات 100.
         </p>
       </footer>
 

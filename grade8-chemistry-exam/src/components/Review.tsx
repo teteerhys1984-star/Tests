@@ -4,6 +4,7 @@ import { EXAM_META, QUESTIONS, sourceLabel } from "../data/exam";
 import type { AnswerMap, ExamSummary, PartScore } from "../lib/grading";
 import { formatCorrectAnswer, formatStudentAnswer, gradePart } from "../lib/grading";
 import { formatDuration, partLetter } from "../lib/report";
+import type { SendStatus } from "../lib/submit";
 import { FigureView, RichText } from "./Science";
 
 export function ContactStrip() {
@@ -116,6 +117,27 @@ function QuestionReview({
   );
 }
 
+const SEND_TEXT: Record<Exclude<SendStatus, "idle">, string> = {
+  sending: "جارٍ إرسال نتيجتك إلى معلّمك…",
+  success: "تم إرسال نتيجتك إلى معلّمك ✓",
+  failed: "تعذّر إرسال النتيجة تلقائيًا. حمّل ملف التقرير وأرسله لمعلّمك.",
+};
+
+/** حالة إرسال النتيجة إلى المعلّم — لا تُعرض في حالة idle. */
+function SendBanner({ status, onResend }: { status: SendStatus; onResend: () => void }) {
+  if (status === "idle") return null;
+  return (
+    <div className={`send-banner ${status}`} role="status" aria-live="polite" data-send-status={status}>
+      <p>{SEND_TEXT[status]}</p>
+      {status === "failed" && (
+        <button type="button" className="btn btn-outline btn-small" onClick={onResend}>
+          إعادة إرسال النتيجة
+        </button>
+      )}
+    </div>
+  );
+}
+
 export function ResultsPage({
   studentName,
   questions,
@@ -124,6 +146,8 @@ export function ResultsPage({
   elapsedSeconds,
   submittedAt,
   downloadNote,
+  sendStatus,
+  onResend,
   onDownloadReport,
   onTryAgain,
   onTeacher,
@@ -135,6 +159,8 @@ export function ResultsPage({
   elapsedSeconds: number;
   submittedAt: number;
   downloadNote: string | null;
+  sendStatus: SendStatus;
+  onResend: () => void;
   onDownloadReport: () => void;
   onTryAgain: () => void;
   onTeacher: () => void;
@@ -200,6 +226,7 @@ export function ResultsPage({
               بوابة المعلم
             </button>
           </div>
+          <SendBanner status={sendStatus} onResend={onResend} />
           {downloadNote && <p className="small-note">{downloadNote}</p>}
         </div>
       </section>
