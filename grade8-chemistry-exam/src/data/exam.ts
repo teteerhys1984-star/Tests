@@ -2,6 +2,8 @@
    Every item is traceable to the verified repository content / textbook pages.
    Sources are kept internal and are revealed only after submission. */
 
+import { EXAM_ID } from "../config";
+
 export type LessonId = 1 | 2;
 export type Source = { lesson: LessonId; pages: string; mixed?: boolean };
 
@@ -101,7 +103,7 @@ export type Question = {
 };
 
 export const EXAM_META = {
-  examId: "chem-g8-u1-lessons1-2",
+  examId: EXAM_ID,
   version: "1.0.0",
   title: "اختبار الذرّة والعنصر والروابط الكيميائية",
   grade: "الصف الثامن",
