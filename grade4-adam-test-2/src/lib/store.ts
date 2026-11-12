@@ -1,5 +1,8 @@
 import type { Answers, GradeResult } from "./grade";
 
+/** Delivery of a submitted attempt's result to the teacher: started, confirmed by the server, or failed. */
+export type DeliveryState = "pending" | "sent" | "failed";
+
 export interface Attempt {
   examId: string;
   version: string;
@@ -18,6 +21,8 @@ export interface Attempt {
   result?: GradeResult;
   reportText?: string;
   reportName?: string;
+  /** Set at submission; "sent" stops a reload of the results page from sending again. */
+  delivery?: DeliveryState;
 }
 
 const KEY = "adam_g4_math_attempt_v1";

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { SHEETS_TOKEN } from "./config";
 import { ALL_SUBS, EXAM_ID, EXAM_TITLE, EXAM_VERSION, LETTER, QUESTIONS } from "./data/exam";
 import { gradeAll, isAnswered, describeStudent, type Ans } from "./lib/grade";
-import { clearAttempt, loadAttempt, newId, saveAttempt, shuffle, type Attempt } from "./lib/store";
+import { clearAttempt, loadAttempt, newId, saveAttempt, shuffle, type Attempt, type DeliveryState } from "./lib/store";
 import { buildReport, downloadText, reportFilename, validateReport } from "./lib/report";
+import { buildPayload, pendingPayload, retryPending, sendWithRetry, type SendStatus, type SubmissionPayload } from "./lib/submit";
 import { fmtDuration, toAr } from "./lib/text";
 import { playStart, playSubmit } from "./lib/audio";
 import { Pixel } from "./components/Pixel";
@@ -97,6 +99,7 @@ function Welcome({ onStart, storageOk }: { onStart: (name: string) => void; stor
           <button className="mc-btn mt-2 text-xl" onClick={go}>
             ابدأ الاختبار
           </button>
+          <p className="text-center text-sm font-bold text-slate-700">سيتم إرسال نتيجتك إلى معلّمك عند التسليم.</p>
         </div>
         {!storageOk && (
           <div className="text-center text-sm font-bold text-amber-900 bg-amber-100 border-2 border-amber-600 p-2">
@@ -116,6 +119,16 @@ export default function App() {
   const ref = useRef<Attempt | null>(attempt);
   const [now, setNow] = useState(() => Date.now());
   const [showKey, setShowKey] = useState(false);
+  // Delivery of the result to the teacher. A submitted attempt restored after a refresh shows
+  // "sent" when the server had confirmed it; otherwise it is sent again (see the effect below).
+  const [sendStatus, setSendStatus] = useState<SendStatus>(() => {
+    const restored = initRef.current?.attempt;
+    if (!restored || restored.phase !== "done") return "idle";
+    return restored.delivery === "sent" ? "success" : "sending";
+  });
+  // Payload of the attempt on the results page (what "resend" sends), and the one being sent now.
+  const outbox = useRef<SubmissionPayload | null>(null);
+  const sending = useRef<SubmissionPayload | null>(null);
 
   const commit = useCallback((fn: (a: Attempt) => Attempt) => {
     const cur = ref.current;
@@ -124,6 +137,57 @@ export default function App() {
     ref.current = next;
     if (!saveAttempt(next)) setStorageOk(false);
     setAttempt(next);
+  }, []);
+
+  // Remembers the outcome in the saved attempt, so a refresh of the results page does not send again.
+  const recordDelivery = (attemptId: string, delivery: DeliveryState) => {
+    const cur = ref.current;
+    if (!cur || cur.phase !== "done" || cur.attemptId !== attemptId || cur.delivery === delivery) return;
+    commit((a) => ({ ...a, delivery }));
+  };
+
+  // Sends in the background; nothing in the interface waits for it.
+  const sendResult = (payload: SubmissionPayload) => {
+    if (sending.current === payload) return;
+    sending.current = payload;
+    outbox.current = payload;
+    setSendStatus("sending");
+    void sendWithRetry(payload).then((ok) => {
+      if (sending.current === payload) sending.current = null;
+      // Ignored if the student has started a new attempt in the meantime.
+      if (outbox.current !== payload) return;
+      recordDelivery(payload.attemptId, ok ? "sent" : "failed");
+      setSendStatus(ok ? "success" : "failed");
+    });
+  };
+
+  // Sends the result of the submitted attempt on screen: the payload kept from an earlier failed
+  // or interrupted delivery if there is one, otherwise one rebuilt from the saved attempt.
+  // Either way it carries the same attemptId.
+  const deliverSubmittedAttempt = () => {
+    try {
+      const cur = ref.current;
+      if (!cur || cur.phase !== "done") return;
+      const stored = pendingPayload(cur.attemptId);
+      sendResult(stored ? { ...stored, token: SHEETS_TOKEN } : buildPayload(cur));
+    } catch {
+      outbox.current = null;
+      setSendStatus("failed");
+    }
+  };
+
+  const resend = () => {
+    if (outbox.current) sendResult(outbox.current);
+    else deliverSubmittedAttempt();
+  };
+
+  useEffect(() => {
+    // A submitted attempt restored after a refresh is sent again unless the server confirmed it.
+    const restored = ref.current;
+    if (restored && restored.phase === "done" && restored.delivery !== "sent") deliverSubmittedAttempt();
+    // Results of earlier attempts that could not be delivered are sent again, quietly.
+    void retryPending();
+    // Runs once, on load.
   }, []);
 
   // Stopwatch tick (timestamp based) while an attempt is active.
@@ -201,6 +265,8 @@ export default function App() {
     setStorageOk(saveAttempt(a));
     setNow(startedAt);
     setAttempt(a);
+    outbox.current = null;
+    setSendStatus("idle");
     playStart(); // once: first question appears
   };
 
@@ -229,11 +295,20 @@ export default function App() {
     validateReport(text, done, result); // 6
     done.reportText = text;
     done.reportName = reportFilename(done.name);
+    done.delivery = "pending";
     ref.current = done;
     if (!saveAttempt(done)) setStorageOk(false);
     downloadText(text, done.reportName); // 7+8: Blob + object URL + immediate download
     playSubmit(); // 9
     setAttempt(done); // 10
+    // 11: delivery to the teacher starts last and in the background. The results page and the TXT
+    // download above never wait for it, and a fault here leaves both untouched.
+    try {
+      sendResult(buildPayload(done, result));
+    } catch {
+      outbox.current = null;
+      setSendStatus("failed");
+    }
   };
 
   const downloadAgain = () => {
@@ -246,6 +321,8 @@ export default function App() {
     ref.current = null;
     setAttempt(null);
     setStorageOk(loadAttempt().storageOk);
+    outbox.current = null;
+    setSendStatus("idle");
   };
 
   // ───────── render ─────────
@@ -257,7 +334,7 @@ export default function App() {
     content = (
       <div className="grid gap-5">
         <Header name={attempt.name} />
-        <Results attempt={attempt} onDownload={downloadAgain} onRetry={retry} />
+        <Results attempt={attempt} onDownload={downloadAgain} onRetry={retry} sendStatus={sendStatus} onResend={resend} />
       </div>
     );
   } else {

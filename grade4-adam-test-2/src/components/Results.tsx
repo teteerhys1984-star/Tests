@@ -1,12 +1,56 @@
 import { QUESTIONS, EXAM_TITLE, LETTER } from "../data/exam";
 import type { Attempt } from "../lib/store";
 import { STATUS_AR } from "../lib/grade";
+import type { SendStatus } from "../lib/submit";
 import { fmtDuration, fmtNum, fmtStamp, toAr } from "../lib/text";
 import { Rich } from "./Rich";
 import { Figure } from "./Figures";
 import { Pixel } from "./Pixel";
 
-export function Results({ attempt, onDownload, onRetry }: { attempt: Attempt; onDownload: () => void; onRetry: () => void }) {
+const SEND_TEXT: Record<Exclude<SendStatus, "idle">, string> = {
+  sending: "جارٍ إرسال نتيجتك إلى معلّمك…",
+  success: "تم إرسال نتيجتك إلى معلّمك ✓",
+  failed: "تعذّر إرسال النتيجة تلقائيًا. حمّل ملف التقرير وأرسله لمعلّمك.",
+};
+const SEND_LOOK: Record<Exclude<SendStatus, "idle">, string> = {
+  sending: "text-amber-900 bg-amber-100 border-amber-600",
+  success: "text-emerald-900 bg-emerald-100 border-emerald-700",
+  failed: "text-red-900 bg-red-100 border-red-700",
+};
+
+/** Delivery of the result to the teacher, in the look of the notices already used in this exam. */
+function SendBanner({ status, onResend }: { status: SendStatus; onResend: () => void }) {
+  if (status === "idle") return null;
+  return (
+    <div
+      className={"flex flex-wrap items-center justify-center gap-x-3 gap-y-2 border-2 p-2 font-bold " + SEND_LOOK[status]}
+      role="status"
+      aria-live="polite"
+      data-send-status={status}
+    >
+      <p>{SEND_TEXT[status]}</p>
+      {status === "failed" && (
+        <button type="button" className="mc-btn blue small" onClick={onResend}>
+          إعادة إرسال النتيجة
+        </button>
+      )}
+    </div>
+  );
+}
+
+export function Results({
+  attempt,
+  onDownload,
+  onRetry,
+  sendStatus,
+  onResend,
+}: {
+  attempt: Attempt;
+  onDownload: () => void;
+  onRetry: () => void;
+  sendStatus: SendStatus;
+  onResend: () => void;
+}) {
   const res = attempt.result!;
   const dur = attempt.durationMs ?? 0;
   const msg =
@@ -45,6 +89,7 @@ export function Results({ attempt, onDownload, onRetry }: { attempt: Attempt; on
           <span className="badge status-incorrect">خاطئة: {toAr(res.incorrect)}</span>
           {res.unanswered > 0 && <span className="badge status-unanswered">بلا إجابة: {toAr(res.unanswered)}</span>}
         </div>
+        <SendBanner status={sendStatus} onResend={onResend} />
         <div className="flex flex-wrap justify-center gap-3 mt-2">
           <button className="mc-btn blue" onClick={onDownload}>
             تنزيل التقرير TXT
