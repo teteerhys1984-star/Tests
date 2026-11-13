@@ -1,8 +1,18 @@
+// فحص شامل للنسخة المبنية في متصفح حقيقي (playwright).
+//   npm run build && node scripts/e2e-test.mjs
+// يحتاج playwright مثبّتاً (ليس من اعتماديات المشروع): npm i -D playwright && npx playwright install chromium
+// لا يتصل بأي شبكة خارجية: كل طلبات الإرسال إلى Google تُعترَض وتُرَدّ محلياً.
 import { chromium } from 'playwright';
-import { QUESTIONS, GRAPHS } from '/home/user/sandbox/src/exam-data.js';
 import { spawn } from 'child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const server = spawn('python3', ['-m', 'http.server', '8901', '--bind', '127.0.0.1'], { cwd: '/home/user/sandbox/dist' });
+const here = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(here, '..');
+const { QUESTIONS, GRAPHS } = await import(path.join(root, 'src/exam-data.js'));
+
+const port = 8901;
+const server = spawn('python3', ['-m', 'http.server', String(port), '--bind', '127.0.0.1'], { cwd: path.join(root, 'dist') });
 await new Promise(r => setTimeout(r, 800));
 
 const strip = (s) => String(s).replace(/⟦|⟧/g, '');
@@ -21,8 +31,10 @@ await page.addInitScript(() => {
   };
 });
 page.on('pageerror', e => { fail++; console.log('  PAGE ERROR:', e.message); });
+// لا شبكة خارجية: طلبات الإرسال إلى Apps Script تُعترَض وتُرَدّ بنجاح وهمي
+await ctx.route('https://script.google.com/**', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) }));
 
-await page.goto('http://127.0.0.1:8901/index.html');
+await page.goto(`http://127.0.0.1:${port}/index.html`);
 await page.waitForSelector('.intro-card');
 
 console.log('== Start screen ==');
@@ -127,6 +139,14 @@ ok(await page.isVisible('.score-num'), 'score displayed');
 ok((await page.locator('.score-num').textContent()).includes('100'), 'score 100/100 shown');
 const st4 = await page.evaluate(() => JSON.parse(localStorage.getItem('g7physics_u1l1_exam_v1')));
 ok(st4.status === 'submitted' && st4.sounds.submit === true && st4.submitTs && st4.elapsedMs > 0, 'submitted state + submit sound flag + timestamps saved');
+ok(!txt.includes('لم يُرسل إلى أي جهة خارجية'), 'report no longer claims nothing is sent');
+ok(txt.includes('تُرسَل النتيجة والإجابات إلى المعلّم'), 'report states the result is sent to the teacher');
+
+console.log('== Delivery to the teacher (intercepted) ==');
+const sendStatus = await page.locator('[data-send-status]').getAttribute('data-send-status', { timeout: 10000 }).catch(() => null);
+ok(sendStatus === 'success', `send banner shows success (${sendStatus})`);
+ok((await page.locator('[data-send-status]').textContent()).includes('تم إرسال نتيجتك إلى معلّمك'), 'success message visible');
+ok((await page.locator('text=إعادة إرسال النتيجة').count()) === 0, 'no resend button after success');
 
 console.log('== Backup download button ==');
 const dl2Promise = page.waitForEvent('download', { timeout: 10000 });
@@ -138,6 +158,7 @@ console.log('== Refresh after submit stays on results ==');
 await page.reload();
 await page.waitForSelector('.results-screen');
 ok(true, 'refresh after submit shows results, not active exam');
+ok((await page.locator('[data-send-status]').getAttribute('data-send-status')) === 'success', 'send status survives a refresh');
 
 console.log('== Try Again ==');
 await page.click('text=محاولة جديدة');
@@ -164,7 +185,7 @@ await page.click('.modal-actions .btn-ghost');
 console.log('== Mobile layout (390px) ==');
 const mob = await ctx.newPage();
 await mob.setViewportSize({ width: 390, height: 844 });
-await mob.goto('http://127.0.0.1:8901/index.html');
+await mob.goto(`http://127.0.0.1:${port}/index.html`);
 await mob.waitForSelector('.intro-card');
 await mob.fill('#student-name', 'اختبار موبايل');
 await mob.click('.btn-start');
