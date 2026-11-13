@@ -98,6 +98,120 @@ button { font: inherit; color: inherit; }
   -webkit-mask-image: radial-gradient(80% 60% at 80% 10%, #000 0%, transparent 70%);
   opacity: .55;
 }
+/* ---------- الشريط العلوي: بيانات المهندس ---------- */
+.topbar {
+  position: relative; z-index: 2;
+  background: linear-gradient(90deg, rgba(8, 20, 42, .42), rgba(8, 20, 42, .22));
+  border-block-end: 1px solid rgba(255, 255, 255, .14);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.topbar__inner {
+  display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+  min-height: 2.6rem; padding-block: .35rem;
+}
+.eng { display: inline-flex; align-items: center; gap: .5rem; min-width: 0; }
+.eng__mark {
+  width: 1.6rem; height: 1.6rem; border-radius: 9px; display: grid; place-items: center; flex: none;
+  background: linear-gradient(140deg, #fde68a, #fbbf24); color: #12284a;
+  box-shadow: 0 4px 12px -6px rgba(251, 191, 36, .9);
+}
+.eng__mark svg { width: 1rem; height: 1rem; }
+.eng__name { font-weight: 800; font-size: .88rem; letter-spacing: .1px; white-space: nowrap; }
+
+.wa {
+  display: inline-flex; align-items: center; gap: .45rem; flex: none;
+  padding: .2rem .25rem .2rem .75rem; border-radius: 999px;
+  background: rgba(255, 255, 255, .12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22);
+  color: #fff; font-weight: 800; font-size: .86rem; line-height: 1;
+  transition: background .2s, box-shadow .2s, transform .2s var(--ease);
+}
+[dir="ltr"] .wa { padding: .2rem .75rem .2rem .25rem; }
+.wa:hover, .wa:focus-visible {
+  background: rgba(37, 211, 102, .22);
+  box-shadow: inset 0 0 0 1px rgba(37, 211, 102, .75), 0 8px 22px -12px rgba(37, 211, 102, .9);
+  transform: translateY(-1px);
+}
+.wa__logo {
+  width: 1.65rem; height: 1.65rem; border-radius: 50%; display: grid; place-items: center; flex: none;
+  background: #25d366; color: #fff;
+  box-shadow: 0 4px 12px -5px rgba(37, 211, 102, .95);
+}
+.wa__logo svg { width: 1rem; height: 1rem; fill: currentColor; }
+.wa__num { direction: ltr; unicode-bidi: isolate; font-variant-numeric: tabular-nums; letter-spacing: .5px; }
+
+/* ---------- سماء الواجهة: طائرة ورقية وغيوم ونجوم ---------- */
+.sky { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; contain: strict; }
+.sky svg { display: block; overflow: visible; }
+
+.cloud { position: absolute; left: 0; color: #fff; will-change: transform; }
+.cloud svg { width: 100%; height: auto; fill: currentColor; }
+.cloud--1 { top: 3.3rem; width: 7.5rem; opacity: .13; animation: cloud 70s linear infinite; animation-delay: -18s; }
+.cloud--2 { top: 8.6rem; width: 5rem; opacity: .09; animation: cloud 96s linear infinite; animation-delay: -60s; }
+.cloud--3 { top: 5.4rem; width: 10rem; opacity: .07; animation: cloud 120s linear infinite; animation-delay: -95s; }
+@keyframes cloud {
+  from { transform: translate3d(100vw, 0, 0); }
+  to   { transform: translate3d(-12rem, 0, 0); }
+}
+
+.star { position: absolute; width: .6rem; height: .6rem; color: #fde68a; opacity: .15; animation: twinkle 4.2s ease-in-out infinite; }
+.star svg { width: 100%; height: 100%; fill: currentColor; }
+.star--1 { top: 3.6rem; left: 12%; }
+.star--2 { top: 6.2rem; left: 31%; width: .45rem; height: .45rem; animation-delay: -1.4s; }
+.star--3 { top: 4.4rem; left: 52%; width: .5rem; height: .5rem; animation-delay: -2.6s; }
+.star--4 { top: 9.4rem; left: 8%; width: .4rem; height: .4rem; animation-delay: -3.3s; }
+@keyframes twinkle {
+  0%, 100% { opacity: .12; transform: scale(.7) rotate(0deg); }
+  50%      { opacity: .85; transform: scale(1.15) rotate(45deg); }
+}
+
+/* الطائرة: مسار أفقي هادئ (flight) + ارتفاع يتبدّل كل رحلة (lane) + تمايل ناعم (bob) */
+.flight {
+  position: absolute; top: 3.5rem; left: 100%;
+  font-size: 1rem; will-change: transform;
+  animation: flight 19s linear infinite, lane 57s step-end infinite;
+  animation-delay: 1.2s, 1.2s;
+}
+.flight__body {
+  display: flex; align-items: center; direction: ltr;
+  transform-origin: 1.4em 50%;
+  animation: bob 3.4s ease-in-out infinite alternate;
+}
+.plane { width: 2.9em; height: auto; flex: none; filter: drop-shadow(0 6px 8px rgba(8, 20, 42, .35)); }
+.trail { width: 10.5em; height: auto; flex: none; margin-inline-start: -.55em; }
+.trail path { animation: dash 1.6s linear infinite; }
+.puff {
+  position: absolute; top: 50%; width: .5em; height: .5em; border-radius: 50%;
+  background: #fff; opacity: 0; animation: puff 2.8s ease-out infinite;
+}
+.puff--1 { left: 3.4em; }
+.puff--2 { left: 5.6em; width: .7em; height: .7em; animation-delay: -.9s; }
+.puff--3 { left: 8em; width: .9em; height: .9em; animation-delay: -1.8s; }
+
+@keyframes flight {
+  0%        { transform: translate3d(0, 0, 0); }
+  82%, 100% { transform: translate3d(calc(-100vw - 15em), -1rem, 0); }
+}
+@keyframes lane {
+  0%     { top: 3.5rem; }
+  33.34% { top: 5.6rem; }
+  66.67% { top: 4.4rem; }
+}
+@keyframes bob {
+  from { transform: translateY(-.4em) rotate(-3.5deg); }
+  to   { transform: translateY(.4em) rotate(3deg); }
+}
+@keyframes dash { to { stroke-dashoffset: 24; } }
+@keyframes puff {
+  0%   { opacity: 0; transform: translate(0, -50%) scale(.4); }
+  25%  { opacity: .38; }
+  100% { opacity: 0; transform: translate(1.6em, -110%) scale(1.5); }
+}
+@media (max-width: 40rem) {
+  .flight { font-size: .78rem; animation-duration: 13s, 39s; }
+  .cloud--3 { display: none; }
+}
+
 .hero__inner { position: relative; z-index: 1; padding-block: 1.6rem 2rem; }
 
 .brand { display: flex; align-items: center; gap: .7rem; }
@@ -389,11 +503,60 @@ button { font: inherit; color: inherit; }
 #view-search .sect-title { justify-content: space-between; }
 
 /* ---------- التذييل ---------- */
-.foot {
-  padding-block: 1.5rem 2.5rem; color: var(--ink-3); font-size: .82rem;
-  border-block-start: 1px solid var(--line);
+.foot { padding-block: .5rem 2.25rem; color: var(--ink-3); font-size: .82rem; }
+.foot__note { margin: 1rem 0 0; text-align: center; }
+
+.credit {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  padding: 1.25rem 1.35rem;
+  color: #fff; border-radius: 1.6rem;
+  background:
+    radial-gradient(110% 140% at 100% 0%, rgba(56, 189, 248, .45), transparent 60%),
+    radial-gradient(90% 130% at 0% 100%, rgba(167, 139, 250, .42), transparent 62%),
+    linear-gradient(135deg, #12284a 0%, #1e3a8a 50%, #0e7490 100%);
+  box-shadow: 0 24px 50px -34px rgba(18, 40, 74, .95);
 }
-.foot p { margin: 0; }
+.credit::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .5;
+  background-image: radial-gradient(rgba(255, 255, 255, .16) 1px, transparent 1px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(70% 120% at 50% 0%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(70% 120% at 50% 0%, #000 0%, transparent 75%);
+}
+.credit__deco {
+  position: absolute; z-index: -1; pointer-events: none; opacity: .2;
+  inset-block-end: -.35rem; left: 50%; width: 11rem; transform: translateX(-50%) rotate(-6deg);
+  display: flex; align-items: center; direction: ltr;
+}
+.credit__deco .plane { width: 2.6rem; filter: none; }
+.credit__deco .trail { width: 8.4rem; }
+.credit__deco .trail path { animation: none; }
+
+.credit__who { display: flex; align-items: center; gap: .85rem; min-width: 0; }
+.credit__mark {
+  width: 3rem; height: 3rem; border-radius: 16px; display: grid; place-items: center; flex: none;
+  background: linear-gradient(140deg, #fde68a, #fbbf24); color: #12284a;
+  box-shadow: 0 12px 24px -14px rgba(251, 191, 36, .95), inset 0 0 0 1px rgba(255, 255, 255, .45);
+}
+.credit__mark svg { width: 1.7rem; height: 1.7rem; }
+.credit__name { margin: 0; font-size: clamp(1.1rem, 4.4vw, 1.35rem); font-weight: 800; line-height: 1.35; }
+
+.credit__contact { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.credit__label { font-size: .84rem; font-weight: 700; color: rgba(255, 255, 255, .78); }
+.wa--lg { padding: .35rem .4rem .35rem 1.1rem; gap: .65rem; font-size: clamp(1.1rem, 4.6vw, 1.3rem); background: rgba(255, 255, 255, .14); }
+[dir="ltr"] .wa--lg { padding: .35rem 1.1rem .35rem .4rem; }
+.wa--lg .wa__logo { width: 2.6rem; height: 2.6rem; }
+.wa--lg .wa__logo svg { width: 1.55rem; height: 1.55rem; }
+.wa--lg .wa__num { letter-spacing: 1px; }
+
+@media (max-width: 34rem) {
+  .credit { flex-direction: column; align-items: stretch; text-align: center; padding: 1.35rem 1.1rem; }
+  .credit__who { flex-direction: column; gap: .6rem; }
+  .credit__contact { flex-direction: column; gap: .5rem; }
+  .credit__deco { inset-block-end: auto; inset-block-start: .4rem; left: 22%; }
+}
 
 /* ---------- الحركة ---------- */
 @keyframes rise {
@@ -412,6 +575,17 @@ button { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+
+  /* سماء ساكنة: الطائرة تقف في مكانها، بلا طيران ولا تمايل ولا وميض */
+  .sky *, .sky *::before, .sky *::after { animation: none !important; }
+  .flight { left: 7%; top: 3.6rem; transform: none; }
+  .flight__body { transform: rotate(-3deg); }
+  .cloud--1 { transform: translate3d(58vw, 0, 0); }
+  .cloud--2 { transform: translate3d(22vw, 0, 0); }
+  .cloud--3 { transform: translate3d(36vw, 0, 0); }
+  .star { opacity: .5; }
+  .puff { display: none; }
+  .wa:hover, .wa:focus-visible { transform: none; }
 }
 </style>
 </head>
@@ -473,10 +647,61 @@ button { font: inherit; color: inherit; }
       <path d="M12 4.2 21 8.6l-9 4.4-9-4.4z" />
       <path d="M6.5 11v5.2C6.5 18 9 19.4 12 19.4s5.5-1.4 5.5-3.2V11" />
     </g>
+    <g id="s-eng" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m8.2 7.6-4.4 4.4 4.4 4.4M15.8 7.6l4.4 4.4-4.4 4.4M13.6 5.2l-3.2 13.6" />
+    </g>
+    <!-- شعار WhatsApp (رمز محلي مضمَّن) -->
+    <path id="s-whatsapp" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+    <!-- طائرة ورقية: مقدّمتها إلى اليسار (اتجاه القراءة العربية) -->
+    <g id="s-plane">
+      <path d="M2 24 62 4 36 29z" fill="#fff" />
+      <path d="M36 29 62 4 47 44z" fill="#cfe4ff" />
+      <path d="M36 29l-5 14 11-9z" fill="#8fb8f5" />
+      <path d="M2 24l34 5" fill="none" stroke="#8fb8f5" stroke-width=".8" stroke-linecap="round" />
+    </g>
+    <linearGradient id="g-trail" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity=".85" />
+      <stop offset=".55" stop-color="#fde68a" stop-opacity=".45" />
+      <stop offset="1" stop-color="#fff" stop-opacity="0" />
+    </linearGradient>
+    <path id="s-cloud" d="M14 30a9 9 0 0 1 1.6-17.9A13 13 0 0 1 40 9.6 10.5 10.5 0 0 1 58 17a7 7 0 0 1 1 13z" />
+    <path id="s-star" d="M12 1.5c.9 6 4.5 9.6 10.5 10.5-6 .9-9.6 4.5-10.5 10.5-.9-6-4.5-9.6-10.5-10.5 6-.9 9.6-4.5 10.5-10.5z" />
   </defs>
 </svg>
 
 <header class="hero">
+  <!-- عنصر بصري فقط: طائرة ورقية تعبر سماء الواجهة خلف المحتوى، ولا تستقبل أي نقر -->
+  <div class="sky" aria-hidden="true">
+    <span class="cloud cloud--1"><svg viewBox="0 0 64 32"><use href="#s-cloud" /></svg></span>
+    <span class="cloud cloud--2"><svg viewBox="0 0 64 32"><use href="#s-cloud" /></svg></span>
+    <span class="cloud cloud--3"><svg viewBox="0 0 64 32"><use href="#s-cloud" /></svg></span>
+    <span class="star star--1"><svg viewBox="0 0 24 24"><use href="#s-star" /></svg></span>
+    <span class="star star--2"><svg viewBox="0 0 24 24"><use href="#s-star" /></svg></span>
+    <span class="star star--3"><svg viewBox="0 0 24 24"><use href="#s-star" /></svg></span>
+    <span class="star star--4"><svg viewBox="0 0 24 24"><use href="#s-star" /></svg></span>
+    <div class="flight">
+      <div class="flight__body">
+        <svg class="plane" viewBox="0 0 64 48"><use href="#s-plane" /></svg>
+        <svg class="trail" viewBox="0 0 180 24"><path d="M2 14c22 6 40 6 62 0s40-6 62 0 34 4 52 0" fill="none" stroke="url(#g-trail)" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="5 7" /></svg>
+        <i class="puff puff--1"></i><i class="puff puff--2"></i><i class="puff puff--3"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <div class="shell topbar__inner">
+      <span class="eng">
+        <span class="eng__mark" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#s-eng" /></svg></span>
+        <span class="eng__name">المهندس سومر شاهين</span>
+      </span>
+      <a class="wa" href="https://wa.me/963930215022" target="_blank" rel="noopener noreferrer"
+         aria-label="واتساب: 0930215022">
+        <span class="wa__num">0930215022</span>
+        <span class="wa__logo"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#s-whatsapp" /></svg></span>
+      </a>
+    </div>
+  </div>
+
   <div class="shell hero__inner">
     <div class="brand">
       <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#s-cap" /></svg></span>
@@ -490,9 +715,9 @@ button { font: inherit; color: inherit; }
     <p class="hero__sub">اختر الصف، ثم المادة، ثم الاختبار — ويُفتح الاختبار فورًا داخل المتصفح، بلا تسجيل دخول.</p>
 
     <ol class="steps">
-      <li><b>١</b> اختر الصف</li>
-      <li><b>٢</b> اختر المادة</li>
-      <li><b>٣</b> ابدأ الاختبار</li>
+      <li><b>1</b> اختر الصف</li>
+      <li><b>2</b> اختر المادة</li>
+      <li><b>3</b> ابدأ الاختبار</li>
     </ol>
 
     <form class="search" role="search" onsubmit="return false">
@@ -538,13 +763,31 @@ __CONTENT__
 </main>
 
 <footer class="shell foot">
-  <p>جميع الاختبارات تعمل داخل المتصفح وتُحفظ نتيجتها تلقائيًا — لا حاجة إلى تنزيل أي برنامج.</p>
+  <div class="credit">
+    <span class="credit__deco" aria-hidden="true">
+      <svg class="plane" viewBox="0 0 64 48"><use href="#s-plane" /></svg>
+      <svg class="trail" viewBox="0 0 180 24"><path d="M2 14c22 6 40 6 62 0s40-6 62 0 34 4 52 0" fill="none" stroke="url(#g-trail)" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="5 7" /></svg>
+    </span>
+    <div class="credit__who">
+      <span class="credit__mark" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#s-eng" /></svg></span>
+      <p class="credit__name">المهندس سومر شاهين</p>
+    </div>
+    <div class="credit__contact">
+      <span class="credit__label" id="wa-label">رقم الهاتف:</span>
+      <a class="wa wa--lg" href="https://wa.me/963930215022" target="_blank" rel="noopener noreferrer"
+         aria-label="رقم الهاتف 0930215022 — فتح محادثة واتساب">
+        <span class="wa__num">0930215022</span>
+        <span class="wa__logo"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#s-whatsapp" /></svg></span>
+      </a>
+    </div>
+  </div>
+  <p class="foot__note">جميع الاختبارات تعمل داخل المتصفح وتُحفظ نتيجتها تلقائيًا — لا حاجة إلى تنزيل أي برنامج.</p>
 </footer>
 
 <noscript>
   <style>
     .view[hidden] { display: block !important; }
-    .crumbs, .search, .glow { display: none !important; }
+    .crumbs, .search, .glow, .sky { display: none !important; }
     .view { margin-block-end: 2rem; }
     .view-head { display: none; }
   </style>
@@ -584,6 +827,7 @@ __CONTENT__
       .replace(/[\u0624]/g, "و")
       .replace(/[\u0626]/g, "ي")
       .replace(/[\u0660-\u0669]/g, function (d) { return String(d.charCodeAt(0) - 0x0660); })
+      .replace(/[\u06F0-\u06F9]/g, function (d) { return String(d.charCodeAt(0) - 0x06F0); })
       .replace(/\s+/g, " ")
       .toLowerCase()
       .trim();
@@ -677,7 +921,7 @@ __CONTENT__
     if (!q) { searchEmpty.hidden = false; searchCount.textContent = ""; activate(searchView, "البحث"); return; }
     var hits = cards.filter(function (c) { return norm(c.getAttribute("data-search")).indexOf(q) >= 0; });
     searchEmpty.hidden = hits.length > 0;
-    searchCount.textContent = hits.length ? hits.length + " نتيجة" : "لا نتائج";
+    searchCount.textContent = hits.length ? String(hits.length) + " نتيجة" : "لا نتائج";
     hits.forEach(function (c) {
       var clone = c.cloneNode(true);
       clone.classList.add("stagger");

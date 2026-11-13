@@ -25,6 +25,10 @@ sys.path.insert(0, os.path.dirname(HERE))
 
 import generate  # noqa: E402  (landing/generate.py)
 
+ENGINEER = "المهندس سومر شاهين"
+PHONE = "0930215022"
+WHATSAPP_URL = "https://wa.me/963930215022"
+
 PAGE = """<!doctype html><html lang="ar" dir="rtl"><head><title>%s</title></head>
 <body>exam</body></html>"""
 
@@ -40,7 +44,9 @@ def make_site(root, exams):
     return site
 
 
-class SubjectVisibility(unittest.TestCase):
+class Landing(unittest.TestCase):
+    """أساس مشترك: يبني موقعًا وهميًا ويولّد صفحته الرئيسية."""
+
     def setUp(self):
         self.tmp = tempfile.mkdtemp(prefix="landing-test-")
         self.cwd = os.getcwd()
@@ -64,6 +70,8 @@ class SubjectVisibility(unittest.TestCase):
         self.assertTrue(view, "no view for grade %d" % grade)
         return re.findall(r'data-subject="([a-z]+)"', view.group(0))
 
+
+class SubjectVisibility(Landing):
     def test_all_nine_grades_are_listed(self):
         page = self.build([("grade1-arabic-test", "اختبار العربية — الصف الأول")])
         for grade in range(1, 10):
@@ -126,14 +134,79 @@ class SubjectVisibility(unittest.TestCase):
 
     def test_standalone_page_without_external_resources(self):
         page = self.build([("grade4-adam-test", "اختبار الرياضيات — الصف الرابع")])
-        self.assertNotIn("http://", page.replace("http://www.w3.org", ""))
-        self.assertNotIn("https://", page.replace("http://www.w3.org", ""))
+        # الرابط الخارجي الوحيد المسموح: رابط واتساب (تنقّل، لا مورد يُحمَّل)
+        local = page.replace("http://www.w3.org", "").replace(WHATSAPP_URL, "")
+        self.assertNotIn("http://", local)
+        self.assertNotIn("https://", local)
         self.assertIn('dir="rtl"', page)
         self.assertIn('lang="ar"', page)
 
     def test_unclassified_exam_is_hidden_but_warned(self):
         page = self.build([("some-unknown-page", "صفحة بلا تصنيف")])
         self.assertNotIn("some-unknown-page", page)
+
+
+class Presentation(Landing):
+    """الأرقام الإنجليزية، بيانات المهندس، والطائرة المتحركة."""
+
+    EXAMS = [
+        ("grade4-adam-test", "اختبار الرياضيات — الصف الرابع"),
+        ("grade4-adam-test-2", "اختبار الرياضيات ٢ — الصف الرابع"),
+        ("grade4-math-3", "اختبار الرياضيات ۳ — الصف الرابع"),
+        ("grade7-physics-exam", "اختبار الفيزياء — الصف السابع"),
+        ("grade8-chemistry-exam", "اختبار الكيمياء — الصف الثامن"),
+    ]
+
+    def test_all_visible_digits_are_western(self):
+        page = self.build(self.EXAMS)
+        self.assertEqual(re.findall("[\u0660-\u0669\u06f0-\u06f9]", page), [])
+        for grade in range(1, 10):
+            self.assertRegex(page, r'class="grade-card__num"[^>]*>%d<' % grade)
+        for step in (1, 2, 3):
+            self.assertIn("<li><b>%d</b>" % step, page)
+        self.assertIn("<span>9 صفًّا دراسيًا</span>", page)
+        self.assertIn("3 اختبارات", page)            # عدد اختبارات رياضيات الصف 4
+        self.assertIn("<b>5</b> اختبارًا منشورًا", page)
+        self.assertRegex(page, r'class="exam-card__idx"[^>]*>3<')
+        # عنوان فيه رقم عربي-هندي يُعرض بأرقام إنجليزية
+        self.assertIn("اختبار الرياضيات 2 — الصف الرابع", page)
+        self.assertIn("اختبار الرياضيات 3 — الصف الرابع", page)
+
+    def test_digit_display_does_not_touch_links_or_ids(self):
+        page = self.build(self.EXAMS)
+        for folder, _ in self.EXAMS:
+            self.assertIn('href="./%s/"' % folder, page)
+        for anchor in ('href="#g4"', 'href="#g4/math"', 'id="view-grade-4"',
+                       'id="view-exams-4-math"', 'id="view-exams-7-physics"'):
+            self.assertIn(anchor, page)
+
+    def test_engineer_credit_top_and_bottom(self):
+        page = self.build(self.EXAMS)
+        self.assertEqual(page.count(ENGINEER), 2)
+        header = page[page.index("<header"):page.index("</header>")]
+        footer = page[page.index("<footer"):page.index("</footer>")]
+        for block in (header, footer):
+            self.assertIn(ENGINEER, block)
+            self.assertIn('href="%s"' % WHATSAPP_URL, block)
+            self.assertIn('class="wa__num">%s<' % PHONE, block)
+            self.assertIn('href="#s-whatsapp"', block)
+        self.assertIn("رقم الهاتف:", footer)
+        self.assertEqual(re.findall(r'href="(https?://[^"]+)"', page), [WHATSAPP_URL] * 2)
+        # التذييل في نهاية الصفحة بعد المحتوى، وليس عنصرًا عائمًا
+        self.assertLess(page.index("</main>"), page.index("<footer"))
+        self.assertNotRegex(page, r"\.(?:foot|credit)\s*\{[^}]*position:\s*(?:fixed|sticky)")
+
+    def test_plane_is_decorative_local_and_respects_reduced_motion(self):
+        page = self.build(self.EXAMS)
+        self.assertIn('<div class="sky" aria-hidden="true">', page)
+        self.assertIn('id="s-plane"', page)
+        self.assertRegex(page, r"\.sky \{[^}]*pointer-events: none")
+        self.assertRegex(page, r"\.sky \{[^}]*z-index: 0")
+        reduced = page[page.index("@media (prefers-reduced-motion: reduce)"):]
+        self.assertIn(".sky *, .sky *::before, .sky *::after { animation: none !important; }",
+                      reduced[:reduced.index("</style>")])
+        self.assertNotIn("<img", page)
+        self.assertNotRegex(page, r"<script[^>]*\bsrc=")
 
 
 class RealSite(unittest.TestCase):

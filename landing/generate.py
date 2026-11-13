@@ -59,7 +59,12 @@ SUBJECT_PATTERNS = [
 OVERRIDES_FILE = os.path.join("landing", "exams.json")
 TEMPLATE_FILE = os.path.join("landing", "template.html")
 
-AR_DIGITS = "٠١٢٣٤٥٦٧٨٩"
+# الأرقام الظاهرة في الواجهة إنجليزية دائمًا (0-9)؛ أي رقم عربي-هندي أو فارسي
+# يرد في عنوان اختبار يُحوَّل عند العرض فقط — البيانات والروابط لا تتغيّر.
+_EASTERN_DIGITS = {}
+for _i in range(10):
+    _EASTERN_DIGITS[0x0660 + _i] = str(_i)  # ٠-٩
+    _EASTERN_DIGITS[0x06F0 + _i] = str(_i)  # ۰-۹
 EMPTY_EXAM_TEXT = "لا توجد اختبارات بعد"
 EMPTY_GRADE_TEXT = "لم يُنشر أي اختبار لهذا الصف بعد"
 
@@ -67,9 +72,9 @@ EMPTY_GRADE_TEXT = "لم يُنشر أي اختبار لهذا الصف بعد"
 # ---------------------------------------------------------------------------
 # 2. أدوات مساعدة
 # ---------------------------------------------------------------------------
-def ar(n):
-    """أرقام عربية-هندية: 7 ← ٧"""
-    return "".join(AR_DIGITS[int(ch)] if ch.isdigit() else ch for ch in str(n))
+def num(value):
+    """أرقام إنجليزية للعرض: 7 ← 7 ، ٧ ← 7"""
+    return str(value).translate(_EASTERN_DIGITS)
 
 
 def count_exams(n):
@@ -80,8 +85,8 @@ def count_exams(n):
     if n == 2:
         return "اختباران"
     if n <= 10:
-        return "%s اختبارات" % ar(n)
-    return "%s اختبارًا" % ar(n)
+        return "%s اختبارات" % num(n)
+    return "%s اختبارًا" % num(n)
 
 
 def count_subjects(n):
@@ -92,8 +97,8 @@ def count_subjects(n):
     if n == 2:
         return "مادتان"
     if n <= 10:
-        return "%s مواد" % ar(n)
-    return "%s مادة" % ar(n)
+        return "%s مواد" % num(n)
+    return "%s مادة" % num(n)
 
 
 def normalize(text):
@@ -102,7 +107,7 @@ def normalize(text):
     text = re.sub("[\u0622\u0623\u0625\u0627\u0671]", "\u0627", text)
     text = re.sub(r"[ىي]", "ي", text)
     text = text.replace("ة", "ه").replace("ؤ", "و").replace("ئ", "ي")
-    text = re.sub(r"[٠-٩]", lambda m: str(ord(m.group(0)) - 0x0660), text)
+    text = num(text)
     text = re.sub(r"\s+", " ", text)
     return text.strip().lower()
 
@@ -246,7 +251,7 @@ def build_home(exams_by_cell):
                 grade - 1,
                 grade,
                 icon("#s-chev", "ic-fwd"),
-                ar(grade),
+                num(grade),
                 grade_name(grade),
                 meta,
                 "".join(dots),
@@ -258,7 +263,7 @@ def build_home(exams_by_cell):
 %s    </div>
   </section>
 """ % (
-        ar(GRADE_MAX),
+        num(GRADE_MAX),
         "".join(cards),
     )
 
@@ -328,11 +333,12 @@ def build_exams_view(grade, key, items):
     hue = subject_hue(key)
     cards = []
     for index, exam in enumerate(items):
-        searchable = "%s %s %s %s %s" % (
+        searchable = "%s %s %s %s الصف %d %s" % (
             exam["title"],
             subject_label(key),
             grade_name(grade),
             GRADES[grade - 1],
+            grade,
             exam["folder"],
         )
         cards.append(
@@ -353,8 +359,8 @@ def build_exams_view(grade, key, items):
                 key,
                 hue,
                 e(normalize(searchable)),
-                ar(index + 1),
-                e(exam["title"]),
+                num(index + 1),
+                e(num(exam["title"])),
                 grade_name(grade),
                 subject_label(key),
                 icon("#s-arrow", "ic-fwd"),
@@ -398,7 +404,7 @@ def build_stats(exams):
         '<li><b>%s</b> صفًّا دراسيًا</li>'
         '<li><b>%s</b> مادة</li>'
         '<li><b>%s</b> اختبارًا منشورًا</li>'
-        % (ar(grades_used), ar(subjects_used), ar(len(exams)))
+        % (num(grades_used), num(subjects_used), num(len(exams)))
     )
 
 
