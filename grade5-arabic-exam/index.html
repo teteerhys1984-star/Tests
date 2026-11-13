@@ -238,6 +238,11 @@ input,textarea,select{font-family:inherit}
 .stat.c1 b{color:#2c8a58}.stat.c2 b{color:#b98a1f}.stat.c3 b{color:#c04a5e}.stat.c4 b{color:var(--purple-600)}.stat.c5 b{color:#a3416f}
 .res-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
 .dl-note{font-size:12.5px;color:var(--ink-faint);font-weight:700;margin-top:12px}
+.send-status{margin:18px auto 0;max-width:560px;padding:11px 16px;border-radius:var(--radius-md);font-weight:800;font-size:14px;line-height:1.8;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;background:var(--lilac-50);border:1.5px solid var(--lilac-200);color:var(--purple-700)}
+.send-status.ok{background:#eaf7ef;border-color:#bfe6cf;color:#2c7a4c}
+.send-status.fail{background:var(--pink-100);border-color:var(--pink-200);color:#a3416f}
+.send-status .btn{padding:9px 18px;font-size:14px}
+.send-note{font-size:13px;color:var(--ink-soft);font-weight:700;text-align:center;margin-top:8px}
 .attempt-info{font-size:12px;color:var(--ink-faint);margin-top:16px;font-weight:600;direction:ltr;unicode-bidi:isolate}
 
 /* ---------- المعلمة ---------- */
@@ -370,6 +375,7 @@ input,textarea,select{font-family:inherit}
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       يبدأ المؤقّت عند ظهور أول سؤال — خذي وقتك وأجيبي بتركيز
     </p>
+    <p class="send-note" id="send-note">عند تسليم الاختبار تُرسَل نتيجتك وإجاباتك إلى معلّمك.</p>
     <button class="teacher-link" id="link-teacher" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
       دخول المعلمة (مفتاح الإجابات)
@@ -478,6 +484,10 @@ input,textarea,select{font-family:inherit}
         إعادة المحاولة
       </button>
     </div>
+    <div class="send-status" id="send-status" role="status" aria-live="polite" hidden>
+      <span id="send-status-text"></span>
+      <button class="btn btn-soft" id="btn-resend" type="button" hidden>إعادة إرسال النتيجة</button>
+    </div>
     <p class="dl-note" id="dl-note"></p>
     <p class="attempt-info" id="attempt-info"></p>
   </section>
@@ -491,7 +501,7 @@ input,textarea,select{font-family:inherit}
       <input id="in-pass" type="password" placeholder="كلمة المرور" autocomplete="off" />
       <div class="err" id="pass-err"></div>
       <button class="btn btn-primary" id="btn-pass" type="button">دخول</button>
-      <p class="gate-note">ملاحظة: هذا ملف مستقل يعمل دون خادم؛ حماية كلمة المرور هنا قيد بسيط على مستوى الواجهة فقط، وليست تشفيراً أو حماية خادمية.</p>
+      <p class="gate-note">ملاحظة: حماية كلمة المرور هنا قيد بسيط على مستوى الواجهة فقط، وليست تشفيراً أو حماية خادمية.</p>
     </div>
     <div id="teacher-key" hidden>
       <div class="key-meta" id="blueprint-meta"></div>
@@ -502,7 +512,7 @@ input,textarea,select{font-family:inherit}
 </main>
 
 <footer class="site-foot">
-  <span>اختبار تفاعلي يعمل محلياً بالكامل — لا تُرسَل أي بيانات خارج جهازك.</span>
+  <span>اختبار تفاعلي — يُحفَظ تقدّمك على جهازك، وعند التسليم تُرسَل نتيجتك وإجاباتك إلى معلّمك.</span>
   <span class="contact-chip">
     المهندس سومر شاهين: <span class="phone num">0930215022</span>
     <a class="wa" href="https://wa.me/963930210522" target="_blank" rel="noopener noreferrer" aria-label="تواصل واتساب">واتساب</a>
@@ -990,7 +1000,7 @@ function freshState() {
     name: "", order: [], idx: 0, optOrders: {},
     startTs: null, submitTs: null, elapsed: 0,
     answers: {}, playedStart: false, playedSubmit: false,
-    report: null, result: null, dlFile: "", autoDl: false
+    report: null, result: null, dlFile: "", autoDl: false, sent: false
   };
 }
 function storageFail() {
@@ -1623,7 +1633,7 @@ function buildReport(result) {
   line(bar);
   line("【 ملاحظات 】");
   line("• الإجابات المقالية قُيّمت آلياً وفق معايير تصحيح معلنة أعلاه؛ يُوصى بأن تراجعها المعلمة مراجعةً نهائية، وتُقبَل كل الصياغات السليمة المكافئة لا النموذج وحده.");
-  line("• أُنشئ هذا التقرير محلياً على جهاز الطالبة، ولم تُرسَل أي بيانات عبر الشبكة.");
+  line("• أُنشئ هذا التقرير محلياً على جهاز الطالبة، وتُرسَل النتيجة والإجابات أيضاً إلكترونياً إلى المعلّم عند التسليم.");
   line("• الأرقام والتواريخ والمدد في هذا التقرير كلها بالأرقام العربية المشرقية (0-9).");
   line("• إعداد: المهندس سومر شاهين — 0930215022");
   line(bar);
@@ -1711,6 +1721,7 @@ function showResults(restored) {
   requestAnimationFrame(() => {
     requestAnimationFrame(() => { fg.style.strokeDashoffset = String(C * (1 - r.total / 100)); });
   });
+  startDelivery();
 }
 
 /* =========================================================
@@ -1724,6 +1735,7 @@ function tryAgain() {
   $("#timer-text").textContent = fmtDurAr(0);
   $("#in-name").value = "";
   $("#review-drawer").hidden = true;
+  setSendStatus("idle");
   show("scr-welcome");
   $("#in-name").focus();
 }
@@ -1782,6 +1794,245 @@ function renderKey() {
 }
 
 /* =========================================================
+   إرسال النتيجة إلى المعلّم (Google Sheets)
+   العقد نفسه المعتمد في الاختبار المرجعي grade5-math-unit1:
+   أسماء الحقول وترتيبها وأنواعها، والمحاولات والمهلة والتخزين المعلّق.
+   لا يُكتب شيء من بيانات الطالبة في console.
+   ========================================================= */
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbwqv4hE1AFy73L7MhyhFwXx0nl4QF5-Nme5jvP-ank-BY_LQr91xA8A_IiQqMuTdh8B/exec";
+const SHEETS_TOKEN = "7U25pymFzsSqmt8ejzPOTPTFJmSvj9Rm";
+const EXAM_ID = "grade5-arabic-exam";
+/* الانتظار قبل المحاولة الثانية ثم الثالثة (3 محاولات في المجموع) */
+const RETRY_DELAYS_MS = [2000, 5000];
+const MAX_ATTEMPTS = RETRY_DELAYS_MS.length + 1;
+/* مهلة المحاولة الواحدة: اتصال معلّق بلا ردّ يُعدّ فشلاً */
+const ATTEMPT_TIMEOUT_MS = 30000;
+/* مفاتيح النتائج المعلّقة لهذا الاختبار: pending:<EXAM_ID>:<attemptId> */
+const PENDING_PREFIX = "pending:" + EXAM_ID + ":";
+const pendingKey = (attemptId) => PENDING_PREFIX + attemptId;
+
+/* سلّم التقدير المعتمد في الاختبار المرجعي — يُرسَل للمعلّم فقط، ولا يُعرض للطالبة ولا يدخل تقرير TXT */
+function gradeLabel(p) {
+  if (p >= 95) return "ممتاز";
+  if (p >= 85) return "جيد جداً";
+  if (p >= 75) return "جيد";
+  if (p >= 65) return "مقبول";
+  if (p >= 50) return "ضعيف";
+  return "يحتاج إلى دعم";
+}
+function stagesOf(q) {
+  return [q.stage, q.stage2].filter((k) => k !== undefined && k !== null && STAGE_NAME[k]);
+}
+/* يبني الحمولة من نتيجة التصحيح المحفوظة نفسها (لا منطق تصحيح جديد هنا) */
+function buildPayload(st) {
+  const r = st.result;
+  let fullQ = 0, partQ = 0, wrongQ = 0;
+  r.rows.forEach((row) => {
+    if (row.got >= row.q.marks) fullQ++;
+    else if (row.got > 0) partQ++;
+    else wrongQ++;
+  });
+  const details = [];
+  r.rows.forEach((row) => {
+    const lessons = stagesOf(row.q).map((k) => STAGE_NAME[k]).join(" + ");
+    row.q.parts.forEach((p, pi) => {
+      const pr = row.parts[pi];
+      details.push({
+        q: row.pos,
+        qTitle: row.q.title,
+        lessons: lessons,
+        label: PART_LETTERS[pi],
+        status: STATUS_WORD[pr.status],
+        awarded: pr.earned,
+        marks: p.marks,
+        studentAnswer: pr.stu && pr.stu.trim() ? pr.stu : "— (لم تُجَب)",
+        correctAnswer: pr.corr
+      });
+    });
+  });
+  return {
+    token: SHEETS_TOKEN,
+    attemptId: st.attemptId,
+    examId: EXAM_ID,
+    examTitle: EXAM.title,
+    studentName: st.name,
+    startAt: new Date(st.startTs).toISOString(),
+    submitAt: new Date(st.submitTs).toISOString(),
+    // ثوانٍ صحيحة بالتقريب نفسه المستعمل في عرض المدة (fmtDur)
+    elapsedSec: Math.max(0, Math.round(st.elapsed / 1000)),
+    summary: {
+      total: r.total,
+      max: EXAM.totalMarks,
+      percentage: r.pct,
+      gradeLabel: gradeLabel(r.pct),
+      fullQuestions: fullQ,
+      partialQuestions: partQ,
+      wrongQuestions: wrongQ,
+      correctSubparts: r.full,
+      partialSubparts: r.part,
+      wrongSubparts: r.wrong,
+      unansweredSubparts: r.empty
+    },
+    // مراحل الدرس التسع؛ السؤال المرتبط بمرحلتين يُحتسب في كلتيهما
+    lessons: Object.keys(STAGE_NAME).map((k) => {
+      let aw = 0, mx = 0;
+      r.rows.forEach((row) => {
+        if (stagesOf(row.q).indexOf(+k) !== -1) { aw += row.got; mx += row.q.marks; }
+      });
+      return { title: STAGE_NAME[k], awarded: aw, max: mx };
+    }),
+    details: details,
+    reportText: st.report || ""
+  };
+}
+
+/* النجاح فقط إذا قُرئ ردّ الخادم وفيه ok:true — أو duplicate:true (المحاولة مسجّلة عنده من قبل) */
+function isAccepted(data) {
+  return typeof data === "object" && data !== null && (data.ok === true || data.duplicate === true);
+}
+/* محاولة واحدة. text/plain مقصود: application/json يستدعي طلب CORS تمهيدياً لا يجيب عنه Apps Script.
+   خطأ الشبكة، أو ردّ ليس JSON، أو انتهاء المهلة = فشل (false). */
+async function postOnce(body) {
+  let timer;
+  try {
+    const ctrl = typeof AbortController === "function" ? new AbortController() : null;
+    const init = {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: body,
+      redirect: "follow"
+    };
+    if (ctrl) init.signal = ctrl.signal;
+    const reply = window.fetch(SHEETS_URL, init).then((res) => res.text());
+    reply.catch(() => {});
+    const timeout = new Promise((_, reject) => {
+      timer = setTimeout(() => {
+        try { if (ctrl) ctrl.abort(); } catch (e) { /* لا شيء */ }
+        reject(new Error("timeout"));
+      }, ATTEMPT_TIMEOUT_MS);
+    });
+    return isAccepted(JSON.parse(await Promise.race([reply, timeout])));
+  } catch (e) {
+    return false;
+  } finally {
+    if (timer !== undefined) clearTimeout(timer);
+  }
+}
+/* حتى 3 محاولات بالحمولة نفسها والمعرّف نفسه. لا ترمي خطأً أبداً. */
+async function deliver(payload) {
+  try {
+    const body = JSON.stringify(payload);
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+      if (attempt > 0) await new Promise((resolve) => setTimeout(resolve, RETRY_DELAYS_MS[attempt - 1]));
+      if (await postOnce(body)) return true;
+    }
+  } catch (e) { /* يُعدّ فشلاً */ }
+  return false;
+}
+function savePending(payload) {
+  try { localStorage.setItem(pendingKey(payload.attemptId), JSON.stringify(payload)); return true; }
+  catch (e) { return false; }
+}
+function dropPending(key) {
+  try { localStorage.removeItem(key); } catch (e) { /* التخزين غير متاح */ }
+}
+function readPending(key) {
+  try {
+    const data = JSON.parse(localStorage.getItem(key) || "null");
+    return typeof data === "object" && data !== null && !Array.isArray(data) && typeof data.attemptId === "string" ? data : null;
+  } catch (e) { return null; }
+}
+/* إن أُغلقت الصفحة أو أُخفيت والإرسال جارٍ تُحفظ الحمولة فوراً كي لا تضيع؛ وتُحذف عند نجاح الإرسال */
+function onPageExit(saveNow) {
+  const onHide = () => saveNow();
+  const onVis = () => { if (document.visibilityState === "hidden") saveNow(); };
+  window.addEventListener("pagehide", onHide);
+  document.addEventListener("visibilitychange", onVis);
+  return () => {
+    window.removeEventListener("pagehide", onHide);
+    document.removeEventListener("visibilitychange", onVis);
+  };
+}
+/* حارس التكرار: إرسال واحد جارٍ على الأكثر لكل attemptId، وما أكّد الخادم استلامه لا يُرسَل ثانيةً */
+const sendInFlight = {};
+const sendDelivered = {};
+function sendResult(payload) {
+  const id = payload.attemptId;
+  if (sendDelivered[id]) return Promise.resolve(true);
+  if (sendInFlight[id]) return sendInFlight[id];
+  const stopWatching = onPageExit(() => savePending(payload));
+  const job = deliver(payload).then((ok) => {
+    stopWatching();
+    delete sendInFlight[id];
+    if (ok) { sendDelivered[id] = true; dropPending(pendingKey(id)); }
+    else savePending(payload);
+    return ok;
+  });
+  sendInFlight[id] = job;
+  return job;
+}
+/* عند فتح الاختبار: إعادة إرسال النتائج المعلّقة لهذا الاختبار بصمت، وحذف ما نجح منها */
+let pendingFlush = null;
+function retryPending() {
+  if (!pendingFlush) pendingFlush = flushPending().then((n) => { pendingFlush = null; return n; });
+  return pendingFlush;
+}
+async function flushPending() {
+  let sent = 0;
+  try {
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.indexOf(PENDING_PREFIX) === 0) keys.push(k);
+    }
+    for (const k of keys) {
+      const stored = readPending(k);
+      if (!stored || pendingKey(stored.attemptId) !== k) continue;
+      // الرمز خاص بنسخة الصفحة الحالية لا بالمحاولة
+      if (await sendResult(Object.assign({}, stored, { token: SHEETS_TOKEN }))) sent++;
+    }
+  } catch (e) { /* صامت: يُعاد عند الفتح القادم */ }
+  return sent;
+}
+
+/* ---------- حالة الإرسال في صفحة النتيجة ---------- */
+let sendUi = "idle";
+function setSendStatus(state, savedLocally) {
+  sendUi = state;
+  const box = $("#send-status"), txt = $("#send-status-text"), btn = $("#btn-resend");
+  if (!box || !txt || !btn) return;
+  box.hidden = state === "idle";
+  box.className = "send-status" + (state === "success" ? " ok" : state === "failed" ? " fail" : "");
+  btn.hidden = state !== "failed";
+  if (state === "sending") txt.textContent = "جارٍ إرسال النتيجة…";
+  else if (state === "success") txt.textContent = "تم إرسال نتيجتك إلى معلّمك ✓";
+  else if (state === "failed") {
+    txt.textContent = savedLocally
+      ? "تعذّر إرسال نتيجتك إلى معلّمك. نتيجتك محفوظة على هذا الجهاز وسنحاول إرسالها تلقائياً عند فتح الاختبار لاحقاً، أو اضغطي «إعادة إرسال النتيجة» الآن."
+      : "تعذّر إرسال نتيجتك إلى معلّمك. تأكّدي من اتصال الإنترنت ثم اضغطي «إعادة إرسال النتيجة»، ولا تغلقي الصفحة قبل نجاح الإرسال.";
+  } else txt.textContent = "";
+}
+/* يرسل نتيجة المحاولة الحالية في الخلفية؛ النتيجة تبقى ظاهرة للطالبة مهما كانت حالة الإرسال */
+function startDelivery() {
+  if (!S || S.status !== "submitted" || !S.result) return;
+  if (S.sent) { setSendStatus("success"); return; }
+  const id = S.attemptId;
+  let payload = null;
+  try { payload = buildPayload(S); } catch (e) { payload = null; }
+  if (!payload) { setSendStatus("failed", false); return; }
+  setSendStatus("sending");
+  sendResult(payload).then((ok) => {
+    if (!S || S.attemptId !== id) return; // بدأت محاولة جديدة؛ لا تُمسّ واجهتها
+    if (ok) { S.sent = true; save(); }
+    setSendStatus(ok ? "success" : "failed", !!readPending(pendingKey(id)));
+  });
+}
+function resendResult() {
+  if (sendUi !== "failed") return;
+  startDelivery();
+}
+
+/* =========================================================
    التهيئة والتوجيه
    ========================================================= */
 function wire() {
@@ -1795,6 +2046,7 @@ function wire() {
     if (S.report && S.dlFile) { try { performDownload(S.report, S.dlFile); } catch (e) { alert("تعذّر التنزيل من هذا المتصفح."); } }
   };
   $("#btn-retry").onclick = tryAgain;
+  $("#btn-resend").onclick = resendResult;
   $("#link-teacher").onclick = () => { teacherFrom = "scr-welcome"; location.hash = "teacher"; show("scr-teacher"); };
   $("#btn-teacher-back").onclick = () => { history.replaceState(null, "", location.pathname + location.search); show(teacherFrom); if (teacherFrom === "scr-exam") startTicker(); };
   $("#btn-pass").onclick = tryPass;
@@ -1836,6 +2088,10 @@ function init() {
   loadState();
   wire();
   qaSelfCheck();
+  route();
+  retryPending();
+}
+function route() {
   if (location.hash === "#teacher" && S.status !== "active") { show("scr-teacher"); return; }
   if (S.status === "submitted" && S.result) { showResults(true); return; }
   if (S.status === "active" && S.order.length === QUESTIONS.length) { enterExam(); return; }

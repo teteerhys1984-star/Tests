@@ -1,0 +1,14 @@
+{
+  "name": "grade5-arabic-exam",
+  "private": true,
+  "version": "1.0.0",
+  "description": "اختبار اللغة العربية التفاعلي — الصف الخامس — الدرس الثاني: صفحة HTML واحدة مستقلة تُنسخ إلى dist/index.html للنشر على GitHub Pages.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test \"tests/*.test.mjs\""
+  },
+  "devDependencies": {
+    "jsdom": "29.1.1"
+  }
+}
