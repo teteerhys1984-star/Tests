@@ -1,0 +1,73 @@
+{
+  "provenance": {
+    "project": "grade5-math-unit1",
+    "submitSha256": "7d495457a55ab26eafac00207c780c2fbb7f226e95d4d3a28894e0994eabeba4",
+    "reportSha256": "30ed5b20014a02f0fe14235ce70970fa2fea6cccdf5171787ef9814454bf3011",
+    "configSha256": "de9628c1dbe34d60d31d32694f808317acad1371e5dae1523e3c1e29e215a56a"
+  },
+  "url": "https://script.google.com/macros/s/AKfycbwqv4hE1AFy73L7MhyhFwXx0nl4QF5-Nme5jvP-ank-BY_LQr91xA8A_IiQqMuTdh8B/exec",
+  "token": "7U25pymFzsSqmt8ejzPOTPTFJmSvj9Rm",
+  "payload": {
+    "token": "string",
+    "attemptId": "string",
+    "examId": "string",
+    "examTitle": "string",
+    "studentName": "string",
+    "startAt": "string",
+    "submitAt": "string",
+    "elapsedSec": "number",
+    "summary": "object",
+    "lessons": "array",
+    "details": "array",
+    "reportText": "string"
+  },
+  "summary": {
+    "total": "number",
+    "max": "number",
+    "percentage": "number",
+    "gradeLabel": "string",
+    "fullQuestions": "number",
+    "partialQuestions": "number",
+    "wrongQuestions": "number",
+    "correctSubparts": "number",
+    "partialSubparts": "number",
+    "wrongSubparts": "number",
+    "unansweredSubparts": "number"
+  },
+  "lesson": {
+    "title": "string",
+    "awarded": "number",
+    "max": "number"
+  },
+  "detail": {
+    "q": "number",
+    "qTitle": "string",
+    "lessons": "string",
+    "label": "string",
+    "status": "string",
+    "awarded": "number",
+    "marks": "number",
+    "studentAnswer": "string",
+    "correctAnswer": "string"
+  },
+  "statuses": {
+    "correct": "إجابة صحيحة",
+    "partial": "إجابة صحيحة جزئياً",
+    "wrong": "إجابة خاطئة",
+    "unanswered": "لم يُجب"
+  },
+  "gradeLabels": {
+    "0": "يحتاج إلى دعم",
+    "50": "ضعيف",
+    "65": "مقبول",
+    "75": "جيد",
+    "85": "جيد جداً",
+    "95": "ممتاز",
+    "100": "ممتاز",
+    "49.99": "يحتاج إلى دعم",
+    "64.99": "ضعيف",
+    "74.99": "مقبول",
+    "84.99": "جيد",
+    "94.99": "جيد جداً"
+  }
+}

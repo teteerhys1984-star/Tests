@@ -62,9 +62,10 @@ const fmtMark = (n) => {
 };
 function uuid() {
   try {
-    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-  } catch (e) {}
-  return "att-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+    if (window.crypto && typeof window.crypto.randomUUID === "function") return window.crypto.randomUUID();
+  } catch (e) { /* المتصفحات القديمة تستخدم البديل الآتي */ }
+  const rand = () => Math.random().toString(36).slice(2, 10);
+  return `${Date.now()}-${rand()}${rand()}`;
 }
 /* تطبيع الأرقام: يقبل الأرقام العربية والفارسية والفواصل والكسور والواحدات */
 function parseNumericInput(raw, expectedUnit) {
@@ -98,8 +99,8 @@ function parseNumericInput(raw, expectedUnit) {
 const numericClose = (x, ans) => Math.abs(x - ans) <= Math.max(0.02, Math.abs(ans) * 1e-9);
 
 /* ---------- الحالة والتخزين ---------- */
-const STORE_KEY = "G8PHYS_U1L12_EXAM_ATTEMPT_V1";
-const ARCHIVE_KEY = "G8PHYS_U1L12_EXAM_ARCHIVE_V1";
+const STORE_KEY = `exam:${EXAM_ID}:attempt:v1`;
+const ARCHIVE_KEY = `exam:${EXAM_ID}:archive:v1`;
 let storageFailed = false;
 let S = null;
 
@@ -117,6 +118,7 @@ function freshState() {
     submittedAt: null,
     results: null,
     report: null,
+    sendStatus: "idle",
     startSoundPlayed: false,
     submitSoundPlayed: false,
     screen: "welcome",
@@ -201,7 +203,7 @@ function pageFooter() {
     <div class="foot-brand">${esc(EXAM.title)}</div>
     <div class="foot-line">${esc(EXAM.subject)} — ${esc(EXAM.grade)} — يشمل: ${esc(EXAM.lesson1)} · ${esc(EXAM.lesson2)}</div>
     <div class="foot-line">${esc(EXAM.contact)} — <a href="${EXAM.whatsapp}" target="_blank" rel="noopener">واتساب</a></div>
-    <div class="foot-line">يعمل هذا الاختبار دون اتصال بالإنترنت، ولا تُرسَل بيانات الطالب إلى أي جهة خارجية.</div>
+    <div class="foot-line">تُرسَل نتيجة الطالب وإجاباته وتقريره إلى المعلّم عند التسليم عبر الإنترنت، ويمكن حفظها مؤقتاً على هذا الجهاز لإعادة الإرسال عند التعذّر.</div>
   </footer>`;
 }
 function examTopBar() {
@@ -257,6 +259,7 @@ function renderWelcome() {
           <li><span class="num-chip">4</span><span>لا تظهر أي تلميحات أو نتائج أثناء الاختبار؛ وحالة الأسئلة في المراجعة تشير إلى المُجاب وغير المُجاب فقط.</span></li>
           <li><span class="num-chip">5</span><span>زرّ «تسليم الاختبار» لا يعمل إلا بعد إجابة جميع الفروع، والتسليم يتم بضغطة واحدة وتنزيل تقريرك فوراً.</span></li>
           <li><span class="num-chip">6</span><span>للأسئلة العددية: اكتب القيمة بالأرقام في الخانة المخصصة، والواحدة المطلوبة مبيّنة بجانبها.</span></li>
+          <li><span class="num-chip">7</span><span>عند التسليم تُرسَل نتيجتك وإجاباتك وتقريرك إلى المعلّم عبر الإنترنت. إذا تعذّر الإرسال، يمكن إعادة المحاولة لاحقاً.</span></li>
         </ul>
       </section>
       <section class="card panel">
