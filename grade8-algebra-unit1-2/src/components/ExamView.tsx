@@ -186,7 +186,7 @@ function SubpartCard({
   const answered = isPartAnswered(part, answer);
 
   return (
-    <section className={`subpart-card ${answered ? 'is-answered' : ''}`} aria-labelledby={`${part.id}-label`}>
+    <section className={`subpart-card ${answered ? 'is-answered' : ''}`} aria-labelledby={`${part.id}-label`} data-subpart-id={part.id}>
       <div className="subpart-head">
         <div className="subpart-title-wrap">
           <span className="subpart-letter" aria-hidden="true">{part.label}</span>
@@ -403,6 +403,7 @@ function SubpartInput({
                   type="button"
                   key={id}
                   className="order-token"
+                  data-item-id={id}
                   onClick={() => onAnswer(part.id, [...chosen, id])}
                   aria-label="أضف إلى الترتيب"
                 >

@@ -11,6 +11,14 @@ import {
 import type { StoredAttempt } from './lib/storage';
 import { loadAttempt, saveAttempt, clearAttempt, newAttemptId } from './lib/storage';
 import { buildReport, reportFilename, triggerReportDownload } from './lib/report';
+import {
+  buildPayload,
+  hasPending,
+  retryPending,
+  sendWithRetry,
+  type SendStatus,
+  type SubmissionPayload,
+} from './lib/submit';
 import { playStartCue, playSubmitCue } from './lib/audio';
 import { Cover } from './components/Cover';
 import { ExamView } from './components/ExamView';
@@ -45,6 +53,66 @@ export default function App() {
       : '',
   );
   const [restoredNotice, setRestoredNotice] = useState(boot.attempt?.status === 'active');
+
+  /** حالة إرسال النتيجة إلى المعلّم — تُستعاد من نتيجة آخر إرسال محفوظة أو من قائمة المعلّق. */
+  const [sendStatus, setSendStatus] = useState<SendStatus>(() => {
+    if (boot.attempt?.status !== 'submitted') return 'idle';
+    if (boot.attempt.sendOutcome === 'success') return 'success';
+    if (boot.attempt.sendOutcome === 'failed' || hasPending(boot.attempt.attemptId)) return 'failed';
+    return 'idle';
+  });
+  /** الحمولة المعروضة حالياً (يعيد زر «إعادة إرسال النتيجة» إرسالها بالمعرّف نفسه). */
+  const outbox = useRef<SubmissionPayload | null>(null);
+  const sending = useRef<SubmissionPayload | null>(null);
+
+  const markSendOutcome = useCallback((outcome: 'success' | 'failed') => {
+    const current = attemptRef.current;
+    if (!current || current.status !== 'submitted') return;
+    const next: StoredAttempt = { ...current, sendOutcome: outcome, lastSavedAt: Date.now() };
+    attemptRef.current = next;
+    setAttempt(next);
+    saveAttempt(next);
+  }, []);
+
+  const sendResult = useCallback(
+    (payload: SubmissionPayload) => {
+      if (sending.current === payload) return;
+      sending.current = payload;
+      setSendStatus('sending');
+      void sendWithRetry(payload).then((ok) => {
+        if (sending.current === payload) sending.current = null;
+        // تُهمل النتيجة إن بدأ الطالب محاولة جديدة في هذه الأثناء
+        if (outbox.current !== payload) return;
+        setSendStatus(ok ? 'success' : 'failed');
+        markSendOutcome(ok ? 'success' : 'failed');
+      });
+    },
+    [markSendOutcome],
+  );
+
+  const handleResend = useCallback(() => {
+    const current = attemptRef.current;
+    if (!current || current.status !== 'submitted' || sending.current) return;
+    try {
+      const result = gradeExam(current.answers);
+      const report = buildReport(current, result);
+      const payload = buildPayload({
+        attemptId: current.attemptId,
+        meta: {
+          studentName: current.studentName,
+          startedAt: current.startedAt,
+          submittedAt: current.submittedAt ?? current.startedAt,
+          elapsedMs: current.elapsedMs ?? Math.max(0, (current.submittedAt ?? current.startedAt) - current.startedAt),
+        },
+        result,
+        reportText: report,
+      });
+      outbox.current = payload;
+      sendResult(payload);
+    } catch {
+      setSendStatus('failed');
+    }
+  }, [sendResult]);
 
   const persist = useCallback((next: StoredAttempt) => {
     const ok = saveAttempt(next);
@@ -85,6 +153,23 @@ export default function App() {
     const id = window.setTimeout(() => setRestoredNotice(false), 9000);
     return () => window.clearTimeout(id);
   }, [restoredNotice]);
+
+  /* إعادة إرسال النتائج المعلّقة تلقائياً عند فتح الاختبار (بلا أي تدخل من الطالب). */
+  useEffect(() => {
+    let alive = true;
+    void retryPending().then((sent) => {
+      if (!alive || sent === 0) return;
+      const current = attemptRef.current;
+      if (!current || current.status !== 'submitted') return;
+      if (!hasPending(current.attemptId)) {
+        setSendStatus('success');
+        markSendOutcome('success');
+      }
+    });
+    return () => {
+      alive = false;
+    };
+  }, [markSendOutcome]);
 
   useEffect(() => {
     const persistCurrent = () => {
@@ -158,6 +243,9 @@ export default function App() {
     setNow(startedAt);
     setDownloadNote('');
     setTeacherOpen(false);
+    outbox.current = null;
+    sending.current = null;
+    setSendStatus('idle');
     setView('exam');
     scrollTop();
   };
@@ -232,6 +320,29 @@ export default function App() {
 
     if (!current.submissionCuePlayed) playSubmitCue();
     setView('results');
+
+    // إرسال النتيجة إلى المعلّم: يبدأ بعد عرض النتيجة وتنزيل التقرير، ولا ينتظره أيٌّ منهما،
+    // وأي خلل فيه لا يمسّ صفحة النتيجة ولا ملف التقرير الاحتياطي.
+    try {
+      const payload = buildPayload({
+        attemptId: finished.attemptId,
+        meta: {
+          studentName: finished.studentName,
+          startedAt: finished.startedAt,
+          submittedAt,
+          elapsedMs: finished.elapsedMs ?? 0,
+        },
+        result,
+        reportText: report,
+      });
+      outbox.current = payload;
+      sendResult(payload);
+    } catch {
+      outbox.current = null;
+      setSendStatus('failed');
+      markSendOutcome('failed');
+    }
+
     setSubmitting(false);
     submittingRef.current = false;
     scrollTop();
@@ -263,6 +374,9 @@ export default function App() {
         : 'تعذر حذف المحاولة السابقة من التخزين المحلي. قد تعود النتيجة السابقة عند إعادة فتح الصفحة.',
     );
     setRestoredNotice(false);
+    outbox.current = null;
+    sending.current = null;
+    setSendStatus('idle');
     submittingRef.current = false;
     setSubmitting(false);
     scrollTop();
@@ -333,6 +447,8 @@ export default function App() {
           result={submittedResult}
           downloadNote={downloadNote}
           reportFilename={attempt.reportFilename ?? reportFilename(attempt.studentName)}
+          sendStatus={sendStatus}
+          onResend={handleResend}
           onDownload={handleDownload}
           onRetry={handleRetry}
           onTeacher={openTeacher}

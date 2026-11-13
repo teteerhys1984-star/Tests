@@ -1,7 +1,7 @@
 import type { Answers, OptionOrder } from './exam';
 import { EXAM_META } from './exam';
 
-export const STORAGE_KEY = 'algebra_nexus_grade8_attempt_v1';
+export const STORAGE_KEY = 'grade8-algebra-unit1-2_attempt_v1';
 
 export interface StoredAttempt {
   schemaVersion: 1;
@@ -22,6 +22,8 @@ export interface StoredAttempt {
   startCuePlayed: boolean;
   submissionCuePlayed: boolean;
   reportFilename: string | null;
+  /** نتيجة آخر إرسال للنتيجة إلى المعلّم (اتجاهل «sending» لأنه حالة مؤقتة). */
+  sendOutcome?: 'success' | 'failed';
   resultSummary?: {
     earned: number;
     max: number;
@@ -50,7 +52,8 @@ function isAttempt(value: unknown): value is StoredAttempt {
     typeof v.optionOrder === 'object' &&
     typeof v.currentIndex === 'number' &&
     typeof v.startedAt === 'number' &&
-    (v.activeView === undefined || v.activeView === 'exam' || v.activeView === 'review')
+    (v.activeView === undefined || v.activeView === 'exam' || v.activeView === 'review') &&
+    (v.sendOutcome === undefined || v.sendOutcome === 'success' || v.sendOutcome === 'failed')
   );
 }
 

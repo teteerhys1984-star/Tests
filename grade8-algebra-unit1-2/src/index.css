@@ -3161,6 +3161,87 @@ input[type="password"]:focus {
   flex-wrap: wrap;
 }
 
+
+/* --- حالة إرسال النتيجة إلى المعلّم --- */
+.send-panel {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 16px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(127, 174, 227, 0.16);
+  background: rgba(7, 19, 37, 0.55);
+}
+
+.send-panel-copy {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.send-panel-icon {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid rgba(94, 214, 247, 0.24);
+  background: rgba(35, 170, 210, 0.12);
+  color: var(--cyan);
+}
+
+.send-panel-copy strong {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text);
+}
+
+.send-panel-copy p {
+  font-size: 0.66rem;
+  line-height: 1.75;
+  color: var(--muted-2);
+  margin-top: 2px;
+  max-width: 72ch;
+}
+
+.send-success .send-panel-icon {
+  color: #8bf0c4;
+  border-color: rgba(96, 230, 175, 0.3);
+  background: rgba(36, 190, 130, 0.14);
+}
+
+.send-failed .send-panel-icon {
+  color: #ffb4a4;
+  border-color: rgba(255, 150, 130, 0.32);
+  background: rgba(210, 80, 60, 0.16);
+}
+
+.send-sending .send-panel-icon {
+  color: #ffe08a;
+  border-color: rgba(255, 217, 122, 0.3);
+  background: rgba(220, 170, 50, 0.14);
+}
+
+.send-resend-btn {
+  flex: none;
+}
+
+@media (max-width: 640px) {
+  .send-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .send-resend-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .results-privacy {
   display: flex;
   align-items: center;
