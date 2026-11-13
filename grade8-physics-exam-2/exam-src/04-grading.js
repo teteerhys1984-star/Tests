@@ -139,7 +139,7 @@ function buildReport(res) {
   L.push("");
   L.push("[5] خاتمة");
   L.push(thin);
-  L.push("أُنشئ هذا التقرير محلياً على جهاز الطالب لحظة التسليم، ولم تُرسَل أي بيانات عبر الشبكة.");
+  L.push("أُنشئ هذا التقرير محلياً على جهاز الطالب لحظة التسليم، وتُرسَل النتيجة وإجابات الطالب وتقريره إلى المعلّم عبر الإنترنت عند التسليم، وقد تُعاد المحاولة لاحقاً عند تعذّر الاتصال.");
   L.push(`${EXAM.contact}`);
   L.push(sep);
   return L.join("\r\n");
@@ -187,8 +187,11 @@ function submitExam() {
   downloadReport(report, filename);
   if (!S.submitSoundPlayed) { S.submitSoundPlayed = true; saveState(); playSound(AUDIO_SUBMIT); }
   S.screen = "results";
+  S.sendStatus = "sending";
   saveState();
   renderApp();
+  // الإرسال في الخلفية؛ لا يؤخر النتيجة أو تنزيل التقرير.
+  sendCurrentResult();
 }
 
 /* ---------- شاشة النتائج ---------- */
@@ -218,6 +221,7 @@ function renderResults() {
       <div class="stat-card"><div class="stat-num" dir="ltr">${fmtDur(res.durationMs)}</div><div class="stat-label">الزمن الكلي</div></div>
       <div class="stat-card"><div class="stat-num" dir="ltr">${TOTAL_PARTS}</div><div class="stat-label">عدد أجزاء الاختبار</div></div>
     </div>
+    ${sendStatusHtml()}
     <section class="card panel mt-16 text-center">
       <p style="font-size:14px;color:var(--slate);margin-top:0">بدأ تنزيل تقريرك النصي تلقائياً لحظة التسليم؛ إذا منع متصفحك التنزيل التلقائي فاستخدم الزر التالي للحصول على الملف نفسه:</p>
       <div class="results-actions" style="margin-top:10px">
@@ -358,6 +362,8 @@ function bindScreenEvents() {
   if (reportBtn && S.report) reportBtn.addEventListener("click", () => downloadReport(S.report.text, S.report.filename));
   const retryBtn = $("#btn-retry");
   if (retryBtn) retryBtn.addEventListener("click", tryAgain);
+  const resendBtn = $("#btn-resend");
+  if (resendBtn) resendBtn.addEventListener("click", sendCurrentResult);
 
   /* أحداث التنقل */
   $$("[data-nav]", app).forEach((el) => {
@@ -483,4 +489,5 @@ function tryAgain() {
     S = freshState();
   }
   renderApp();
+  initializeSheets();
 })();

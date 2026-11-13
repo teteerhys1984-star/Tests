@@ -5,8 +5,9 @@
    ============================================================ */
 "use strict";
 
+const EXAM_ID = "grade8-physics-exam-2";
 const EXAM = {
-  id: "G8-PHYS-U1-L1L2-EXAM",
+  id: EXAM_ID,
   version: "1.0",
   title: "اختبار الفيزياء — الوحدة الأولى: الحركة والقوى",
   shortTitle: "اختبار الوحدة الأولى",
@@ -55,9 +56,9 @@ const DIAGRAMS = {
     <line x1="150" y1="270" x2="330" y2="30" stroke="${C_TEAL}" stroke-width="5" marker-end="url(#ah-p68-t)"/>
     <path d="M162 270 L162 258 L150 258" fill="none" stroke="${C_ROD}" stroke-width="2"/>
     <circle cx="150" cy="270" r="5.5" fill="${C_NAVY}"/>
-    <text x="126" y="296" font-size="16" font-weight="700" fill="${C_NAVY}">O</text>
+    <text x="132" y="294" font-size="16" font-weight="700" fill="${C_NAVY}">O</text>
     <text x="342" y="26" font-size="16" font-weight="700" fill="${C_NAVY}">M</text>
-    <text x="222 y="296" font-size="16" font-weight="700" fill="${C_NAVY}">F₁ = 6 N</text>
+    <text x="200" y="294" font-size="16" font-weight="700" fill="${C_NAVY}">F₁ = 6 N</text>
     <text x="112" y="160" font-size="16" font-weight="700" fill="${C_BLUE}" transform="rotate(-90 112 160)" text-anchor="middle">F₂ = 8 N</text>
     <text x="268" y="186" font-size="16" font-weight="800" fill="${C_TEAL}" transform="rotate(-37 268 186)">F</text>
   </svg>`,
@@ -127,7 +128,7 @@ const DIAGRAMS = {
     <text x="152" y="192" font-size="15.5" font-weight="800" fill="${C_TEAL}" transform="rotate(-36.9 152 192)">F = 25 N</text>
   </svg>`,
   /* س11(ب): المستوى المائل الأملس — تحليل الثقل */
-  incline: `<svg viewBox="10 28 320 205" role="img" aria-label="تحليل قوة الثقل على مستوى مائل أملس">
+  incline: `<svg viewBox="0 0 640 330" role="img" aria-label="تحليل قوة الثقل على مستوى مائل أملس">
     ${AHEAD("ah-inc-w", C_NAVY)}${AHEAD("ah-inc-1", C_BLUE)}${AHEAD("ah-inc-2", C_BLUE)}${AHEAD("ah-inc-r", C_TEAL)}
     <polygon points="56.8,70 230,170 56.8,170" fill="#eef4fa" stroke="#b9c6d6" stroke-width="1.8"/>
     <line x1="22" y1="170" x2="330" y2="170" stroke="${C_ROD}" stroke-width="3"/>

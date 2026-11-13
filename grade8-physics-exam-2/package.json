@@ -6,7 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync": "node scripts/sync-exam.mjs",
+    "prebuild": "node scripts/sync-exam.mjs",
+    "predev": "node scripts/sync-exam.mjs",
+    "test": "node tests/run.mjs",
+    "test:reference": "node scripts/check-reference.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",
@@ -20,6 +25,8 @@
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.1.1",
+    "fake-indexeddb": "6.2.4",
+    "jsdom": "29.1.1",
     "tailwindcss": "4.1.17",
     "typescript": "5.9.3",
     "vite": "7.3.7",

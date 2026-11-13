@@ -2,7 +2,7 @@
 import fs from "fs";
 import { JSDOM } from "jsdom";
 
-const HTML = fs.readFileSync(process.argv[2] || "/home/user/sandbox/Grade8_Physics_Unit1_Lessons1-2_Interactive_Exam.html", "utf-8");
+const HTML = fs.readFileSync(process.argv[2] || new URL("../index.html", import.meta.url), "utf-8");
 let pass = 0, fail = 0;
 const results = [];
 function check(name, cond, extra = "") {
@@ -18,6 +18,9 @@ function makeWindow(persistedStorage = null) {
     pretendToBeVisual: true,
     beforeParse(window) {
       window.scrollTo = () => {};
+      // This QA harness must never contact Google Sheets.
+      window.fetch = async () => ({ text: async () => '{"ok":true}' });
+      window.Audio = function () { this.play = () => Promise.resolve(); };
       window.URL.createObjectURL = () => "blob:mock-" + downloads.length;
       window.URL.revokeObjectURL = () => {};
       const origClick = window.HTMLAnchorElement.prototype.click;
@@ -45,7 +48,7 @@ const qa = (window, sel) => [...window.document.querySelectorAll(sel)];
 
 /* Get exam internals from the window (script scope is closure, so replicate reads from localStorage state). */
 function getState(window) {
-  const raw = window.localStorage.getItem("G8PHYS_U1L12_EXAM_ATTEMPT_V1");
+  const raw = window.localStorage.getItem("exam:grade8-physics-exam-2:attempt:v1");
   return raw ? JSON.parse(raw) : null;
 }
 /* Answer maps reconstructed from the data: we expose them by evaluating textContent? No — replay logic:
@@ -69,7 +72,7 @@ function answerAllCorrect(window) {
   const ctx = vmMod.createContext({});
   vmMod.runInContext(dataM[0] + ";globalThis.QS = QUESTIONS;", ctx);
   const QS = ctx.QS;
-  const state0 = { KEY: "G8PHYS_U1L12_EXAM_ATTEMPT_V1" };
+  const state0 = { KEY: "exam:grade8-physics-exam-2:attempt:v1" };
 
   const correctAns = (p) => {
     if (p.type === "mcq") return p.correct;
@@ -309,7 +312,7 @@ function answerAllCorrect(window) {
       // elapsed accuracy: elapsed from timestamp despite JS pause
       const fakePast = st2.startedAt - 5000;
       st2.startedAt = fakePast;
-      w2.window.localStorage.setItem("G8PHYS_U1L12_EXAM_ATTEMPT_V1", JSON.stringify(st2));
+      w2.window.localStorage.setItem("exam:grade8-physics-exam-2:attempt:v1", JSON.stringify(st2));
       const w3 = makeWindow(dumpStorage(w2.window));
       const swText = q(w3.window, "#sw-display").textContent;
       check("D8 elapsed computed from timestamps (>=5s)", /^\d{2}:\d{2}:(0[5-9]|1\d)/.test(swText), swText);
