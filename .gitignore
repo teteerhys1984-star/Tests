@@ -1,3 +1,5 @@
 node_modules
 dist
 .tmp-test
+_site
+__pycache__
