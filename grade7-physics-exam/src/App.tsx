@@ -1,7 +1,16 @@
 // @ts-nocheck
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EXAM_META, QUESTIONS, GRAPHS, TEACHER_PASSWORD, PART_LABELS } from "./exam-data.js";
 import * as R from "./report.js";
+import {
+  buildAttemptReport,
+  buildPayload,
+  newAttemptId,
+  retryPending,
+  sendWithRetry,
+  type SendStatus,
+  type SubmissionPayload,
+} from "./submit";
 
 R.bindGraphs(GRAPHS);
 
@@ -18,7 +27,13 @@ type Session = {
   current: number; visited: number[]; order: number[];
   startTs: number | null; submitTs: number | null; elapsedMs: number | null;
   sounds: { start: boolean; submit: boolean };
-  results: null | { score: number; total: number; percent: number; counts: Record<string, number>; details: any[]; reportText: string; fileName: string };
+  results: null | {
+    score: number; total: number; percent: number; counts: Record<string, number>;
+    details: any[]; reportText: string; fileName: string;
+    attemptId: string; startTs: number; submitTs: number;
+  };
+  /** حالة إرسال النتيجة إلى المعلّم (تُحفظ كي تبقى واضحة بعد إعادة فتح الصفحة). */
+  delivery: SendStatus;
 };
 
 function freshSession(): Session {
@@ -29,6 +44,7 @@ function freshSession(): Session {
     startTs: null, submitTs: null, elapsedMs: null,
     sounds: { start: false, submit: false },
     results: null,
+    delivery: "idle",
   };
 }
 
@@ -172,8 +188,53 @@ export default function App() {
   const [teacherOpen, setTeacherOpen] = useState(false);
   const [teacherUnlocked, setTeacherUnlocked] = useState(false);
   const [storageWarn, setStorageWarn] = useState(false);
+  /** الحمولة المعروضة حالياً (يعيد زر «إعادة إرسال النتيجة» إرسالها)، والحمولة الجاري إرسالها الآن. */
+  const outbox = useRef<SubmissionPayload | null>(null);
+  const sending = useRef<SubmissionPayload | null>(null);
 
   useEffect(() => { SRef.current = S; persistSession(S, () => setStorageWarn(true)); }, [S]);
+
+  /* ---------- إعادة إرسال النتائج المعلّقة من محاولات سابقة، بصمت، عند فتح الاختبار ---------- */
+  useEffect(() => {
+    void retryPending();
+  }, []);
+
+  /* ---------- إرسال النتيجة إلى المعلّم في الخلفية (لا ينتظره شيء في الواجهة) ---------- */
+  const sendResult = useCallback((payload: SubmissionPayload) => {
+    if (sending.current === payload) return;
+    sending.current = payload;
+    setS((s) => (s.results?.attemptId === payload.attemptId ? { ...s, delivery: "sending" } : s));
+    void sendWithRetry(payload).then((ok) => {
+      if (sending.current === payload) sending.current = null;
+      // تُهمل النتيجة إن بدأ الطالب محاولة جديدة في هذه الأثناء
+      if (outbox.current === payload) {
+        setS((s) => (s.results?.attemptId === payload.attemptId ? { ...s, delivery: ok ? "success" : "failed" } : s));
+      }
+    });
+  }, []);
+
+  /* ---------- «إعادة إرسال النتيجة»: زر مستقل عن «محاولة جديدة» ---------- */
+  const handleResend = useCallback(() => {
+    if (outbox.current) sendResult(outbox.current);
+    else if (SRef.current.results) {
+      // بعد إعادة فتح الصفحة لا تكون الحمولة في الذاكرة: تُبنى من المحاولة المحفوظة نفسها،
+      // بالمعرّف نفسه، فلا يُسجّل الخادم المحاولة مرّتين.
+      const r = SRef.current;
+      if (!r.results) return;
+      const payload = buildPayload({
+        attemptId: r.results.attemptId,
+        studentName: r.studentName,
+        startTs: r.results.startTs,
+        submitTs: r.results.submitTs,
+        questions: QUESTIONS,
+        results: r.results,
+        maxMarks: QUESTIONS.reduce((sum, q) => sum + q.marks, 0),
+        reportText: r.results.reportText,
+      });
+      outbox.current = payload;
+      sendResult(payload);
+    }
+  }, [sendResult]);
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 500);
     return () => clearInterval(t);
@@ -224,17 +285,48 @@ export default function App() {
     const submitTs = Date.now();
     const elapsedMs = S.startTs ? submitTs - S.startTs : 0;
     const fileName = R.makeFileName(S.studentName);
-    const sessionForReport = { attemptId: S.attemptId, studentName: S.studentName, startTs: S.startTs, submitTs };
-    const reportText = R.buildReport({ meta: EXAM_META, questions: QUESTIONS, answers: S.answers, session: sessionForReport, results: res });
-    const results = { ...res, reportText, fileName };
-    const ns: Session = { ...S, status: "submitted", submitTs, elapsedMs, results, sounds: { ...S.sounds, submit: true } };
+    // معرّف المحاولة التي بدأت عند الضغط على «ابدأ الاختبار»، ويُطبع في التقرير.
+    const attemptId = S.attemptId || newAttemptId();
+    const startTs = S.startTs ?? submitTs;
+    const reportText = buildAttemptReport({
+      questions: QUESTIONS, answers: S.answers, results: res,
+      studentName: S.studentName, startTs, submitTs, attemptId,
+    });
+    const results = { ...res, reportText, fileName, attemptId, startTs, submitTs };
+    const ns: Session = {
+      ...S, status: "submitted", submitTs, elapsedMs, results, attemptId,
+      delivery: "sending", sounds: { ...S.sounds, submit: true },
+    };
     setS(ns); persistSession(ns, () => setStorageWarn(true));
     playSubmitSound();
     downloadText(fileName, reportText);
+
+    // إرسال النتيجة إلى المعلّم: يبدأ بعد التنزيل وعرض النتيجة، ولا ينتظره أيٌّ منهما،
+    // وأي خلل فيه لا يمسّ صفحة النتيجة ولا ملف التقرير.
+    let payload: SubmissionPayload | null = null;
+    try {
+      payload = buildPayload({
+        attemptId,
+        studentName: S.studentName,
+        startTs,
+        submitTs,
+        questions: QUESTIONS,
+        results: res,
+        maxMarks: QUESTIONS.reduce((sum, q) => sum + q.marks, 0),
+        reportText,
+      });
+    } catch {
+      payload = null;
+    }
+    outbox.current = payload;
+    if (payload) sendResult(payload);
+    else setS((s) => ({ ...s, delivery: "failed" }));
   };
 
   const tryAgain = () => {
     const ns = freshSession();
+    outbox.current = null;
+    sending.current = null;
     setS(ns); persistSession(ns, () => setStorageWarn(true));
     setView("exam");
   };
@@ -259,7 +351,7 @@ export default function App() {
         <ReviewScreen S={S} elapsed={elapsed} answered={answered} totalP={totalP} remaining={remaining} qAnswered={qAnswered} goto={goto} setView={setView} onSubmit={submitExam} />
       )}
       {screen === "results" && S.results && (
-        <ResultsScreen S={S} results={S.results} onTryAgain={tryAgain} onTeacher={() => setTeacherOpen(true)} />
+        <ResultsScreen S={S} results={S.results} delivery={S.delivery} onResend={handleResend} onTryAgain={tryAgain} onTeacher={() => setTeacherOpen(true)} />
       )}
 
       {teacherOpen && <TeacherGate onClose={() => setTeacherOpen(false)} unlocked={teacherUnlocked} setUnlocked={setTeacherUnlocked} />}
@@ -297,7 +389,7 @@ function IntroScreen({ onStart, onTeacher }: { onStart: (n: string) => void; onT
         <button className="btn btn-primary btn-start" disabled={!name.trim()} onClick={() => onStart(name)}>
           ابدأ الاختبار ✦
         </button>
-        <p className="intro-note">يبدأ العداد فقط بعد الضغط على «ابدأ الاختبار»، ويمكنكِ التنقل بين الأسئلة وتغيير إجاباتكِ قبل التسليم.</p>
+        <p className="intro-note">يبدأ العداد فقط بعد الضغط على «ابدأ الاختبار»، ويمكنكِ التنقل بين الأسئلة وتغيير إجاباتكِ قبل التسليم. وعند التسليم تُرسَل نتيجتك وإجاباتك إلى معلّمك.</p>
       </div>
       <button className="teacher-link" onClick={onTeacher}>منطقة المعلم</button>
     </div>
@@ -532,9 +624,32 @@ function ReviewScreen(props: any) {
 }
 
 // ============================================================================
+// حالة إرسال النتيجة إلى المعلّم
+// ============================================================================
+const SEND_TEXT: Record<Exclude<SendStatus, "idle">, string> = {
+  sending: "جارٍ إرسال النتيجة إلى معلّمك…",
+  success: "تم إرسال نتيجتك إلى معلّمك ✓",
+  failed: "تعذّر إرسال النتيجة إلى معلّمك. نتيجتك محفوظة على هذا الجهاز، ويمكنك إعادة الإرسال.",
+};
+
+function SendBanner({ status, onResend }: { status: SendStatus; onResend: () => void }) {
+  if (status === "idle") return null;
+  return (
+    <div className={`send-banner ${status}`} role="status" aria-live="polite" data-send-status={status}>
+      <p className="send-text">{SEND_TEXT[status]}</p>
+      {status === "failed" && (
+        <button type="button" className="btn btn-ghost send-resend" onClick={onResend}>
+          إعادة إرسال النتيجة
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ============================================================================
 // شاشة النتائج
 // ============================================================================
-function ResultsScreen({ S, results, onTryAgain, onTeacher }: any) {
+function ResultsScreen({ S, results, delivery, onResend, onTryAgain, onTeacher }: any) {
   const c = results.counts;
   const qScores = QUESTIONS.map((q: any, i: number) => {
     const ds = results.details.filter((d: any) => d.qid === q.id);
@@ -575,6 +690,7 @@ function ResultsScreen({ S, results, onTryAgain, onTeacher }: any) {
             </div>
           ))}
         </div>
+        <SendBanner status={delivery} onResend={onResend} />
         <div className="results-actions">
           <button className="btn btn-primary" onClick={() => downloadText(results.fileName, results.reportText)}>تنزيل التقرير TXT ⬇</button>
           <button className="btn btn-ghost" onClick={onTryAgain}>محاولة جديدة (Try Again)</button>

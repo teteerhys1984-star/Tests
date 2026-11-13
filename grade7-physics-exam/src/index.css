@@ -392,3 +392,16 @@ body {
   .header-title span { display: none; }
   .score-num { font-size: 2.5rem; }
 }
+
+/* ---------- حالة إرسال النتيجة إلى المعلّم ---------- */
+.send-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.7rem; flex-wrap: wrap;
+  margin: 0.4rem 0 1.1rem; padding: 0.6rem 0.9rem;
+  border-radius: 14px; border: 1px solid var(--border);
+  font-size: 0.9rem; font-weight: 700; text-align: right;
+}
+.send-banner .send-text { margin: 0; flex: 1 1 12rem; }
+.send-banner.sending { background: #fdf6e7; border-color: #f0dfae; color: #8a6a1f; }
+.send-banner.success { background: #f0f8f2; border-color: #cfe8d8; color: #3d7557; }
+.send-banner.failed { background: #fdf0f3; border-color: #f3d3dd; color: #a34a63; }
+.send-banner .send-resend { padding: 0.45rem 1rem; font-size: 0.85rem; flex: none; }
