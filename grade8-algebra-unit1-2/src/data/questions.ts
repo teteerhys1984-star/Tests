@@ -871,7 +871,7 @@ export const questions: Question[] = [
 ];
 
 export const EXAM_META = {
-  id: 'algebra-nexus-grade8-u1-u2',
+  id: 'grade8-algebra-unit1-2',
   version: '1.0.0',
   title: 'ALGEBRA NEXUS — التحدّي الرياضي',
   arabicTitle: 'اختبار الجبر التفاعلي — الوحدتان الأولى والثانية',

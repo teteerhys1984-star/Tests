@@ -12,7 +12,7 @@ interface CoverProps {
 
 const instructions = [
   '15 سؤالًا رئيسًا، ولكل سؤال أجزاء مترابطة تُقيّم مهارات مختلفة.',
-  'الاسم الكامل مطلوب قبل البدء، ويُستخدم في تقرير النتيجة.',
+  'الاسم الكامل مطلوب قبل البدء، ويُستخدم في تقرير النتيجة ويُرسل إلى معلّمك.',
   'المؤقّت تصاعدي ولا يبدأ إلا بعد الضغط على «ابدأ الاختبار».',
   'يمكنك التنقل بين الأسئلة وتغيير إجاباتك قبل التسليم.',
   'تُحفظ الإجابات محليًا على هذا الجهاز، وتُستعاد عند إعادة فتح الصفحة.',
@@ -89,7 +89,7 @@ export function Cover({ initialName, onStart, onTeacher, storageError }: CoverPr
             </p>
             <div className="hero-meta-row">
               <span className="meta-chip"><CheckIcon size={14} /> تم التحقق الآلي من 100 درجة</span>
-              <span className="meta-chip"><ShieldIcon size={14} /> توليد محلي بالكامل</span>
+              <span className="meta-chip"><ShieldIcon size={14} /> تقرير TXT محلي + إرسال للمعلّم</span>
             </div>
             <div className="hero-stats" aria-label="ملخص الاختبار">
               <div className="hero-stat">
@@ -195,7 +195,7 @@ export function Cover({ initialName, onStart, onTeacher, storageError }: CoverPr
                 {error ? (
                   <p className="field-error" id="name-error" role="alert">{error}</p>
                 ) : (
-                  <p className="field-hint" id="name-hint">الاسم إلزامي، ويُحفظ على جهازك فقط.</p>
+                  <p className="field-hint" id="name-hint">الاسم إلزامي، ويُستخدم في التقرير ويُرسل إلى معلّمك.</p>
                 )}
               </div>
               <button type="submit" className="btn btn-primary btn-start">
@@ -206,7 +206,7 @@ export function Cover({ initialName, onStart, onTeacher, storageError }: CoverPr
             <div className="entry-facts">
               <div><ClockIcon size={16} /><span>المؤقّت يبدأ مع السؤال الأول</span></div>
               <div><CheckIcon size={16} /><span>حفظ تلقائي واستعادة للمحاولة</span></div>
-              <div><ShieldIcon size={16} /><span>لا تُرسل بياناتك إلى خادم</span></div>
+              <div><ShieldIcon size={16} /><span>تُرسل النتيجة إلى معلّمك فقط</span></div>
             </div>
           </div>
         </section>
@@ -253,7 +253,7 @@ export function Cover({ initialName, onStart, onTeacher, storageError }: CoverPr
           <LogoMark size={26} />
           <span dir="ltr">ALGEBRA NEXUS</span>
         </div>
-        <p>اختبار تعليمي محلي. بيانات الطالب تبقى في متصفحه ولا تُرسل عبر الشبكة.</p>
+        <p>اختبار تعليمي. يُنشأ تقرير TXT داخل متصفح الطالب، وتُرسل النتيجة إلى معلّمك عبر خدمة النتائج فقط.</p>
         <button type="button" className="footer-link" onClick={onTeacher}>
           <LockIcon size={14} /> مساحة المعلّم
         </button>

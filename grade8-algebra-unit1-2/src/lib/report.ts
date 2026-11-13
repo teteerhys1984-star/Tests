@@ -181,7 +181,8 @@ export function buildReport(attempt: StoredAttempt, result: ExamResult): string 
   rows.push('إفصاح الخصوصية وطريقة التوليد');
   rows.push(dash());
   rows.push('تم إنشاء هذا التقرير محليًا داخل متصفح الطالب باستخدام Blob وObject URL.');
-  rows.push('لم تُرسل بيانات الطالب أو إجاباته إلى أي خادم أو خدمة خارجية.');
+  rows.push('تُرسَل نسخة من النتيجة إلى معلّم الطالب عبر خدمة النتائج المرتبطة بلوحة المعلّم (Google Apps Script).');
+  rows.push('لا تُرسل أي بيانات شخصية غير اسم الطالب، ولا تُسجَّل بيانات الطلاب في وحدة تخزين عامة داخل الصفحة.');
   rows.push('يُحتسب الصحيح جزئيًا فقط في الأجزاء ذات الحقول المنفصلة أو الحكم والتبرير المنفصلين.');
   rows.push('تقبل المصحح الصور الكسرية المكافئة المضبوطة، ولا يستخدم أطراف تفاوت عددية واسعة.');
   rows.push('');
@@ -213,4 +214,17 @@ export function triggerReportDownload(filename: string, content: string): boolea
   } catch {
     return false;
   }
+}
+
+/**
+ * سلم التقدير المرجعي نفسه المستعمل في الاختبار المرجعي grade5-math-unit1.
+ * يُرسَل هذا التصنيف إلى المعلّم داخل الحمولة فقط، ولا يُعرض للطالب في واجهة النتيجة.
+ */
+export function gradeLabel(percentage: number): string {
+  if (percentage >= 95) return 'ممتاز';
+  if (percentage >= 85) return 'جيد جداً';
+  if (percentage >= 75) return 'جيد';
+  if (percentage >= 65) return 'مقبول';
+  if (percentage >= 50) return 'ضعيف';
+  return 'يحتاج إلى دعم';
 }

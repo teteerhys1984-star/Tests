@@ -1,6 +1,7 @@
 import type { StoredAttempt } from '../lib/storage';
 import type { ExamResult } from '../lib/exam';
 import { DIFFICULTY_LABEL, EXAM_META, marksWord } from '../lib/exam';
+import type { SendStatus } from '../lib/submit';
 import { formatDuration, formatTimestamp } from '../lib/time';
 import { RichText } from './Math';
 import { LogoMark, DownloadIcon, RetryIcon, LockIcon, ClockIcon, CheckIcon, AlertIcon, FileIcon, ShieldIcon } from './Icons';
@@ -10,10 +11,31 @@ interface ResultsViewProps {
   result: ExamResult;
   downloadNote: string;
   reportFilename: string;
+  sendStatus: SendStatus;
+  onResend: () => void;
   onDownload: () => void;
   onRetry: () => void;
   onTeacher: () => void;
 }
+
+const SEND_META: Record<SendStatus, { title: string; note: string }> = {
+  idle: {
+    title: 'النتيجة لم تُرسل بعد',
+    note: 'يمكنك إرسال النتيجة إلى معلّمك الآن. تنزيل تقرير TXT يعمل دائمًا بغض النظر عن نتيجة الإرسال.',
+  },
+  sending: {
+    title: 'جارٍ إرسال النتيجة إلى المعلّم…',
+    note: 'الإرسال يجري في الخلفية، ويمكنك متابعة النتيجة وتنزيل التقرير في الأثناء.',
+  },
+  success: {
+    title: 'تم إرسال النتيجة إلى المعلّم ✓',
+    note: 'وصلت النتيجة. تُحتسب كل محاولة مرة واحدة عند المعلّم حتى لو أُعيد إرسالها.',
+  },
+  failed: {
+    title: 'تعذّر إرسال النتيجة تلقائيًا',
+    note: 'النتيجة محفوظة في هذا المتصفح وستُعاد المحاولة تلقائيًا عند فتح الاختبار من جديد. يمكنك إعادة الإرسال الآن، أو تنزيل التقرير وإرساله لمعلّمك.',
+  },
+};
 
 const statusLabels = {
   correct: 'صحيح',
@@ -35,6 +57,8 @@ export function ResultsView({
   result,
   downloadNote,
   reportFilename,
+  sendStatus,
+  onResend,
   onDownload,
   onRetry,
   onTeacher,
@@ -147,6 +171,33 @@ export function ResultsView({
           </div>
         </section>
 
+
+        <section
+          className={`send-panel glass-card send-${sendStatus}`}
+          data-send-status={sendStatus}
+          aria-live="polite"
+          aria-label="حالة إرسال النتيجة إلى المعلّم"
+        >
+          <div className="send-panel-copy">
+            <span className="send-panel-icon" aria-hidden="true">
+              {sendStatus === 'success' ? <CheckIcon size={18} /> : sendStatus === 'failed' ? <AlertIcon size={18} /> : <ShieldIcon size={18} />}
+            </span>
+            <div>
+              <strong>{SEND_META[sendStatus].title}</strong>
+              <p>{SEND_META[sendStatus].note}</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="btn btn-secondary btn-small send-resend-btn"
+            onClick={onResend}
+            disabled={sendStatus === 'sending'}
+          >
+            <RetryIcon size={16} />
+            إعادة إرسال النتيجة
+          </button>
+        </section>
+
         <section className="results-info-grid">
           <div className="result-info-card glass-card">
             <div className="result-info-head"><ClockIcon size={17} /><span>سجل الوقت</span></div>
@@ -234,7 +285,7 @@ export function ResultsView({
 
         <p className="results-privacy">
           <ShieldIcon size={15} />
-          البيانات والتقرير لا يغادران متصفحك. استخدم زر التنزيل كنسخة احتياطية إذا منع المتصفح التنزيل التلقائي.
+          تقرير TXT يُنشأ داخل متصفحك، وتُرسل النتيجة إلى معلّمك فقط عبر خدمة النتائج. استخدم زر التنزيل كنسخة احتياطية إذا منع المتصفح التنزيل التلقائي.
         </p>
       </main>
 
