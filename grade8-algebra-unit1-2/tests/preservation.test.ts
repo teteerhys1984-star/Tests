@@ -116,6 +116,17 @@ check(
     JSON.stringify(fixture.normalized.validation.difficultyCounts),
   JSON.stringify(validation.difficultyCounts),
 )
+const difficultyMarks: Record<string, number> = {}
+for (const question of questions) {
+  difficultyMarks[question.difficulty] = (difficultyMarks[question.difficulty] ?? 0) + question.marks
+}
+check(
+  'علامات مستويات الصعوبة الفعلية محفوظة (15/30/40/15)',
+  JSON.stringify(difficultyMarks) ===
+    JSON.stringify({ foundational: 15, intermediate: 30, advanced: 40, reasoning: 15 }),
+  JSON.stringify(difficultyMarks),
+)
+
 check(
   'تقرير التحقق مطابق للأصل',
   JSON.stringify({
