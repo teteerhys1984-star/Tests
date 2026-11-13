@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>منصة الاختبارات</title>
+<meta name="description" content="اختبارات تفاعلية للصفوف من الأول إلى التاسع: اختر الصف، ثم المادة، ثم الاختبار وابدأ فورًا." />
+<meta name="theme-color" content="#12284a" />
+<meta name="color-scheme" content="light" />
+<style>
+/* ============================================================
+   منصة الاختبارات — واجهة الفهرس
+   ملف تصميم مستقل: لا صور خارجية، لا خطوط من الإنترنت، لا مكتبات.
+   ============================================================ */
+
+:root {
+  --font: "Segoe UI", "Noto Sans Arabic", "Dubai", "Almarai", "Tajawal", Tahoma,
+          system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --ink: #101a2c;
+  --ink-2: #3d4d63;
+  --ink-3: #5b6b80;
+  --line: rgba(16, 26, 44, .10);
+  --card: #ffffff;
+  --page: #f5f7fb;
+  --brand: 222;
+  --radius: 22px;
+  --shell: 74rem;
+  --ease: cubic-bezier(.22, .68, .28, 1);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--page);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection { background: hsl(var(--brand) 90% 88%); color: hsl(var(--brand) 60% 25%); }
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+
+:focus-visible {
+  outline: 3px solid hsl(var(--brand) 85% 55%);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.shell { width: 100%; max-width: var(--shell); margin-inline: auto; padding-inline: 1.15rem; }
+
+.skip {
+  position: absolute; inset-inline-start: 50%; inset-block-start: -4rem;
+  transform: translateX(50%);
+  background: #fff; color: var(--ink); padding: .6rem 1.1rem; border-radius: 999px;
+  box-shadow: 0 8px 24px -8px rgba(16, 26, 44, .5); z-index: 40; transition: inset-block-start .2s;
+}
+.skip:focus { inset-block-start: .75rem; }
+[dir="rtl"] .skip { transform: translateX(50%); }
+
+/* ---------- خلفية مضيئة ---------- */
+.glow { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.glow span {
+  position: absolute; border-radius: 50%; filter: blur(70px); opacity: .28;
+  animation: drift 22s var(--ease) infinite alternate;
+}
+.glow span:nth-child(1) { width: 34rem; height: 34rem; inset-inline-start: -12rem; inset-block-start: -14rem; background: #38bdf8; }
+.glow span:nth-child(2) { width: 28rem; height: 28rem; inset-inline-end: -10rem; inset-block-start: -8rem; background: #a78bfa; animation-duration: 26s; }
+.glow span:nth-child(3) { width: 26rem; height: 26rem; inset-inline-start: 40%; inset-block-start: 34rem; background: #fbbf24; opacity: .16; animation-duration: 30s; }
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(3rem, 4rem, 0) scale(1.12); }
+}
+
+/* ---------- الواجهة العلوية ---------- */
+.hero {
+  position: relative;
+  color: #fff;
+  background:
+    radial-gradient(120% 100% at 100% 0%, rgba(56, 189, 248, .55), transparent 58%),
+    radial-gradient(90% 90% at 0% 100%, rgba(167, 139, 250, .50), transparent 62%),
+    linear-gradient(135deg, #12284a 0%, #1e3a8a 45%, #0e7490 100%);
+  border-radius: 0 0 2rem 2rem;
+  box-shadow: 0 24px 60px -40px rgba(18, 40, 74, .9);
+  overflow: hidden;
+}
+.hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, .16) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(80% 60% at 80% 10%, #000 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(80% 60% at 80% 10%, #000 0%, transparent 70%);
+  opacity: .55;
+}
+.hero__inner { position: relative; z-index: 1; padding-block: 1.6rem 2rem; }
+
+.brand { display: flex; align-items: center; gap: .7rem; }
+.brand__mark {
+  width: 2.7rem; height: 2.7rem; border-radius: 14px; display: grid; place-items: center;
+  background: rgba(255, 255, 255, .16);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .28);
+  color: #fff; flex: none;
+}
+.brand__mark svg { width: 1.55rem; height: 1.55rem; }
+.brand__name { font-weight: 800; font-size: 1.06rem; letter-spacing: .2px; line-height: 1.2; }
+.brand__tag { display: block; font-size: .78rem; font-weight: 500; color: rgba(255, 255, 255, .74); }
+
+.hero h1 {
+  margin: 1.5rem 0 .35rem;
+  font-size: clamp(1.6rem, 5.2vw, 2.5rem);
+  line-height: 1.25; font-weight: 800; letter-spacing: -.2px;
+}
+.hero h1 .hl {
+  background: linear-gradient(100deg, #fde68a, #fbbf24 45%, #f472b6);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero__sub { margin: 0; max-width: 42rem; color: rgba(255, 255, 255, .82); font-size: clamp(.9rem, 2.6vw, 1.02rem); }
+
+.steps {
+  list-style: none; display: flex; flex-wrap: wrap; gap: .5rem;
+  margin: 1.25rem 0 0; padding: 0;
+}
+.steps li {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .42rem .85rem .42rem .6rem; border-radius: 999px;
+  background: rgba(255, 255, 255, .13);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18);
+  font-size: .84rem; font-weight: 700; backdrop-filter: blur(6px);
+}
+.steps b {
+  width: 1.35rem; height: 1.35rem; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(255, 255, 255, .92); color: #1e3a8a; font-size: .8rem;
+}
+
+.search { position: relative; margin-block-start: 1.15rem; max-width: 30rem; }
+.search__icon {
+  position: absolute; inset-inline-start: .95rem; inset-block-start: 50%; transform: translateY(-50%);
+  width: 1.15rem; height: 1.15rem; color: rgba(255, 255, 255, .7); pointer-events: none;
+}
+.search input {
+  width: 100%; padding: .85rem 2.9rem .85rem 2.9rem;
+  border: 1px solid rgba(255, 255, 255, .28); border-radius: 999px;
+  background: rgba(255, 255, 255, .14); color: #fff;
+  font: inherit; font-size: .95rem;
+  box-shadow: 0 10px 30px -22px rgba(0, 0, 0, .9);
+  transition: background .2s, border-color .2s;
+}
+.search input::placeholder { color: rgba(255, 255, 255, .68); }
+.search input::-webkit-search-cancel-button, .search input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
+.search input:hover { background: rgba(255, 255, 255, .2); }
+.search input:focus { outline: none; background: rgba(255, 255, 255, .24); border-color: rgba(255, 255, 255, .6); }
+.search__clear {
+  position: absolute; inset-inline-end: .55rem; inset-block-start: 50%; transform: translateY(-50%);
+  width: 2rem; height: 2rem; border: 0; border-radius: 50%; cursor: pointer;
+  background: rgba(255, 255, 255, .22); color: #fff; font-size: 1.1rem; line-height: 1;
+}
+.search__clear:hover { background: rgba(255, 255, 255, .34); }
+.search__hint {
+  position: absolute; inset-inline-end: 1rem; inset-block-start: 50%; transform: translateY(-50%);
+  font-size: .74rem; color: rgba(255, 255, 255, .6); border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: 6px; padding: 0 .35rem; pointer-events: none;
+}
+
+.stats {
+  list-style: none; display: flex; flex-wrap: wrap; gap: .35rem 1.15rem;
+  margin: 1.1rem 0 0; padding: 0; font-size: .88rem; color: rgba(255, 255, 255, .82);
+}
+.stats b { color: #fff; font-weight: 800; }
+
+/* ---------- مسار التنقل ---------- */
+.crumbs {
+  position: sticky; inset-block-start: 0; z-index: 20;
+  display: flex; align-items: center; gap: .35rem; flex-wrap: wrap;
+  padding-block: .55rem;
+  background: rgba(245, 247, 251, .86);
+  backdrop-filter: blur(12px);
+  border-block-end: 1px solid var(--line);
+}
+.crumbs[hidden] { display: none; }
+.crumb {
+  border: 0; background: transparent; cursor: pointer;
+  padding: .3rem .7rem; border-radius: 999px;
+  font-size: .86rem; font-weight: 700; color: var(--ink-2);
+  transition: background .18s, color .18s;
+}
+.crumb:hover { background: hsl(var(--brand) 85% 94%); color: hsl(var(--brand) 70% 32%); }
+.crumb[aria-current="page"] {
+  background: hsl(var(--brand) 90% 96%); color: hsl(var(--brand) 72% 30%);
+  box-shadow: inset 0 0 0 1px hsl(var(--brand) 80% 86%);
+}
+.crumb__sep { color: #b6c0cd; font-size: .8rem; }
+.crumb[hidden], .crumb__sep[hidden] { display: none; }
+
+/* ---------- المسرح (المشاهد) ---------- */
+.stage { padding-block: 1.35rem 3rem; min-height: 60vh; outline: none; }
+.view[hidden] { display: none; }
+
+.view-head {
+  display: flex; align-items: center; gap: .8rem; flex-wrap: wrap;
+  margin-block-end: 1.05rem;
+}
+.view-head__icon {
+  width: 3rem; height: 3rem; border-radius: 16px; display: grid; place-items: center; flex: none;
+  background: linear-gradient(140deg, hsl(var(--h) 92% 94%), hsl(var(--h) 90% 86%));
+  color: hsl(var(--h) 68% 34%);
+  box-shadow: inset 0 0 0 1px hsl(var(--h) 78% 82%);
+}
+.view-head__icon svg { width: 1.7rem; height: 1.7rem; }
+.view-head__text { min-width: 0; }
+.view-head h2 { margin: 0; font-size: clamp(1.15rem, 4vw, 1.5rem); font-weight: 800; line-height: 1.3; }
+.view-head p { margin: 0; color: var(--ink-3); font-size: .88rem; }
+
+.back {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .45rem .9rem .45rem .7rem; border-radius: 999px; cursor: pointer;
+  background: #fff; border: 1px solid var(--line); color: var(--ink-2);
+  font-size: .85rem; font-weight: 700;
+  transition: transform .2s var(--ease), border-color .2s, color .2s;
+}
+.back svg { width: 1.05rem; height: 1.05rem; }
+.back:hover { transform: translateX(calc(var(--fwd, -1) * -3px)); border-color: hsl(var(--h, var(--brand)) 70% 65%); color: hsl(var(--h, var(--brand)) 70% 34%); }
+
+.sect-title {
+  display: flex; align-items: baseline; gap: .5rem; flex-wrap: wrap;
+  margin: 0 0 .8rem; font-size: 1.05rem; font-weight: 800;
+}
+.sect-title span { font-size: .82rem; font-weight: 600; color: var(--ink-3); }
+
+/* ---------- الشبكات ---------- */
+.grid { display: grid; gap: .75rem; }
+.grid--grades { grid-template-columns: 1fr; }
+.grid--subjects { grid-template-columns: 1fr; }
+.grid--exams { grid-template-columns: 1fr; }
+@media (min-width: 27rem) {
+  .grid--grades { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid--exams { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 40rem) {
+  .grid--subjects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 55rem) {
+  .grid--grades { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
+  .grid--subjects { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
+  .grid--exams { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
+}
+
+/* ---------- بطاقة الصف ---------- */
+.grade-card {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: grid; align-content: start; gap: .1rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgba(16, 26, 44, .04), 0 14px 30px -26px rgba(16, 26, 44, .6);
+  transition: transform .24s var(--ease), box-shadow .24s var(--ease), border-color .24s;
+}
+.grade-card::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(110% 85% at 100% 0%, hsl(var(--h) 92% 95%), transparent 62%),
+    radial-gradient(100% 110% at 0% 100%, hsl(var(--h) 88% 92% / .85), transparent 58%);
+}
+.grade-card::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(200px circle at var(--mx, 50%) var(--my, 0%), hsl(var(--h) 95% 70% / .30), transparent 68%);
+}
+.grade-card:hover, .grade-card:focus-visible {
+  transform: translateY(-5px);
+  border-color: hsl(var(--h) 72% 72%);
+  box-shadow: 0 18px 40px -24px hsl(var(--h) 65% 45% / .55), 0 2px 6px rgba(16, 26, 44, .05);
+}
+.grade-card:hover::after, .grade-card:focus-visible::after { opacity: 1; }
+.grade-card:active { transform: translateY(-2px) scale(.995); }
+
+/* صفّ بلا اختبارات: يُبهَت قليلًا فتبرز الصفوف المتاحة */
+.grade-card.is-empty .grade-card__num { opacity: .32; }
+.grade-card.is-empty .grade-card__name { color: var(--ink-2); }
+.grade-card.is-empty .go { opacity: .45; }
+.grade-card.is-empty:hover .grade-card__num,
+.grade-card.is-empty:focus-visible .grade-card__num { opacity: .6; }
+
+.grade-card__num {
+  font-size: clamp(2.2rem, 8vw, 2.9rem); font-weight: 800; line-height: 1.05;
+  background: linear-gradient(135deg, hsl(var(--h) 85% 52%), hsl(calc(var(--h) + 38) 88% 58%));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.grade-card__name { font-weight: 800; font-size: 1.02rem; }
+.grade-card__meta { color: var(--ink-3); font-size: .8rem; }
+.grade-card__dots { display: flex; gap: .18rem; margin-block-start: .5rem; }
+.grade-card__dots i {
+  width: .5rem; height: .5rem; border-radius: 50%;
+  background: hsl(var(--h2) 82% 55%); box-shadow: 0 0 0 2px #fff;
+}
+.grade-card__dots i.is-off { background: #dfe5ee; }
+.go {
+  position: absolute; inset-block-start: .85rem; inset-inline-end: .85rem;
+  width: 1.9rem; height: 1.9rem; border-radius: 50%; display: grid; place-items: center;
+  background: hsl(var(--h) 90% 95%); color: hsl(var(--h) 68% 34%);
+  transition: transform .25s var(--ease), background .25s;
+}
+.go svg { width: 1.05rem; height: 1.05rem; }
+.grade-card:hover .go, .subject-card:not(.is-empty):hover .go {
+  transform: translateX(calc(var(--fwd, -1) * 4px));
+  background: hsl(var(--h) 90% 89%);
+}
+
+/* ---------- بطاقة المادة ---------- */
+.subject-card {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: grid; grid-template-columns: auto 1fr; align-items: center;
+  gap: .2rem .85rem;
+  padding: .95rem 1rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+  box-shadow: 0 1px 2px rgba(16, 26, 44, .04), 0 14px 30px -28px rgba(16, 26, 44, .6);
+  transition: transform .24s var(--ease), box-shadow .24s var(--ease), border-color .24s;
+}
+.subject-card::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: .9;
+  background: radial-gradient(120% 120% at 0% 0%, hsl(var(--h) 92% 95%), transparent 58%);
+}
+.subject-card:not(.is-empty):hover, .subject-card:not(.is-empty):focus-visible {
+  transform: translateY(-4px);
+  border-color: hsl(var(--h) 72% 72%);
+  box-shadow: 0 18px 38px -26px hsl(var(--h) 65% 45% / .5);
+}
+.subject-card:not(.is-empty) { padding-inline-end: 3.1rem; }
+.subject-card:not(.is-empty) .go { inset-block-start: 50%; transform: translateY(-50%); }
+.subject-card:not(.is-empty):hover .go { transform: translateY(-50%) translateX(calc(var(--fwd, -1) * 4px)); }
+.subject-card__icon {
+  grid-row: span 2;
+  width: 3rem; height: 3rem; border-radius: 16px; display: grid; place-items: center;
+  background: linear-gradient(140deg, hsl(var(--h) 92% 92%), hsl(var(--h) 90% 84%));
+  color: hsl(var(--h) 68% 32%);
+  box-shadow: inset 0 0 0 1px hsl(var(--h) 78% 80%);
+}
+.subject-card__icon svg { width: 1.65rem; height: 1.65rem; }
+.subject-card__name { font-weight: 800; font-size: 1rem; }
+.subject-card__meta { grid-column: 2; color: var(--ink-3); font-size: .8rem; }
+.subject-card.is-empty { background: #fbfcfe; border-style: dashed; box-shadow: none; }
+.subject-card.is-empty .subject-card__icon { background: #f1f4f9; color: #9aa7b8; box-shadow: inset 0 0 0 1px #e5eaf2; }
+.subject-card.is-empty .subject-card__name { color: var(--ink-3); }
+
+/* ---------- بطاقة الاختبار ---------- */
+.exam-card {
+  position: relative; isolation: isolate;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .8rem;
+  padding: .9rem 1rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(16, 26, 44, .04), 0 12px 26px -26px rgba(16, 26, 44, .6);
+  transition: transform .22s var(--ease), box-shadow .22s var(--ease), border-color .22s;
+}
+.exam-card:hover, .exam-card:focus-visible {
+  transform: translateY(-3px);
+  border-color: hsl(var(--h) 72% 70%);
+  box-shadow: 0 16px 34px -24px hsl(var(--h) 60% 45% / .45);
+}
+.exam-card__idx {
+  width: 2.3rem; height: 2.3rem; border-radius: 13px; display: grid; place-items: center; flex: none;
+  background: hsl(var(--h) 90% 95%); color: hsl(var(--h) 65% 32%);
+  font-weight: 800; font-size: .95rem;
+}
+.exam-card__title { font-weight: 700; font-size: .96rem; line-height: 1.45; }
+.exam-card__path { display: block; color: var(--ink-3); font-size: .78rem; }
+.exam-card__cta {
+  display: inline-flex; align-items: center; gap: .3rem; flex: none;
+  padding: .45rem .8rem; border-radius: 999px;
+  background: hsl(var(--h) 75% 36%); color: #fff; font-weight: 700; font-size: .82rem;
+  box-shadow: 0 8px 18px -12px hsl(var(--h) 70% 35%);
+  transition: transform .22s var(--ease), filter .22s;
+}
+.exam-card__cta svg { width: 1rem; height: 1rem; }
+.exam-card:hover .exam-card__cta, .exam-card:focus-visible .exam-card__cta { transform: translateX(calc(var(--fwd, -1) * 3px)); filter: brightness(1.06); }
+
+/* ---------- حالات فارغة ---------- */
+.note {
+  display: grid; place-items: center; gap: .3rem; text-align: center;
+  padding: 2.2rem 1.25rem; border-radius: var(--radius);
+  background: #fff; border: 1px dashed #d9e0ea; color: var(--ink-3);
+}
+.note svg { width: 2.2rem; height: 2.2rem; color: #c3ccda; }
+.note b { color: var(--ink-2); font-size: 1rem; }
+
+/* ---------- نتائج البحث ---------- */
+#view-search .sect-title { justify-content: space-between; }
+
+/* ---------- التذييل ---------- */
+.foot {
+  padding-block: 1.5rem 2.5rem; color: var(--ink-3); font-size: .82rem;
+  border-block-start: 1px solid var(--line);
+}
+.foot p { margin: 0; }
+
+/* ---------- الحركة ---------- */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px) scale(.985); }
+  to { opacity: 1; transform: none; }
+}
+.view.is-in .stagger {
+  animation: rise .36s var(--ease) both;
+  animation-delay: calc(min(var(--i, 0), 9) * 26ms);
+}
+[dir="rtl"] { --fwd: -1; }
+[dir="ltr"] { --fwd: 1; }
+[dir="rtl"] .ic-fwd { transform: scaleX(-1); }
+[dir="ltr"] .ic-back { transform: scaleX(-1); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#stage">تخطَّ إلى الاختبارات</a>
+<div class="glow" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<!-- مكتبة الأيقونات: رموز مضمَّنة، بلا أي مورد خارجي -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="s-cap" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9.2 12 4.8l9 4.4-9 4.4z" />
+      <path d="M7.5 11.2v4.4c0 1.7 2 3 4.5 3s4.5-1.3 4.5-3v-4.4" />
+      <path d="M20.5 10.4v4.2" />
+    </g>
+    <g id="s-arabic" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 6.6C10.4 5 8 4.4 4 4.4v13.2c4 0 6.4.6 8 2.2 1.6-1.6 4-2.2 8-2.2V4.4c-4 0-6.4.6-8 2.2z" />
+      <path d="M12 6.6v13.2" />
+      <path d="M15.2 8.6h2.4M15.2 12h2.4" />
+    </g>
+    <g id="s-math" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="13.4" r="6.4" />
+      <path d="M12 3.6v3.4M12 3.6 7.6 17.6M12 3.6l4.4 14" />
+    </g>
+    <g id="s-english" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.4 12.6c0 3.5-3.4 6.2-8.4 6.2-1 0-2-.1-2.9-.3L4 20.4l1.6-3.6C4 15.7 3 14.2 3 12.6c0-3.5 3.9-6.2 9-6.2s8.4 2.7 8.4 6.2z" />
+      <path d="M8.4 11.4h7.2M12 11.4V15" />
+    </g>
+    <g id="s-physics" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="2.1" fill="currentColor" stroke="none" />
+      <ellipse cx="12" cy="12" rx="9" ry="3.9" />
+      <ellipse cx="12" cy="12" rx="9" ry="3.9" transform="rotate(58 12 12)" />
+      <ellipse cx="12" cy="12" rx="9" ry="3.9" transform="rotate(-58 12 12)" />
+    </g>
+    <g id="s-chemistry" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9.2 3.4h5.6" />
+      <path d="M10.2 3.4v6.2L5.6 18.4A2 2 0 0 0 7.4 21.4h9.2a2 2 0 0 0 1.8-3L13.8 9.6V3.4" />
+      <path d="M7.6 14.4h8.8" />
+      <circle cx="10.6" cy="17.4" r=".95" fill="currentColor" stroke="none" />
+      <circle cx="14.2" cy="18.4" r=".8" fill="currentColor" stroke="none" />
+    </g>
+    <g id="s-chev" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m9.5 5.5 6.5 6.5-6.5 6.5" />
+    </g>
+    <g id="s-arrow" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 12h14" />
+      <path d="m13 6.5 5.5 5.5L13 17.5" />
+    </g>
+    <g id="s-search" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="10.8" cy="10.8" r="6.6" />
+      <path d="m15.8 15.8 4.4 4.4" />
+    </g>
+    <g id="s-empty" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 6.5h15v12h-15z" />
+      <path d="M4.5 11h15M9 6.5v12" />
+    </g>
+    <g id="s-grades" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4.2 21 8.6l-9 4.4-9-4.4z" />
+      <path d="M6.5 11v5.2C6.5 18 9 19.4 12 19.4s5.5-1.4 5.5-3.2V11" />
+    </g>
+  </defs>
+</svg>
+
+<header class="hero">
+  <div class="shell hero__inner">
+    <div class="brand">
+      <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#s-cap" /></svg></span>
+      <span class="brand__text">
+        <span class="brand__name">منصة الاختبارات</span>
+        <span class="brand__tag">الصفوف الأول – التاسع · اختبارات تفاعلية</span>
+      </span>
+    </div>
+
+    <h1>ابدأ اختبارك في <span class="hl">ثلاث خطوات</span></h1>
+    <p class="hero__sub">اختر الصف، ثم المادة، ثم الاختبار — ويُفتح الاختبار فورًا داخل المتصفح، بلا تسجيل دخول.</p>
+
+    <ol class="steps">
+      <li><b>١</b> اختر الصف</li>
+      <li><b>٢</b> اختر المادة</li>
+      <li><b>٣</b> ابدأ الاختبار</li>
+    </ol>
+
+    <form class="search" role="search" onsubmit="return false">
+      <svg class="search__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#s-search" /></svg>
+      <label class="sr-only" for="q">ابحث في الاختبارات</label>
+      <input id="q" type="search" autocomplete="off" spellcheck="false"
+             placeholder="ابحث باسم الاختبار أو المادة أو الصف…" aria-label="ابحث في الاختبارات" />
+      <span class="search__hint" id="q-hint" aria-hidden="true">/</span>
+      <button type="button" class="search__clear" id="q-clear" aria-label="مسح البحث" hidden>&times;</button>
+    </form>
+
+    <ul class="stats">__STATS__</ul>
+  </div>
+</header>
+
+<nav class="crumbs shell" id="crumbs" aria-label="مسار التنقل" hidden>
+  <button type="button" class="crumb" data-go="" id="crumb-home">الرئيسية</button>
+  <span class="crumb__sep" id="crumb-sep-1" hidden aria-hidden="true">‹</span>
+  <button type="button" class="crumb" id="crumb-grade" hidden></button>
+  <span class="crumb__sep" id="crumb-sep-2" hidden aria-hidden="true">‹</span>
+  <button type="button" class="crumb" id="crumb-subject" hidden></button>
+</nav>
+
+<main class="shell stage" id="stage" tabindex="-1">
+__CONTENT__
+  <!-- مشهد البحث: يُملأ بالنتائج من الواجهة نفسها -->
+  <section class="view" id="view-search" data-label="نتائج البحث" style="--h: 222" hidden>
+    <div class="view-head">
+      <span class="view-head__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#s-search" /></svg></span>
+      <div class="view-head__text">
+        <h2>نتائج البحث</h2>
+        <p>ابحث باسم الاختبار أو المادة أو الصف — أو اضغط <kbd>/</kbd> للانتقال إلى البحث.</p>
+      </div>
+    </div>
+    <h2 class="sect-title">المطابقات <span id="search-count"></span></h2>
+    <div class="grid grid--exams" id="search-results"></div>
+    <div class="note" id="search-empty">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#s-search" /></svg>
+      <b>لا توجد نتائج مطابقة</b>
+      <span>جرّب كلمة أقصر، أو اختر الصف والمادة من الخطوات.</span>
+    </div>
+  </section>
+</main>
+
+<footer class="shell foot">
+  <p>جميع الاختبارات تعمل داخل المتصفح وتُحفظ نتيجتها تلقائيًا — لا حاجة إلى تنزيل أي برنامج.</p>
+</footer>
+
+<noscript>
+  <style>
+    .view[hidden] { display: block !important; }
+    .crumbs, .search, .glow { display: none !important; }
+    .view { margin-block-end: 2rem; }
+    .view-head { display: none; }
+  </style>
+</noscript>
+
+<script>
+(function () {
+  "use strict";
+  var doc = document;
+  var views = [].slice.call(doc.querySelectorAll(".view"));
+  var stage = doc.getElementById("stage");
+  var crumbs = doc.getElementById("crumbs");
+  var cHome = doc.getElementById("crumb-home");
+  var cGrade = doc.getElementById("crumb-grade");
+  var cSubject = doc.getElementById("crumb-subject");
+  var cSep1 = doc.getElementById("crumb-sep-1");
+  var cSep2 = doc.getElementById("crumb-sep-2");
+  var input = doc.getElementById("q");
+  var hint = doc.getElementById("q-hint");
+  var clear = doc.getElementById("q-clear");
+  var searchView = doc.getElementById("view-search");
+  var searchList = doc.getElementById("search-results");
+  var searchEmpty = doc.getElementById("search-empty");
+  var searchCount = doc.getElementById("search-count");
+  var cards = [].slice.call(doc.querySelectorAll(".exam-card"));
+  var titles = {};
+  [].slice.call(doc.querySelectorAll(".view")).forEach(function (v) {
+    titles[v.id] = v.getAttribute("data-label") || "منصة الاختبارات";
+  });
+
+  function norm(s) {
+    return (s || "")
+      .replace(/[\u064B-\u065F\u0670\u0640]/g, "")
+      .replace(/[\u0622\u0623\u0625\u0627\u0671]/g, "ا")
+      .replace(/[\u0649\u064A]/g, "ي")
+      .replace(/\u0629/g, "ه")
+      .replace(/[\u0624]/g, "و")
+      .replace(/[\u0626]/g, "ي")
+      .replace(/[\u0660-\u0669]/g, function (d) { return String(d.charCodeAt(0) - 0x0660); })
+      .replace(/\s+/g, " ")
+      .toLowerCase()
+      .trim();
+  }
+
+  function findView(id) { return doc.getElementById(id); }
+
+  function activate(view, label) {
+    views.forEach(function (v) { if (v !== view) v.hidden = true; });
+    if (!view) return;
+    view.hidden = false;
+    view.classList.remove("is-in");
+    void view.offsetWidth;
+    view.classList.add("is-in");
+    doc.title = label ? label + " — منصة الاختبارات" : "منصة الاختبارات";
+  }
+
+  function mark(el, current) {
+    if (current) el.setAttribute("aria-current", "page");
+    else el.removeAttribute("aria-current");
+  }
+
+  function setCrumbs(gradeLabel, gradeHash, subjectLabel) {
+    var has = !!(gradeLabel || subjectLabel);
+    crumbs.hidden = !has;
+    mark(cHome, !has);
+    cGrade.hidden = !gradeLabel;
+    cSep1.hidden = !gradeLabel;
+    if (gradeLabel) {
+      cGrade.textContent = gradeLabel;
+      cGrade.setAttribute("data-go", gradeHash);
+      mark(cGrade, !subjectLabel);
+    }
+    cSep2.hidden = !subjectLabel;
+    cSubject.hidden = !subjectLabel;
+    if (subjectLabel) {
+      cSubject.textContent = subjectLabel;
+      cSubject.setAttribute("data-go", location.hash || "");
+      mark(cSubject, true);
+    }
+  }
+
+  function scrollToStage() {
+    var top = stage.getBoundingClientRect().top;
+    if (top < 0) window.scrollTo({ top: window.pageYOffset + top - 12, behavior: "smooth" });
+  }
+
+  function go(hash, opts) {
+    opts = opts || {};
+    if ((location.hash || "") === (hash || "")) { render(); return; }
+    if (opts.push === false) {
+      var url = location.pathname + location.search + (hash || "");
+      history.replaceState(null, "", url);
+    } else {
+      location.hash = hash || "";
+    }
+    render();
+  }
+
+  function render() {
+    var h = (location.hash || "").replace(/^#/, "");
+    if (h === "search") { renderSearch(); return; }
+    var parts = h.split("/");
+    var grade = parts[0] || "";
+    var subject = parts[1] || "";
+
+    if (subject) {
+      var v = findView("view-exams-" + grade.replace("g", "") + "-" + subject);
+      if (v) {
+        activate(v, v.getAttribute("data-label"));
+        setCrumbs(v.getAttribute("data-grade-label"), "#" + grade, v.getAttribute("data-subject-label"));
+        return;
+      }
+    }
+    if (grade) {
+      var g = findView("view-grade-" + grade.replace("g", ""));
+      if (g) {
+        activate(g, g.getAttribute("data-label"));
+        setCrumbs(g.getAttribute("data-label"), "#" + grade, "");
+        return;
+      }
+    }
+    var home = findView("view-home");
+    activate(home, "");
+    setCrumbs("", "", "");
+  }
+
+  function renderSearch() {
+    var q = norm(input.value);
+    searchList.innerHTML = "";
+    if (!q) { searchEmpty.hidden = false; searchCount.textContent = ""; activate(searchView, "البحث"); return; }
+    var hits = cards.filter(function (c) { return norm(c.getAttribute("data-search")).indexOf(q) >= 0; });
+    searchEmpty.hidden = hits.length > 0;
+    searchCount.textContent = hits.length ? hits.length + " نتيجة" : "لا نتائج";
+    hits.forEach(function (c) {
+      var clone = c.cloneNode(true);
+      clone.classList.add("stagger");
+      clone.style.setProperty("--h", c.getAttribute("data-hue") || "222");
+      searchList.appendChild(clone);
+    });
+    activate(searchView, "البحث");
+  }
+
+  /* التنقل بروابط الهاش (يعمل مع أزرار الرجوع في المتصفح) */
+  window.addEventListener("hashchange", function () {
+    if ((location.hash || "").replace(/^#/, "") !== "search" && input.value) resetSearch(false);
+    render();
+    scrollToStage();
+    stage.focus({ preventScroll: true });
+  });
+
+  doc.addEventListener("click", function (e) {
+    var el = e.target.closest ? e.target.closest("[data-go]") : null;
+    if (!el) return;
+    e.preventDefault();
+    go(el.getAttribute("data-go") || "");
+    scrollToStage();
+  });
+
+  /* البحث */
+  function resetSearch(focus) {
+    input.value = "";
+    clear.hidden = true;
+    hint.hidden = false;
+    if (focus) input.focus();
+  }
+  input.addEventListener("input", function () {
+    var has = input.value.length > 0;
+    clear.hidden = !has;
+    hint.hidden = has;
+    if ((location.hash || "").replace(/^#/, "") !== "search") {
+      history.replaceState(null, "", location.pathname + location.search + "#search");
+    }
+    renderSearch();
+  });
+  clear.addEventListener("click", function () {
+    resetSearch(true);
+    var back = input.getAttribute("data-back") || "";
+    go(back, { push: false });
+  });
+  input.addEventListener("focus", function () {
+    input.setAttribute("data-back", (location.hash || "").replace("#search", ""));
+  });
+
+  /* اختصارات لوحة المفاتيح */
+  doc.addEventListener("keydown", function (e) {
+    if (e.key === "/" && doc.activeElement !== input) {
+      e.preventDefault();
+      input.focus();
+      return;
+    }
+    if (e.key === "Escape") {
+      if (input.value) { resetSearch(false); go(input.getAttribute("data-back") || "", { push: false }); return; }
+      var cur = (location.hash || "").replace(/^#/, "");
+      if (cur.indexOf("/") > 0) go("#" + cur.split("/")[0]);
+      else if (cur) go("");
+    }
+  });
+
+  /* لمعة تتبع المؤشر — للأجهزة التي تملك فأرة فقط */
+  if (window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    var pending = null, frame = 0;
+    doc.addEventListener("pointermove", function (e) {
+      var card = e.target.closest ? e.target.closest(".grade-card, .subject-card") : null;
+      if (!card) return;
+      pending = { card: card, x: e.clientX, y: e.clientY };
+      if (frame) return;
+      frame = requestAnimationFrame(function () {
+        frame = 0;
+        if (!pending) return;
+        var r = pending.card.getBoundingClientRect();
+        pending.card.style.setProperty("--mx", ((pending.x - r.left) / r.width * 100).toFixed(1) + "%");
+        pending.card.style.setProperty("--my", ((pending.y - r.top) / r.height * 100).toFixed(1) + "%");
+      });
+    }, { passive: true });
+  }
+
+  render();
+  if (stage.getBoundingClientRect().top < 0) stage.scrollIntoView();
+})();
+</script>
+</body>
+</html>
