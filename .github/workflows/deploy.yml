@@ -164,7 +164,7 @@ jobs:
               fh.write(html_page)
 
           print("Generated _site/index.html listing {0} exam(s): {1}".format(
-              len(exams), ", ".join(name for name, _ in exams)))
+              len(exams), ", ".join(name for _, _, name, _ in exams)))
           PYEOF
 
       - name: Configure GitHub Pages
