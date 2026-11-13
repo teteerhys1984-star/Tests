@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>اختبار اللغة العربية التفاعلي — الصف الخامس — الدرس الثاني: بالرأي والرأي الآخر</title>
+<meta name="description" content="اختبار تفاعلي شامل في اللغة العربية للصف الخامس — الوحدة الأولى: أحلامي وطموحاتي — الدرس الثاني: بالرأي والرأي الآخر (ص 12-24)" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   نظام التصميم — زنابق وردية هادئة (Pastel Bloom)
+   ============================================================ */
+:root{
+  --pink-50:#fdf3f7; --pink-100:#fbe4ee; --pink-200:#f7cbdd; --pink-300:#f2aecb; --pink-400:#e98fb8;
+  --lilac-50:#f7f2fc; --lilac-100:#efe5f9; --lilac-200:#e0cdf2; --lilac-300:#cdaedf;
+  --purple-300:#c79ade; --purple-400:#b07fd0; --purple-500:#9a68c2; --purple-600:#8354ad; --purple-700:#6d4193;
+  --cream-50:#fffdf9; --cream-100:#fdf8ef; --cream-200:#f8eedd;
+  --ink:#4d3a5c; --ink-soft:#7a6489; --ink-faint:#a390b3;
+  --white:#ffffff;
+  --grad-main:linear-gradient(135deg,#b07fd0 0%,#e98fb8 100%);
+  --grad-soft:linear-gradient(135deg,#fbe4ee 0%,#efe5f9 100%);
+  --grad-cream:linear-gradient(180deg,#fffdf9 0%,#fdf6ee 100%);
+  --shadow-card:0 24px 70px -24px rgba(132,84,173,.28), 0 4px 18px -6px rgba(233,143,184,.18);
+  --shadow-pop:0 10px 30px -10px rgba(132,84,173,.30);
+  --radius-xl:30px; --radius-lg:22px; --radius-md:16px;
+  --font-body:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;
+  --font-poem:'Amiri','Cairo','Segoe UI',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body); color:var(--ink); min-height:100vh; line-height:1.9;
+  background-color:var(--cream-100);
+  background-image:
+    radial-gradient(1100px 560px at 88% -8%, rgba(242,174,203,.34), transparent 62%),
+    radial-gradient(900px 520px at -6% 22%, rgba(224,205,242,.42), transparent 60%),
+    radial-gradient(1000px 640px at 50% 118%, rgba(247,203,221,.30), transparent 64%);
+  background-attachment:fixed;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='none' stroke='%23e3c7e8' stroke-width='1' opacity='.55'%3E%3Ccircle cx='26' cy='30' r='2.6'/%3E%3Ccircle cx='26' cy='30' r='.9' fill='%23f2aecb' stroke='none'/%3E%3Cpath d='M150 148c3-6 9-6 12 0-3 6-9 6-12 0Zm6-12c0 3-1 8-6 12-1-5 1-10 6-12Zm0 24c-5-2-7-7-6-12 5 4 6 9 6 12Z'/%3E%3Cpath d='M60 140l1.8 3.6 3.6 1.8-3.6 1.8L60 151l-1.8-3.8-3.6-1.8 3.6-1.8 1.8-3.6z' fill='%23f2d3e4' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+}
+::selection{background:var(--pink-200);color:var(--purple-700)}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit}
+:focus-visible{outline:3px solid var(--purple-300);outline-offset:2px;border-radius:8px}
+.num{font-variant-numeric:tabular-nums;letter-spacing:.5px}
+
+/* ---------- الزخارف العائمة ---------- */
+.deco{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.deco svg{position:absolute;opacity:.8;filter:drop-shadow(0 6px 14px rgba(176,127,208,.18))}
+.float-a{animation:floaty 9s ease-in-out infinite alternate}
+.float-b{animation:floaty 12s ease-in-out -3s infinite alternate}
+.float-c{animation:floaty 11s ease-in-out -6s infinite alternate}
+@keyframes floaty{from{transform:translateY(-8px) rotate(-2deg)}to{transform:translateY(12px) rotate(3deg)}}
+@media (prefers-reduced-motion:reduce){.float-a,.float-b,.float-c{animation:none}}
+
+/* ---------- الترويسة والتذييل ---------- */
+.site-head,.site-foot{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;padding:14px 18px;text-align:center}
+.site-head{padding-top:20px}
+.brand-mini{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--purple-700);font-size:15px}
+.brand-mini .bloom{width:34px;height:34px;flex:none}
+.contact-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.78);border:1px solid var(--lilac-200);border-radius:999px;padding:5px 14px;font-size:13.5px;font-weight:700;color:var(--ink-soft);backdrop-filter:blur(6px);box-shadow:0 4px 14px -8px rgba(132,84,173,.25)}
+.contact-chip svg{width:16px;height:16px}
+.contact-chip a.wa{display:inline-flex;align-items:center;gap:6px;color:#1f9e57;text-decoration:none;font-weight:800}
+.contact-chip a.wa:hover{text-decoration:underline}
+.contact-chip .phone{direction:ltr;unicode-bidi:isolate}
+.site-foot{font-size:12.5px;color:var(--ink-faint);flex-direction:column;gap:6px;padding-bottom:26px}
+.site-foot .contact-chip{margin-top:4px}
+
+/* ---------- الحاوية ---------- */
+#app{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:8px 18px 30px}
+.card{background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid rgba(224,205,242,.75);border-radius:var(--radius-xl);box-shadow:var(--shadow-card);position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;inset:0 0 auto 0;height:7px;background:var(--grad-main)}
+
+/* ---------- شارة أيقونة ---------- */
+.icon{width:18px;height:18px;flex:none}
+.h-icon{width:22px;height:22px}
+
+/* ---------- شاشة الترحيب ---------- */
+.welcome{padding:46px 34px 40px;text-align:center}
+.welcome .seal{width:86px;height:86px;margin:0 auto 14px;border-radius:50%;background:var(--grad-soft);border:2px solid var(--lilac-200);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-pop)}
+.welcome .seal svg{width:44px;height:44px}
+.exam-kicker{display:inline-flex;gap:8px;align-items:center;background:var(--lilac-100);border:1px solid var(--lilac-200);color:var(--purple-700);font-size:13px;font-weight:800;border-radius:999px;padding:4px 16px;margin-bottom:14px}
+.welcome h1{font-family:var(--font-poem);font-size:clamp(26px,4.6vw,38px);font-weight:700;color:var(--purple-700);line-height:1.55}
+.welcome .sub{font-size:16.5px;color:var(--ink-soft);font-weight:600;margin-top:6px}
+.welcome .poem-line{font-family:var(--font-poem);font-size:clamp(19px,3vw,24px);color:var(--pink-400);font-weight:700;margin:16px 0 4px}
+.meta-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:18px 0 6px}
+.meta-chips span{background:var(--cream-100);border:1px solid var(--cream-200);border-radius:999px;padding:4px 14px;font-size:13px;font-weight:700;color:var(--ink-soft)}
+.name-block{margin:26px auto 8px;max-width:460px;text-align:right}
+.name-block label{display:block;font-weight:800;color:var(--purple-600);margin-bottom:8px;font-size:15px}
+.name-row{display:flex;gap:10px;flex-wrap:wrap}
+.name-row input{flex:1;min-width:220px;border:2px solid var(--lilac-200);background:var(--cream-50);border-radius:var(--radius-md);padding:13px 18px;font-size:16px;color:var(--ink);font-weight:600;transition:border-color .2s,box-shadow .2s}
+.name-row input:focus{border-color:var(--purple-400);box-shadow:0 0 0 4px rgba(176,127,208,.14);outline:none}
+.name-err{color:#c04a7e;font-size:13px;font-weight:700;min-height:22px;margin-top:6px;text-align:right}
+.start-hint{font-size:13px;color:var(--ink-faint);display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px}
+.teacher-link{margin-top:20px;display:inline-flex;align-items:center;gap:7px;background:none;border:none;color:var(--ink-faint);font-size:13px;font-weight:700;text-decoration:none}
+.teacher-link:hover{color:var(--purple-600)}
+.teacher-link svg{width:15px;height:15px}
+
+/* ---------- أزرار ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:none;border-radius:var(--radius-md);font-weight:800;font-size:16px;padding:13px 26px;transition:transform .15s,box-shadow .2s,opacity .2s;text-decoration:none}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn-primary{background:var(--grad-main);color:#fff;box-shadow:0 12px 26px -10px rgba(154,104,194,.55)}
+.btn-primary:hover{box-shadow:0 16px 34px -10px rgba(154,104,194,.65);transform:translateY(-1px)}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;filter:saturate(.6)}
+.btn-ghost{background:#fff;color:var(--purple-600);border:2px solid var(--lilac-200)}
+.btn-ghost:hover{border-color:var(--purple-300);background:var(--lilac-50)}
+.btn-soft{background:var(--lilac-100);color:var(--purple-700);border:1px solid var(--lilac-200)}
+.btn-soft:hover{background:var(--lilac-200)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ---------- شاشة الاختبار ---------- */
+.exam-shell{display:flex;flex-direction:column;gap:14px}
+.exam-top{position:sticky;top:10px;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border:1px solid var(--lilac-200);border-radius:var(--radius-lg);box-shadow:var(--shadow-pop);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.timer-chip{display:inline-flex;align-items:center;gap:8px;background:var(--grad-soft);border:1px solid var(--lilac-200);border-radius:999px;padding:5px 15px;font-weight:900;color:var(--purple-700);font-size:15px}
+.timer-chip svg{width:16px;height:16px}
+.qpos{font-weight:800;color:var(--ink-soft);font-size:14px}
+.qpos b{color:var(--purple-700)}
+.progress-wrap{flex:1;min-width:140px}
+.progress-track{height:10px;background:var(--lilac-100);border-radius:999px;overflow:hidden;border:1px solid var(--lilac-200)}
+.progress-fill{height:100%;width:0;background:var(--grad-main);border-radius:999px;transition:width .45s cubic-bezier(.4,0,.2,1)}
+.progress-label{font-size:11.5px;color:var(--ink-faint);font-weight:700;margin-top:3px}
+.student-chip{display:inline-flex;align-items:center;gap:7px;background:var(--pink-100);border:1px solid var(--pink-200);color:#a3416f;border-radius:999px;padding:5px 14px;font-size:13px;font-weight:800}
+.student-chip svg{width:15px;height:15px}
+
+.qcard{padding:34px 30px 28px;animation:qin .4s cubic-bezier(.2,.7,.3,1)}
+@keyframes qin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.qhead{display:flex;align-items:flex-start;gap:14px;margin-bottom:6px}
+.qbadge{width:52px;height:52px;flex:none;border-radius:18px;background:var(--grad-main);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:21px;box-shadow:var(--shadow-pop);font-family:var(--font-poem)}
+.qtitle{font-size:19px;font-weight:800;color:var(--purple-700);line-height:1.7;padding-top:8px}
+.qlead{font-size:13.5px;color:var(--ink-faint);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.qlead svg{width:15px;height:15px}
+.part{border-top:1.5px dashed var(--lilac-200);padding:20px 0 6px}
+.part:first-of-type{border-top:none;padding-top:10px}
+.part-label{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--pink-100);border:1.5px solid var(--pink-200);color:#a3416f;font-weight:900;font-size:15px;margin-left:9px;font-family:var(--font-poem)}
+.part-text{font-size:16.5px;font-weight:700;color:var(--ink);display:inline}
+.part-note{display:block;font-size:13px;color:var(--ink-faint);font-weight:600;margin:6px 40px 0}
+
+/* خيارات */
+.opts{display:grid;gap:10px;margin-top:14px}
+.opt{display:flex;align-items:center;gap:12px;background:var(--cream-50);border:2px solid var(--cream-200);border-radius:var(--radius-md);padding:12px 16px;font-size:15.5px;font-weight:700;color:var(--ink);text-align:right;transition:all .18s;width:100%}
+.opt:hover{border-color:var(--lilac-300);background:var(--lilac-50);transform:translateY(-1px)}
+.opt .dot{width:22px;height:22px;flex:none;border-radius:50%;border:2.5px solid var(--lilac-300);display:flex;align-items:center;justify-content:center;transition:all .18s;background:#fff}
+.opt .dot::after{content:"";width:10px;height:10px;border-radius:50%;background:transparent;transition:background .15s}
+.opt.sel{border-color:var(--purple-500);background:linear-gradient(135deg,#fdf3fa,#f6effc);box-shadow:0 6px 18px -10px rgba(154,104,194,.5)}
+.opt.sel .dot{border-color:var(--purple-500)}
+.opt.sel .dot::after{background:var(--grad-main)}
+.opt.sq .dot{border-radius:7px}
+.opt.sq .dot::after{border-radius:3px}
+.tf-row{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
+.tf-btn{flex:1;min-width:130px;display:flex;align-items:center;justify-content:center;gap:9px;background:var(--cream-50);border:2px solid var(--cream-200);border-radius:var(--radius-md);padding:13px;font-size:16px;font-weight:800;color:var(--ink);transition:all .18s}
+.tf-btn svg{width:19px;height:19px}
+.tf-btn.t svg{color:#3e9e6b}.tf-btn.f svg{color:#c05a7c}
+.tf-btn:hover{border-color:var(--lilac-300);background:var(--lilac-50)}
+.tf-btn.sel{border-color:var(--purple-500);background:linear-gradient(135deg,#fdf3fa,#f6effc);box-shadow:0 6px 18px -10px rgba(154,104,194,.5)}
+
+/* حقول نصية */
+.fill-in{width:100%;max-width:420px;border:2px solid var(--lilac-200);background:var(--cream-50);border-radius:var(--radius-md);padding:12px 18px;font-size:16.5px;font-weight:700;color:var(--ink);margin-top:12px;display:block}
+.fill-in:focus{border-color:var(--purple-400);box-shadow:0 0 0 4px rgba(176,127,208,.14);outline:none}
+.write-area{width:100%;min-height:150px;border:2px solid var(--lilac-200);background:var(--cream-50);border-radius:var(--radius-md);padding:14px 18px;font-size:16px;font-weight:600;color:var(--ink);margin-top:12px;resize:vertical;line-height:2}
+.write-area:focus{border-color:var(--purple-400);box-shadow:0 0 0 4px rgba(176,127,208,.14);outline:none}
+.write-count{font-size:12px;color:var(--ink-faint);font-weight:700;text-align:left;margin-top:4px;direction:ltr}
+
+/* تصنيف */
+.classify-zone{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media(max-width:560px){.classify-zone{grid-template-columns:1fr}}
+.cat-col{background:var(--lilac-50);border:2px dashed var(--lilac-300);border-radius:var(--radius-md);padding:12px;min-height:110px;transition:all .18s}
+.cat-col.armed{border-color:var(--purple-500);background:var(--lilac-100);box-shadow:inset 0 0 0 3px rgba(176,127,208,.2)}
+.cat-col h4{font-size:15px;color:var(--purple-700);margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.cat-items{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:#fff;border:2px solid var(--lilac-200);border-radius:999px;padding:6px 14px;font-size:14.5px;font-weight:800;color:var(--ink);transition:all .15s}
+.chip svg{width:14px;height:14px;color:var(--ink-faint)}
+.chip:hover{border-color:var(--purple-300);transform:translateY(-1px)}
+.chip.armed{border-color:var(--purple-500);background:var(--grad-soft);box-shadow:0 4px 12px -6px rgba(154,104,194,.5)}
+.pool{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;background:var(--cream-50);border:1.5px solid var(--cream-200);border-radius:var(--radius-md);padding:12px;transition:all .18s}
+.pool.armed{border-color:var(--purple-500);background:var(--lilac-50);box-shadow:inset 0 0 0 3px rgba(176,127,208,.15)}
+.pool-label{font-size:13px;font-weight:800;color:var(--ink-faint);width:100%;margin-bottom:2px}
+
+/* مطابقة */
+.match-zone{display:grid;grid-template-columns:1fr;gap:10px;margin-top:14px}
+.match-row{display:flex;align-items:center;gap:10px;background:var(--cream-50);border:1.5px solid var(--cream-200);border-radius:var(--radius-md);padding:10px 14px;flex-wrap:wrap}
+.match-left{font-weight:900;color:var(--purple-700);font-size:16px;min-width:74px;background:var(--lilac-100);border-radius:10px;padding:4px 14px;text-align:center}
+.match-opts{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+
+/* ترتيب */
+.order-tray{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.order-slots{display:flex;flex-direction:column;gap:9px;margin-top:14px}
+.slot{display:flex;align-items:center;gap:12px;border:2px dashed var(--lilac-300);border-radius:var(--radius-md);padding:9px 14px;min-height:52px;background:var(--lilac-50)}
+.slot.filled{border-style:solid;border-color:var(--purple-400);background:#fff}
+.slot .slot-num{width:30px;height:30px;flex:none;border-radius:50%;background:var(--lilac-200);color:var(--purple-700);display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-poem)}
+.slot.filled .slot-num{background:var(--grad-main);color:#fff}
+.slot .slot-text{font-weight:800;font-size:15px;flex:1}
+.slot .rm{background:none;border:none;color:var(--ink-faint);display:flex}
+.slot .rm:hover{color:#c04a7e}
+.mini-tools{display:flex;gap:8px;margin-top:10px}
+
+/* تنقّل */
+.nav-row{display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.nav-row .btn{padding:11px 22px;font-size:15px}
+.review-btn{display:inline-flex;align-items:center;gap:8px}
+.review-drawer{background:rgba(255,255,255,.95);border:1px solid var(--lilac-200);border-radius:var(--radius-lg);box-shadow:var(--shadow-pop);padding:16px 18px}
+.review-drawer h3{font-size:15px;color:var(--purple-700);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.review-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:8px}
+.rv{aspect-ratio:1;border-radius:14px;border:2px solid var(--lilac-200);background:var(--cream-50);font-weight:900;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;font-family:var(--font-poem)}
+.rv:hover{transform:translateY(-2px);border-color:var(--purple-300)}
+.rv.done{background:var(--grad-soft);border-color:var(--purple-400);color:var(--purple-700)}
+.rv.cur{box-shadow:0 0 0 3px var(--pink-300);border-color:var(--pink-400)}
+.rv-legend{display:flex;gap:14px;margin-top:10px;font-size:12px;color:var(--ink-faint);font-weight:700;flex-wrap:wrap}
+.rv-legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-left:5px;vertical-align:-1px}
+
+.submit-zone{background:rgba(255,255,255,.95);border:1px solid var(--lilac-200);border-radius:var(--radius-lg);box-shadow:var(--shadow-pop);padding:18px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:space-between}
+.missing-note{font-weight:800;color:#a3416f;background:var(--pink-100);border:1px solid var(--pink-200);border-radius:12px;padding:8px 16px;font-size:14px;display:inline-flex;align-items:center;gap:8px}
+.missing-note.ok{background:#eaf7ef;border-color:#bfe6cf;color:#2c7a4c}
+#btn-submit{font-size:17px;padding:14px 34px}
+
+/* ---------- نتائج ---------- */
+.results{padding:42px 30px 36px;text-align:center}
+.score-ring{width:190px;height:190px;margin:18px auto;position:relative}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring .ring-bg{stroke:var(--lilac-100)}
+.score-ring .ring-fg{stroke:url(#ringGrad);stroke-linecap:round;transition:stroke-dashoffset 1.1s cubic-bezier(.3,.7,.3,1)}
+.score-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-inner .sc{font-size:44px;font-weight:900;color:var(--purple-700);font-family:var(--font-poem);line-height:1}
+.score-inner .of{font-size:14px;color:var(--ink-faint);font-weight:800}
+.score-inner .pc{font-size:16px;color:#a3416f;font-weight:900;margin-top:2px}
+.res-title{font-family:var(--font-poem);font-size:clamp(24px,4vw,32px);color:var(--purple-700);font-weight:700}
+.res-name{font-size:17px;color:var(--ink-soft);font-weight:800;margin-top:4px}
+.res-praise{font-size:14px;color:var(--ink-faint);font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:22px 0 6px}
+.stat{background:var(--cream-50);border:1.5px solid var(--cream-200);border-radius:var(--radius-md);padding:12px 8px}
+.stat b{display:block;font-size:23px;font-family:var(--font-poem)}
+.stat span{font-size:12.5px;font-weight:800;color:var(--ink-soft)}
+.stat.c1 b{color:#2c8a58}.stat.c2 b{color:#b98a1f}.stat.c3 b{color:#c04a5e}.stat.c4 b{color:var(--purple-600)}.stat.c5 b{color:#a3416f}
+.res-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.dl-note{font-size:12.5px;color:var(--ink-faint);font-weight:700;margin-top:12px}
+.attempt-info{font-size:12px;color:var(--ink-faint);margin-top:16px;font-weight:600;direction:ltr;unicode-bidi:isolate}
+
+/* ---------- المعلمة ---------- */
+.teacher{padding:36px 28px}
+.teacher h2{font-family:var(--font-poem);color:var(--purple-700);font-size:26px;margin-bottom:4px}
+.teacher .t-sub{color:var(--ink-soft);font-weight:700;font-size:14px;margin-bottom:18px}
+.gate{max-width:420px;margin:26px auto;text-align:center}
+.gate input{width:100%;border:2px solid var(--lilac-200);border-radius:var(--radius-md);padding:12px 16px;font-size:16px;text-align:center;letter-spacing:2px;background:var(--cream-50);direction:ltr}
+.gate .err{color:#c04a7e;font-weight:700;font-size:13px;min-height:20px;margin-top:6px}
+.gate-note{font-size:12px;color:var(--ink-faint);margin-top:10px;font-weight:600}
+.key-q{border:1.5px solid var(--lilac-200);border-radius:var(--radius-lg);padding:18px 20px;margin:14px 0;background:#fff}
+.key-q h3{font-size:16.5px;color:var(--purple-700)}
+.key-meta{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 12px}
+.key-meta span{font-size:11.5px;font-weight:800;border-radius:999px;padding:3px 12px}
+.km-diff{background:var(--pink-100);color:#a3416f;border:1px solid var(--pink-200)}
+.km-stage{background:var(--lilac-100);color:var(--purple-700);border:1px solid var(--lilac-200)}
+.km-page{background:var(--cream-100);color:#8a6d3b;border:1px solid var(--cream-200)}
+.km-marks{background:#eaf3fd;color:#2c5d8a;border:1px solid #cfe3f5}
+.key-part{border-top:1px dashed var(--lilac-200);padding:12px 6px 4px}
+.key-part .kp-t{font-weight:800;font-size:14.5px}
+.key-part .kp-a{color:#276b47;font-weight:700;font-size:14px;margin-top:4px}
+.key-part .kp-x{color:var(--ink-soft);font-size:13px;margin-top:3px}
+.key-part .kp-s{color:var(--ink-faint);font-size:12px;margin-top:3px;direction:rtl}
+.key-part .kp-m{display:inline-block;background:var(--lilac-100);border-radius:8px;padding:0 10px;font-size:12px;font-weight:900;color:var(--purple-700)}
+.rubric-list{margin:4px 0 0;padding-right:18px;font-size:13px;color:var(--ink-soft)}
+.t-back{margin-bottom:8px}
+
+/* ---------- تنبيهات ---------- */
+#storage-banner{position:fixed;bottom:16px;right:16px;left:16px;max-width:460px;margin:0 auto;z-index:60;background:#fff7e8;border:1.5px solid #f0d9a8;color:#8a6410;border-radius:14px;padding:10px 16px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:9px;box-shadow:0 12px 30px -12px rgba(138,100,16,.4)}
+#storage-banner svg{width:18px;height:18px;flex:none}
+.fade-up{animation:qin .45s cubic-bezier(.2,.7,.3,1)}
+@media(max-width:640px){
+  .welcome{padding:34px 20px 30px}
+  .qcard{padding:24px 18px 20px}
+  .exam-top{top:6px}
+  .progress-wrap{min-width:100%;order:4}
+  .results{padding:32px 18px 28px}
+}
+</style>
+</head>
+<body>
+
+<!-- زخارف عائمة هادئة -->
+<div class="deco" aria-hidden="true">
+  <svg class="float-a" style="top:9%;right:3%;width:64px;height:64px" viewBox="0 0 64 64" fill="none">
+    <g stroke="#e98fb8" stroke-width="2" stroke-linecap="round">
+      <circle cx="32" cy="32" r="6" fill="#f7cbdd" stroke="none"/>
+      <ellipse cx="32" cy="17" rx="7" ry="11" fill="#fbe4ee"/><ellipse cx="32" cy="47" rx="7" ry="11" fill="#fbe4ee"/>
+      <ellipse cx="17" cy="32" rx="11" ry="7" fill="#fbe4ee"/><ellipse cx="47" cy="32" rx="11" ry="7" fill="#fbe4ee"/>
+    </g>
+  </svg>
+  <svg class="float-b" style="top:16%;left:4%;width:46px;height:46px" viewBox="0 0 48 48" fill="none">
+    <path d="M24 6l3.6 11.4L39 21l-11.4 3.6L24 36l-3.6-11.4L9 21l11.4-3.6L24 6z" fill="#e0cdf2" stroke="#b07fd0" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M38 32l1.6 4.4L44 38l-4.4 1.6L38 44l-1.6-4.4L32 38l4.4-1.6L38 32z" fill="#f7cbdd"/>
+  </svg>
+  <svg class="float-c" style="bottom:14%;right:6%;width:40px;height:40px" viewBox="0 0 48 48" fill="none">
+    <path d="M24 42S6 30.6 6 18.8C6 11.9 11.4 7 17.4 7c3.2 0 5.5 1.6 6.6 3.2C25.1 8.6 27.4 7 30.6 7 36.6 7 42 11.9 42 18.8 42 30.6 24 42 24 42z" fill="#fbe4ee" stroke="#e98fb8" stroke-width="2"/>
+  </svg>
+  <svg class="float-b" style="bottom:8%;left:8%;width:56px;height:56px" viewBox="0 0 64 64" fill="none">
+    <g stroke="#cdaedf" stroke-width="2" stroke-linecap="round">
+      <circle cx="32" cy="32" r="5.5" fill="#efe5f9" stroke="none"/>
+      <ellipse cx="32" cy="18" rx="6.5" ry="10" fill="#f7f2fc"/><ellipse cx="32" cy="46" rx="6.5" ry="10" fill="#f7f2fc"/>
+      <ellipse cx="18" cy="32" rx="10" ry="6.5" fill="#f7f2fc"/><ellipse cx="46" cy="32" rx="10" ry="6.5" fill="#f7f2fc"/>
+      <ellipse cx="22" cy="22" rx="7" ry="5" transform="rotate(45 22 22)" fill="#f7f2fc"/><ellipse cx="42" cy="42" rx="7" ry="5" transform="rotate(45 42 42)" fill="#f7f2fc"/>
+    </g>
+  </svg>
+  <svg class="float-a" style="top:46%;left:2%;width:34px;height:34px" viewBox="0 0 48 48" fill="none">
+    <path d="M24 6l3.6 11.4L39 21l-11.4 3.6L24 36l-3.6-11.4L9 21l11.4-3.6L24 6z" fill="#fbe4ee" stroke="#f2aecb" stroke-width="1.6" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<!-- تنبيه فشل التخزين -->
+<div id="storage-banner" hidden dir="rtl">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+  <span>تنبيه: التخزين المحلي في هذا المتصفح غير متاح حالياً، لذلك قد لا يُحفَظ تقدّمك تلقائياً. يمكنك متابعة الاختبار، لكن تجنّبي تحديث الصفحة.</span>
+</div>
+
+<!-- الترويسة: معلومات التواصل -->
+<header class="site-head">
+  <div class="brand-mini">
+    <svg class="bloom" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <circle cx="24" cy="24" r="5" fill="#e98fb8"/>
+      <ellipse cx="24" cy="11" rx="6" ry="9" fill="#f2aecb"/><ellipse cx="24" cy="37" rx="6" ry="9" fill="#f2aecb"/>
+      <ellipse cx="11" cy="24" rx="9" ry="6" fill="#cdaedf"/><ellipse cx="37" cy="24" rx="9" ry="6" fill="#cdaedf"/>
+    </svg>
+    <span>اختبار اللغة العربية — الصف الخامس</span>
+  </div>
+  <span class="contact-chip">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#7a6489" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    المهندس سومر شاهين: <span class="phone num">0930215022</span>
+    <a class="wa" href="https://wa.me/963930210522" target="_blank" rel="noopener noreferrer" aria-label="تواصل واتساب">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.2 5.1 4.49.71.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.58-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.82 9.82 0 01-1.51-5.26c0-5.45 4.44-9.88 9.9-9.88a9.83 9.83 0 017.03 2.91 9.83 9.83 0 012.9 7c0 5.45-4.44 9.86-9.94 9.86m8.42-18.3A11.8 11.8 0 0012.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.6 5.95L.06 24l6.3-1.65a11.9 11.9 0 005.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.9 0-3.18-1.24-6.16-3.48-8.41"/></svg>
+      واتساب
+    </a>
+  </span>
+</header>
+
+<main id="app">
+
+  <!-- ============ شاشة الترحيب ============ -->
+  <section id="scr-welcome" class="card welcome fade-up">
+    <div class="seal" aria-hidden="true">
+      <svg viewBox="0 0 48 48" fill="none" stroke="#9a68c2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5c0-1.4 1.6-2.5 3-2.5h26c1.4 0 3 1.1 3 2.5v19c0 1.4-1.6 2.5-3 2.5H7c-1.4 0-3-1.1-3-2.5v-19z" transform="translate(3 -3) scale(0.92)"/>
+        <path d="M8 40V8a4 4 0 014-4h26a4 4 0 014 4v26"/>
+      </svg>
+    </div>
+    <span class="exam-kicker">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z"/></svg>
+      الوحدة الأولى: أحلامي وطموحاتي
+    </span>
+    <h1>اختبار الدرس الثاني<br/>«بالرأي والرأي الآخر»</h1>
+    <p class="sub">اختبار تفاعلي شامل — اللغة العربية · الصف الخامس الأساسي</p>
+    <p class="poem-line">حوار + حب = حياة</p>
+    <div class="meta-chips">
+      <span>20 سؤالاً متنوعاً</span><span>العلامة الكاملة: 100</span><span>الصفحات 12–24</span><span>بحفظ تلقائي للتقدّم</span>
+    </div>
+    <div class="name-block">
+      <label for="in-name">الاسم الكامل للطالبة:</label>
+      <div class="name-row">
+        <input id="in-name" type="text" placeholder="اكتبي اسمك الثلاثي هنا…" autocomplete="name" maxlength="60" />
+        <button id="btn-start" class="btn btn-primary">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14l11-7-11-7z"/></svg>
+          ابدئي الاختبار
+        </button>
+      </div>
+      <div class="name-err" id="name-err"></div>
+    </div>
+    <p class="start-hint">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      يبدأ المؤقّت عند ظهور أول سؤال — خذي وقتك وأجيبي بتركيز
+    </p>
+    <button class="teacher-link" id="link-teacher" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      دخول المعلمة (مفتاح الإجابات)
+    </button>
+  </section>
+
+  <!-- ============ شاشة الاختبار ============ -->
+  <section id="scr-exam" class="exam-shell" hidden>
+    <div class="exam-top">
+      <span class="timer-chip" id="timer-chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="timer-text" class="num">٠٠:٠٠:٠٠</span>
+      </span>
+      <span class="student-chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="student-chip-name"></span>
+      </span>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="progress-label" id="progress-label"></div>
+      </div>
+      <span class="qpos">السؤال <b id="qpos-cur">١</b> من <b>٢٠</b></span>
+    </div>
+
+    <article class="card qcard" id="q-card">
+      <div class="qhead">
+        <div class="qbadge" id="q-badge">١</div>
+        <div class="qtitle" id="q-title"></div>
+      </div>
+      <div class="qlead" id="q-lead"></div>
+      <div id="q-parts"></div>
+    </article>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" id="btn-prev">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        السابق
+      </button>
+      <button class="btn btn-soft review-btn" id="btn-review" type="button">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        مراجعة الإجابات
+      </button>
+      <button class="btn btn-primary" id="btn-next">
+        التالي
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+    </div>
+
+    <div class="review-drawer" id="review-drawer" hidden>
+      <h3>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        خريطة الأسئلة — انتقلي إلى أي سؤال
+      </h3>
+      <div class="review-grid" id="review-grid"></div>
+      <div class="rv-legend">
+        <span><i style="background:#f6ecfb;border:1.5px solid #b07fd0"></i> تمت الإجابة</span>
+        <span><i style="background:#fffdf9;border:1.5px solid #e0cdf2"></i> لم تُجب بعد</span>
+        <span><i style="background:transparent;border:2px solid #f2aecb;box-shadow:0 0 0 2px #f7cbdd"></i> السؤال الحالي</span>
+      </div>
+    </div>
+
+    <div class="submit-zone">
+      <div id="missing-note" class="missing-note"></div>
+      <button class="btn btn-primary" id="btn-submit" disabled>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        تسليم الاختبار
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ شاشة النتائج ============ -->
+  <section id="scr-results" class="card results fade-up" hidden>
+    <svg width="0" height="0" style="position:absolute"><defs>
+      <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#b07fd0"/><stop offset="100%" stop-color="#e98fb8"/>
+      </linearGradient>
+    </defs></svg>
+    <h2 class="res-title">انتهى الاختبار — أحسنتِ!</h2>
+    <p class="res-name" id="res-name"></p>
+    <p class="res-praise" id="res-praise"></p>
+    <div class="score-ring">
+      <svg width="190" height="190" viewBox="0 0 190 190">
+        <circle class="ring-bg" cx="95" cy="95" r="82" fill="none" stroke-width="15"/>
+        <circle class="ring-fg" id="ring-fg" cx="95" cy="95" r="82" fill="none" stroke-width="15" stroke-dasharray="515.2" stroke-dashoffset="515.2"/>
+      </svg>
+      <div class="score-inner">
+        <div class="sc num" id="res-score">0</div>
+        <div class="of">من 100</div>
+        <div class="pc num" id="res-pct">0%</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat c1"><b class="num" id="st-full">0</b><span>إجابة تامة</span></div>
+      <div class="stat c2"><b class="num" id="st-part">0</b><span>إجابة جزئية</span></div>
+      <div class="stat c3"><b class="num" id="st-wrong">0</b><span>إجابة خاطئة</span></div>
+      <div class="stat c4"><b class="num" id="st-empty">0</b><span>جزء غير مُجاب</span></div>
+      <div class="stat c5"><b class="num" id="st-time">—</b><span>مدة الاختبار</span></div>
+    </div>
+    <div class="res-actions">
+      <button class="btn btn-primary" id="btn-download">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        تنزيل التقرير TXT
+      </button>
+      <button class="btn btn-ghost" id="btn-retry">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+        إعادة المحاولة
+      </button>
+    </div>
+    <p class="dl-note" id="dl-note"></p>
+    <p class="attempt-info" id="attempt-info"></p>
+  </section>
+
+  <!-- ============ شاشة المعلمة ============ -->
+  <section id="scr-teacher" class="card teacher" hidden>
+    <button class="btn btn-ghost t-back" id="btn-teacher-back" type="button">عودة</button>
+    <h2>مفتاح الإجابات — منطقة المعلمة</h2>
+    <p class="t-sub">محتوى تربوي خاص بالمعلمة: الإجابات، البدائل المقبولة، معايير التصحيح، والمراجع المنهجية الداخلية.</p>
+    <div class="gate" id="teacher-gate">
+      <input id="in-pass" type="password" placeholder="كلمة المرور" autocomplete="off" />
+      <div class="err" id="pass-err"></div>
+      <button class="btn btn-primary" id="btn-pass" type="button">دخول</button>
+      <p class="gate-note">ملاحظة: هذا ملف مستقل يعمل دون خادم؛ حماية كلمة المرور هنا قيد بسيط على مستوى الواجهة فقط، وليست تشفيراً أو حماية خادمية.</p>
+    </div>
+    <div id="teacher-key" hidden>
+      <div class="key-meta" id="blueprint-meta"></div>
+      <div id="key-list"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <span>اختبار تفاعلي يعمل محلياً بالكامل — لا تُرسَل أي بيانات خارج جهازك.</span>
+  <span class="contact-chip">
+    المهندس سومر شاهين: <span class="phone num">0930215022</span>
+    <a class="wa" href="https://wa.me/963930210522" target="_blank" rel="noopener noreferrer" aria-label="تواصل واتساب">واتساب</a>
+  </span>
+</footer>
+
+<script>
+/* =====================================================================
+   بنك الاختبار — الدرس الثاني: بالرأي والرأي الآخر (الصفحات 12-24)
+   مصادر الأسئلة: قفل المصدر الدائم lesson-02-bil-rayi-wal-rayi-al-akhar
+   وسجل الأنشطة الموثّق لمراحل التعلّم التسع.
+   المخطط: أساسي 6 / متوسط 7 / متقدم 4 / تفكير 3 — المجموع 100 درجة.
+   ===================================================================== */
+const EXAM = {
+  id: "AR5-U1-L2-EXAM", version: "1.0.0",
+  subject: "اللغة العربية", grade: "الصف الخامس الأساسي",
+  unit: "الوحدة الأولى: أحلامي وطموحاتي",
+  lesson: "الدرس الثاني: بالرأي والرأي الآخر — «حوار + حب = حياة»",
+  pages: "12-24",
+  title: "اختبار اللغة العربية التفاعلي — الصف الخامس — الدرس الثاني: بالرأي والرأي الآخر",
+  totalMarks: 100
+};
+const DIFF_NAME = { basic: "أساسي", medium: "متوسط", advanced: "متقدم", thinking: "تفكير واستدلال" };
+const STAGE_NAME = {
+  1: "استكشاف الصور والاستماع",
+  2: "النص الشعري",
+  3: "الفهم القرائي",
+  4: "المقابلة الصحفية",
+  5: "قواعد اللغة: المصادر",
+  6: "الإملاء: همزة القطع",
+  7: "الخط: الهمزة والمد والألف",
+  8: "التعبير الكتابي",
+  9: "ألعب وأتعلم"
+};
+const QUESTIONS = [
+  /* ---------- أساسي (6 × 4) ---------- */
+  { id: "q01", diff: "basic", stage: 2, pages: "13", marks: 4,
+    skill: "فهم المفردة من معجم الدرس",
+    title: "مفردات من معجم الدرس",
+    lead: "يساعدنا معجمُ الكلمات في فهم مفردات النص الشعري.",
+    src: "المرحلة 2 — النص الشعري | ص13: معجم الكلمات",
+    parts: [
+      { id: "a", type: "choice", marks: 2, srcNote: "ص13 — معجم الكلمات",
+        t: "ما المعنى الذي يورده معجم الدرس لكلمة «تتصفّى»؟",
+        opts: ["تنتقي", "تتخاصم", "تتوقّف عن الكلام", "تتراجع عمّا قالته"], correct: 0,
+        ans: "تنتقي",
+        exp: "يسجّل معجم الكلمات في المصدر: «تتصفّى: تنتقي»." },
+      { id: "b", type: "tf", marks: 2, srcNote: "ص13 — معجم الكلمات",
+        t: "يشرح معجمُ الدرس كلمةَ «الحكمة» بأنها: اعتماد العقل والعلم بحقائق الأمور.",
+        correct: true, ans: "صحيح",
+        exp: "ورد في معجم الدرس: «الحكمة: اعتماد العقل والعلم بحقائق الأمور»." }
+    ] },
+  { id: "q02", diff: "basic", stage: 2, pages: "13", marks: 4,
+    skill: "التعرّف إلى هوية النص الشعري وبنائه",
+    title: "نتعرّف إلى النص الشعري",
+    lead: "لكلّ نصٍّ عنوانٌ وشاعرٌ وبنيةٌ تميّزه.",
+    src: "المرحلة 2 — النص الشعري | ص13: هوية النص وبنيته",
+    parts: [
+      { id: "a", type: "choice", marks: 2, srcNote: "ص13 — النص الشعري",
+        t: "من شاعرُ نصِّ «بالرأي والرأي الآخر»؟",
+        opts: ["صالح هواري", "نزار قبّاني", "أحمد شوقي", "محمود درويش"], correct: 0,
+        ans: "صالح هواري",
+        exp: "النص الشعري في ص13 بعنوان «بالرأي والرأي الآخر» للشاعر صالح هواري." },
+      { id: "b", type: "choice", marks: 2, srcNote: "ص13 — بنية النص",
+        t: "كيف جاء بناءُ القصيدة في الكتاب؟",
+        opts: ["ثلاثة مقاطع تفصل بينها علاماتُ نجوم", "مقطع واحد طويل بلا أيّ فواصل", "خمسة مقاطع تفصل بينها سطور فارغة"], correct: 0,
+        ans: "ثلاثة مقاطع تفصل بينها علامات نجوم",
+        exp: "بُنيت القصيدة على ثلاثة مقاطع تفصل بينها علامات نجوم وردية." }
+    ] },
+  { id: "q03", diff: "basic", stage: 5, pages: "17-18", marks: 4,
+    skill: "تعريف المصدر وتمييزه وتحويل الفعل إليه",
+    title: "المصدر: تعريفٌ وتطبيقٌ أوّل",
+    lead: "نتعرّف في قواعد درسنا إلى مفهومٍ جديد نطبّقه على أفعالٍ كثيرة.",
+    src: "المرحلة 5 — قواعد اللغة: المصادر | ص17 القاعدة، ص18 أطبّق",
+    parts: [
+      { id: "a", type: "tf", marks: 1, srcNote: "ص17 — القاعدة",
+        t: "المصدر اسمٌ من جنس الفعل يدلّ على حدثٍ مجرّدٍ من الزمن.",
+        correct: true, ans: "صحيح",
+        exp: "هذا هو نصّ القاعدة المقرَّرة في ص17." },
+      { id: "b", type: "choice", marks: 1, srcNote: "ص17 — أمثلة الاستقراء",
+        t: "أيّ كلمةٍ ممّا يأتي مصدر؟",
+        opts: ["إتقان", "أتقنَ", "أقبلَ", "غادرَ"], correct: 0,
+        ans: "إتقان",
+        exp: "«إتقان» اسم يدلّ على الحدث مجرّداً من الزمن؛ من أمثلة الاستقراء: عملاً، إتقان، تقديم." },
+      { id: "c", type: "fill", marks: 2, srcNote: "ص18 — أطبّق (المطابقة)",
+        t: "أكملي: مصدرُ الفعل «ذهب» هو: …",
+        accept: ["ذهاب", "الذهاب"], ans: "ذهاب", alts: "ذهاب",
+        exp: "وردت المطابقة «ذهب / ذهاب» ضمن أزواج تطبيق المصادر في ص18." }
+    ] },
+  { id: "q04", diff: "basic", stage: 6, pages: "19", marks: 4,
+    skill: "رسم همزة القطع",
+    title: "همزة القطع: اللمسة الأولى",
+    lead: "للهمزات رسومٌ دقيقة نتقنها بالتأنّي والملاحظة.",
+    src: "المرحلة 6 — الإملاء: همزة القطع | ص19 أقرأ الأمثلة والاستقراء",
+    parts: [
+      { id: "a", type: "choice", marks: 2, srcNote: "ص19 — أقرأ الأمثلة",
+        t: "همزةُ القطع المكسورة في أول الكلمة تُرسَم:",
+        opts: ["تحت الألف", "فوق الألف", "على السطر بلا ألف", "فوق الواو"], correct: 0,
+        ans: "تحت الألف",
+        exp: "المثال «إقبالاً» يبدأ بهمزة قطع مكسورة مرسومة تحت الألف." },
+      { id: "b", type: "choice", marks: 2, srcNote: "ص19 — الاستقراء",
+        t: "أيّ كلمةٍ من الآتية تبدأ بهمزة قطعٍ مفتوحة؟",
+        opts: ["أقبل", "انتشار", "ذهب", "رؤية"], correct: 0,
+        ans: "أقبل",
+        exp: "«أقبل» من أمثلة الاستقراء الموثّقة في ص19؛ باقي الكلمات لا تبدأ بهمزة قطع مرسومة." }
+    ] },
+  { id: "q05", diff: "basic", stage: 3, pages: "15", marks: 4,
+    skill: "تمييز الحقوق من الواجبات",
+    title: "ميزان الحقوق والواجبات",
+    lead: "لكلٍّ منّا حقوقٌ يتمتّع بها، وواجباتٌ يقوم بها.",
+    src: "المرحلة 3 — الفهم القرائي | ص15: ميزان الحقوق والواجبات",
+    parts: [
+      { id: "a", type: "tf", marks: 2, srcNote: "ص15 — الميزان",
+        t: "وضع ميزانُ الدرس «التعليم» و«الصحة» في كفّة الحقوق.",
+        correct: true, ans: "صحيح",
+        exp: "يسجّل ميزان ص15 «التعليم» و«الصحة» ضمن الحقوق." },
+      { id: "b", type: "choice", marks: 2, srcNote: "ص15 — الميزان",
+        t: "أيٌّ ممّا يأتي واجبٌ سجّله ميزانُ الدرس؟",
+        opts: ["التزام القوانين", "التعليم", "الصحة"], correct: 0,
+        ans: "التزام القوانين",
+        exp: "يورد الميزان «التزام القوانين» ضمن الواجبات، بينما التعليم والصحة حقوق." }
+    ] },
+  { id: "q06", diff: "basic", stage: 1, pages: "12", marks: 4,
+    skill: "استكشاف مثيرات الصور وعبارة الافتتاح",
+    title: "مع الصور الافتتاحية للدرس",
+    lead: "تُفتَح رحلتنا بصورٍ نتأمّلها وعبارةٍ نتذكّرها.",
+    src: "المرحلة 1 — استكشاف الصور والاستماع | ص12",
+    parts: [
+      { id: "a", type: "choice", marks: 2, srcNote: "ص12 — أتأمّل الصور",
+        t: "تدور الصورُ الافتتاحية للدرس حول:",
+        opts: ["الوطن وعلمِه، والحوار، وتعاون الأطفال", "ألعاب الفيديو الحديثة", "رحلات الفضاء والكواكب", "أسواق المدينة القديمة"], correct: 0,
+        ans: "الوطن وعلمه، والحوار، وتعاون الأطفال",
+        exp: "الصور الثلاث مثيرات موثّقة في ص12: الوطن/العلم، الحوار، تعاون الأطفال." },
+      { id: "b", type: "fill", marks: 2, srcNote: "ص12 — عبارة الافتتاح",
+        t: "أكملي عبارةَ افتتاح الدرس: حوار + … = حياة",
+        accept: ["حب", "الحب"], ans: "حب", alts: "حب",
+        exp: "العبارة الافتتاحية الموثّقة في ص12: حوار + حب = حياة." }
+    ] },
+  /* ---------- متوسط (7 × 5) ---------- */
+  { id: "q07", diff: "medium", stage: 3, pages: "14", marks: 5,
+    skill: "المعنى السياقي للكلمة",
+    title: "معنى الكلمة يتلوّن بسياقها",
+    lead: "نتأمّل كلمةً واحدةً في موضعين مختلفين، ونكتشف الفرق بأنفسنا.",
+    src: "المرحلة 3 — الفهم القرائي | ص14: نشاط المعنى السياقي",
+    parts: [
+      { id: "a", type: "choice", marks: 2, srcNote: "ص14 — نشاط 2",
+        t: "ما معنى «تنضج» في جملة النص: «فالحكمةُ تنضجُ بالرأي والرأي الآخر»؟",
+        opts: ["تكتمل وتزداد نموّاً ورسوخاً", "تُطهى على النار", "يصفرّ لونُها", "تتقشّر من أغصانها"], correct: 0,
+        ans: "تكتمل وتزداد نموّاً ورسوخاً",
+        exp: "هنا «تنضج» معنوية: تكتمل الحكمة وتنمو بتداول الآراء." },
+      { id: "b", type: "choice", marks: 2, srcNote: "ص14 — نشاط 2",
+        t: "وما معناها في: «ثمرةُ التين تنضجُ في فصل الصيف»؟",
+        opts: ["تبلغ نضجَها فتصبح صالحةً للأكل", "تصبح أكثر حكمة", "تجفّ وتذبل فوراً", "تختفي عن الشجرة"], correct: 0,
+        ans: "تبلغ نضجَها فتصبح صالحةً للأكل",
+        exp: "في سياق الثمرة المعنى حسّي: بلوغ النضوج الطبيعي." },
+      { id: "c", type: "tf", marks: 1, srcNote: "ص14 — نشاط 2",
+        t: "للكلمة الواحدة معنىً واحد ثابت لا يتغيّر مهما اختلف السياق.",
+        correct: false, ans: "خطأ",
+        exp: "تدرّب النشاط على اختلاف المعنى باختلاف السياق، كما في موضعَي «تنضج»." }
+    ] },
+  { id: "q08", diff: "medium", stage: 3, pages: "14", marks: 5,
+    skill: "ترتيب أفكار النص حسب ورودها",
+    title: "نرتّب أفكار النص",
+    lead: "اضغطي على العبارات بالترتيب الذي وردت به في النص.",
+    src: "المرحلة 3 — الفهم القرائي | ص14: نشاط ترتيب الأفكار",
+    parts: [
+      { id: "a", type: "order", marks: 5, srcNote: "ص14 — نشاط 4",
+        t: "رتّبي الأفكار الثلاثة الآتية حسب ورودها في النص:",
+        items: ["الحكمة تنمو بتعدّد الآراء", "كلُّ حقٍّ يقابله واجب", "بالحوار الإيجابي نصنع مستقبلاً لوطنّنا"],
+        wts: [2, 2, 1], scramble: [2, 0, 1],
+        ans: "1) الحكمة تنمو بتعدّد الآراء 2) كل حق يقابله واجب 3) بالحوار الإيجابي نصنع مستقبلاً لوطنّنا",
+        exp: "الترتيب الموثّق: الحكمة بتعدد الآراء، ثم الحق والواجب، ثم صناعة المستقبل بالحوار." }
+    ] },
+  { id: "q09", diff: "medium", stage: 4, pages: "16", marks: 5,
+    skill: "متطلّبات المقابلة الصحفية ونموذجها",
+    title: "خطوات المقابلة الصحفية",
+    lead: "المقابلة الناجحة تُعدّ بعناية وتُدار بأدب.",
+    src: "المرحلة 4 — المقابلة الصحفية | ص16: أتعلّم",
+    parts: [
+      { id: "a", type: "multi", marks: 3, per: 1, neg: 1, srcNote: "ص16 — المتطلّبات الستة",
+        t: "اختاري ثلاثةً من متطلّبات إجراء المقابلة الصحفية:",
+        opts: [
+          "تحضير أسئلة قصيرة متعلّقة مباشرة بالموضوع",
+          "الترحيب بالضيف في البداية وشكره في النهاية",
+          "إعطاء الضيف وقتاً كافياً لإبداء رأيه",
+          "مقاطعة الضيف أثناء كلامه",
+          "طرح أسئلة بعيدة عن موضوع المقابلة"
+        ], ok: [0, 1, 2],
+        ans: "تحضير أسئلة قصيرة متعلّقة مباشرة بالموضوع ؛ الترحيب بالضيف وشكره ؛ إعطاء الضيف وقتاً كافياً لإبداء رأيه",
+        exp: "من المتطلّبات الستة الموثّقة في ص16؛ المقاطعة والابتعاد عن الموضوع خلاف الآداب المقرّرة." },
+      { id: "b", type: "choice", marks: 2, srcNote: "ص16 — المقابلة النموذجية",
+        t: "في نموذج المقابلة بالدرس، مَن الذي حاورته الصحفيةُ؟",
+        opts: ["خبير توعية صحية", "مدرّبة رياضة", "رسّامة مشهورة", "مزارع"], correct: 0,
+        ans: "خبير توعية صحية",
+        exp: "نموذج ص16 مقابلة بين صحفية وخبير توعية صحية حول المخلّفات المتفجّرة وطرق الوقاية منها." }
+    ] },
+  { id: "q10", diff: "medium", stage: 5, pages: "18", marks: 5,
+    skill: "تصنيف الفعل والمصدر",
+    title: "فعلٌ أم مصدر؟",
+    lead: "اضغطي على اللفظ، ثم على العمود المناسب لتصنيفه.",
+    src: "المرحلة 5 — قواعد اللغة: المصادر | ص18: التقويم النهائي",
+    parts: [
+      { id: "a", type: "classify", marks: 5, per: 1, srcNote: "ص18 — التقويم",
+        t: "صنّفي الألفاظ الآتية إلى «فعل» أو «مصدر»:",
+        cats: ["فعل", "مصدر"],
+        items: [
+          { t: "أخبر", cat: 0 }, { t: "إخبار", cat: 1 }, { t: "زرع", cat: 0 },
+          { t: "زراعة", cat: 1 }, { t: "حصد", cat: 0 }
+        ],
+        ans: "فعل: أخبر، زرع، حصد | مصدر: إخبار، زراعة",
+        exp: "الفعل يرتبط بزمن، والمصدر يدلّ على الحدث مجرّداً من الزمن — تقويم ص18." }
+    ] },
+  { id: "q11", diff: "medium", stage: 6, pages: "19", marks: 5,
+    skill: "تصويب رسم الهمزة وتحليله",
+    title: "مصوّبةُ الهمزات",
+    lead: "عيناكِ رقيبٌ دقيق على رسوم الهمزات.",
+    src: "المرحلة 6 — الإملاء: همزة القطع | ص19: أقرأ الأمثلة",
+    parts: [
+      { id: "a", type: "choice", marks: 2, srcNote: "ص19 — أقرأ الأمثلة",
+        t: "كُتب على لوحة الصف: «اقبالاً». ما الصورة الصحيحة للكلمة؟",
+        opts: ["إقبالاً", "أقبالاً", "تبقى كما هي: اقبالاً"], correct: 0,
+        ans: "إقبالاً",
+        exp: "الكلمة مصدر يبدأ بهمزة قطع مكسورة، فتُرسَم الهمزة تحت الألف: إقبالاً." },
+      { id: "b", type: "choice", marks: 1, srcNote: "ص19 — القاعدة",
+        t: "اختاري التعليل الصحيح لرسم همزة «إقبالاً» تحت الألف:",
+        opts: ["لأنّها مصدرٌ يبدأ بهمزة قطع مكسورة", "لأنّها اسمُ علمٍ لمدينة قديمة", "لأنّها فعلُ أمرٍ مباشر"], correct: 0,
+        ans: "لأنّها مصدرٌ يبدأ بهمزة قطع مكسورة",
+        exp: "المصدر المبدوء بهمزة من مواضع همزة القطع؛ والكسرة تقتضي الرسم تحت الألف." },
+      { id: "c", type: "fill", marks: 2, srcNote: "جملة تدريبية على مهارة ص19",
+        t: "استخرجي من الجملة التدريبية الآتية كلمةً تبدأ بهمزة قطع: «أَقبَلَ التلميذُ على القراءةِ بنشاطٍ»",
+        accept: ["أقبل"], ans: "أقبل", alts: "أقبلَ",
+        exp: "«أقبل» فعل ماضٍ مبدوء بهمزة قطع. (الجملة تدريبية من إعداد الاختبار على المهارة نفسها، وليست نصاً مقولاً عن الكتاب.)" }
+    ] },
+  { id: "q12", diff: "medium", stage: 5, pages: "18", marks: 5,
+    skill: "مطابقة الفعل بمصدره وتعليل الحكم",
+    title: "من الفعل إلى مصدره",
+    lead: "طابقي، ثم علّلي الحكم اللغوي.",
+    src: "المرحلة 5 — قواعد اللغة: المصادر | ص18: المطابقة والقاعدة ص17",
+    parts: [
+      { id: "a", type: "match", marks: 3, per: 1, srcNote: "ص18 — أزواج المطابقة",
+        t: "طابقي كلّ فعلٍ بمصدره:",
+        lefts: ["رأى", "اشترك", "انتشر"],
+        rights: ["انتشار", "رؤية", "اشتراك"],
+        map: [1, 2, 0],
+        ans: "رأى ← رؤية ؛ اشترك ← اشتراك ؛ انتشر ← انتشار",
+        exp: "من أزواج المطابقة الموثّقة في ص18." },
+      { id: "b", type: "choice", marks: 2, srcNote: "ص17 — القاعدة",
+        t: "نعدّ كلمة «رؤية» مصدراً لأنّها:",
+        opts: ["اسمٌ يدلّ على حدثٍ مجرّدٍ من الزمن", "تدلّ على زمنٍ ماضٍ", "تبدأ بهمزة وصل"], correct: 0,
+        ans: "اسم يدلّ على حدث مجرّد من الزمن",
+        exp: "هذا هو مقياس القاعدة المقرّرة للمصدر في ص17." }
+    ] },
+  { id: "q13", diff: "medium", stage: 7, pages: "21-22", marks: 5,
+    skill: "معرفة مادة الخط وقواعده البصرية",
+    title: "بالخطّ الجميل",
+    lead: "يدُنا تكتب بجمالٍ ما تعلّمته أعينُنا.",
+    src: "المرحلة 7 — الخط: الهمزة والمد والألف | ص21-22",
+    parts: [
+      { id: "a", type: "choice", marks: 2, srcNote: "ص21-22 — مادة الخط",
+        t: "ما مادّةُ الخطّ التي تدرّبنا عليها في هذا الدرس؟",
+        opts: ["كتابة الهمزة والمدّ والألف بخطّ الرقعة", "رسم الحروف بخطّ الثلث المذهَّب", "كتابة البسملة بالخطّ الديواني"], correct: 0,
+        ans: "كتابة الهمزة والمدّ والألف بخطّ الرقعة",
+        exp: "مادة الخط الموثّقة في ص21-22: رسم الهمزة والمد والألف بخط الرقعة." },
+      { id: "b", type: "tf", marks: 1, srcNote: "ص21 — القاعدتان البصريتان",
+        t: "تُرسَم الألف في خطّ الرقعة بالاتجاه نفسه دائماً، سواء جاءت مفردةً أم متصلة.",
+        correct: false, ans: "خطأ",
+        exp: "للألف المفردة اتجاهٌ بصري يختلف عن الألف المتصلة وفق القاعدتين في ص21." },
+      { id: "c", type: "choice", marks: 2, srcNote: "ص21-22 — تطبيق الخط (عناصر من إعداد الاختبار على المهارة)",
+        t: "أيّ كلمةٍ تصلح تدريباً يجمع الهمزةَ والمدّ والألف معاً؟",
+        opts: ["سماء", "حُلم", "شمس", "كتاب"], correct: 0,
+        ans: "سماء",
+        exp: "«سماء» تجمع مدّاً ألفياً وهمزةً متطرّفة؛ باقي الكلمات لا تجمع العناصر الثلاثة." }
+    ] },
+  /* ---------- متقدم (4 × 6) ---------- */
+  { id: "q14", diff: "advanced", stage: 6, pages: "19-20", marks: 6,
+    skill: "تحليل كلمة بهمزتها على نمط جدول ص20",
+    title: "نحلّل كلمةً تحليلاً كاملاً",
+    lead: "فلنحطّ بكلمة «إقبالاً» على طاولة الفحص الإملائي.",
+    src: "المرحلة 6 — الإملاء: همزة القطع | ص19 الاستقراء، ص20 جدول التحليل",
+    parts: [
+      { id: "a", type: "choice", marks: 1, srcNote: "ص19-20 — نوع الهمزة",
+        t: "نوع الهمزة في كلمة «إقبالاً»:",
+        opts: ["همزة قطع", "همزة وصل", "ليس في الكلمة همزة"], correct: 0,
+        ans: "همزة قطع",
+        exp: "كل أمثلة المادة (أقبل، إقبالاً، أخذ…) همزاتُ قطع." },
+      { id: "b", type: "choice", marks: 1, srcNote: "ص19 — الرسم",
+        t: "رسم هذه الهمزة:",
+        opts: ["تحت الألف", "فوق الألف", "على نبرة", "على واو"], correct: 0,
+        ans: "تحت الألف",
+        exp: "الهمزة مكسورة فترسم تحت الألف." },
+      { id: "c", type: "choice", marks: 2, srcNote: "ص20 — حركة الهمزة",
+        t: "حركة همزة «إقبالاً» هي:",
+        opts: ["الكسرة", "الفتحة", "الضمّة", "السكون"], correct: 0,
+        ans: "الكسرة",
+        exp: "من بيانات جدول التحليل: حركة الهمزة في «إقبالاً» الكسرة." },
+      { id: "d", type: "fill", marks: 2, srcNote: "ص19-20 — المصدر وفعله (يرتبط أيضاً بقاعدة المصادر ص18)",
+        t: "كلمة «إقبالاً» مصدرٌ مأخوذ من الفعل: …",
+        accept: ["أقبل"], ans: "أقبل", alts: "أقبلَ",
+        exp: "إقبالاً مصدر الفعل الرباعي «أقبل»؛ والمصدر المبدوء بهمزة من مواضع همزة القطع." }
+    ] },
+  { id: "q15", diff: "advanced", stage: 6, pages: "19", marks: 6,
+    skill: "استيعاب مواضع همزة القطع في القاعدة",
+    title: "مواضع همزة القطع في القاعدة",
+    lead: "القاعدة سورٌ متين؛ والمواضع أبوابُه المعروفة.",
+    src: "المرحلة 6 — الإملاء: همزة القطع | ص19: القاعدة",
+    parts: [
+      { id: "a", type: "multi", marks: 4, per: 2, neg: 2, srcNote: "ص19 — القاعدة",
+        t: "اختاري العبارتين المطابقتين لمواضع همزة القطع كما وردتا في القاعدة:",
+        opts: [
+          "الفعل الماضي الثلاثي المبدوء بهمزة، ومصدره",
+          "الفعل الماضي الرباعي وأمرُه ومصدرُه",
+          "الفعل المضارع فقط",
+          "جميع الكلمات بلا استثناء"
+        ], ok: [0, 1],
+        ans: "الماضي الثلاثي المبدوء بهمزة ومصدره ؛ الماضي الرباعي وأمره ومصدره",
+        exp: "تنصّ القاعدة على هذين الموضعين، إضافة إلى أول الحروف والأسماء والأفعال." },
+      { id: "b", type: "tf", marks: 2, srcNote: "ص19 — الاستقراء",
+        t: "الحرف «أنْ» يبدأ بهمزة قطع.",
+        correct: true, ans: "صحيح",
+        exp: "ورد «أن» ضمن أمثلة الاستقراء الموثّقة: أقبل، إقبالاً، أخذ، أملاً، أساس، أن، إلى." }
+    ] },
+  { id: "q16", diff: "advanced", stage: 9, pages: "24", marks: 6,
+    skill: "تكوين المصادر وعكسها إلى أفعال (نشاط اللعبة)",
+    title: "لعبة المصادر والأفعال",
+    lead: "في نشاط «ألعب وأتعلّم» نتحرّك في الاتجاهين: من الفعل وإليه.",
+    src: "المرحلة 9 — ألعب وأتعلّم | ص24 (وترتبط بقاعدة المصادر ص17-18)",
+    parts: [
+      { id: "a", type: "fill", marks: 2, srcNote: "ص24 — جذور اللعبة",
+        t: "كوّني المصدر: جلس ← …",
+        accept: ["جلوس", "الجلوس"], ans: "جلوس", alts: "جلوس",
+        exp: "من جذور اللعبة الموثّقة: كتب، ذهب، صعد، جلس، سبح." },
+      { id: "b", type: "fill", marks: 2, srcNote: "ص24 — جذور اللعبة",
+        t: "كوّني المصدر: سبح ← …",
+        accept: ["سباحة", "السباحة"], ans: "سباحة", alts: "سباحة",
+        exp: "سبح ← سباحة؛ كما في تكوين المصادر من الجذور في ص24." },
+      { id: "c", type: "fill", marks: 2, srcNote: "ص24 — بطاقات المصادر",
+        t: "ومن بطاقة المصدر إلى فعله: «وجود» مصدرُ الفعل: …",
+        accept: ["وجد"], ans: "وجَدَ", alts: "وجد",
+        exp: "من بطاقات تحويل المصادر إلى أفعال الموثّقة: وجود، لعباً، زخرفة، علماً." }
+    ] },
+  { id: "q17", diff: "advanced", stage: 8, pages: "22-23", marks: 6,
+    skill: "فهم حوار التعبير الكتابي وتحليله",
+    title: "نفهم حوارَ العشب والظلّ",
+    lead: "حوارٌ هادئ دار بين العشب وظلّ الشجرة — فماذا حمل من معانٍ؟",
+    src: "المرحلة 8 — التعبير الكتابي | ص22-23: حوار العشب وظل الشجرة",
+    parts: [
+      { id: "a", type: "choice", marks: 2, srcNote: "ص22-23 — شخصيات الحوار",
+        t: "مَن الذي كان يصغي إلى حوار العشب وظلّ الشجرة؟",
+        opts: ["العصفور", "الفراشة", "النحلة", "الغيمة"], correct: 0,
+        ans: "العصفور",
+        exp: "يسمع عصفورٌ الحوارَ الدائر بين العشب وظل الشجرة." },
+      { id: "b", type: "choice", marks: 2, srcNote: "ص22-23 — مضمون الحوار",
+        t: "لماذا يتحرّك الظلّ وفق الحوار؟",
+        opts: [
+          "لأنّ حركته مرتبطة بالوقت وبحركة أغصان الشجرة والريح",
+          "لأنّه يحاول الهروب من العشب",
+          "لأنّ العصفور يدفعه من مكانه"
+        ], correct: 0,
+        ans: "لأنّ حركته مرتبطة بالوقت وبحركة أغصان الشجرة والريح",
+        exp: "يوضّح الظلُّ للعشب أنّ حركته مرتبطة بالوقت وبحركة الأغصان والريح." },
+      { id: "c", type: "tf", marks: 2, srcNote: "ص22-23 — سياق الحوار",
+        t: "يدور هذا الحوار في يومٍ شتويٍّ ممطر.",
+        correct: false, ans: "خطأ",
+        exp: "الحوار يدور في يومٍ صيفيٍّ حار." }
+    ] },
+  /* ---------- تفكير واستدلال (3) ---------- */
+  { id: "q18", diff: "thinking", stage: 3, stage2: 1, pages: "12-14", marks: 5,
+    skill: "تحليل الأفكار والقيم والاستدلال",
+    title: "نتأمّل ونستنتج",
+    lead: "خلف الكلمات قيمٌ ومعانٍ — فلنفكّر بعمق.",
+    src: "المراحل 1-3 — الافتتاحية والنص الشعري والفهم القرائي | ص12-14",
+    parts: [
+      { id: "a", type: "choice", marks: 2, srcNote: "ص12 — عبارة الافتتاح",
+        t: "ما أعمقُ دلالةٍ لعبارة الدرس الافتتاحية «حوار + حب = حياة»؟",
+        opts: [
+          "التحاور بمحبّة واحترام أساسُ حياةٍ كريمةٍ وتعايشٍ بين الناس",
+          "الرياضيات أهمّ من الكلام",
+          "كثرةُ الكلام تُطيل العمر",
+          "الحوار مضيعةٌ للوقت"
+        ], correct: 0,
+        ans: "التحاور بمحبة واحترام أساس حياة كريمة وتعايش بين الناس",
+        exp: "تلخّص العبارة فلسفة الدرس: بالحوار والحب تستقيم الحياة." },
+      { id: "b", type: "choice", marks: 2, srcNote: "ص13-14 — أفكار النص",
+        t: "يدعو النصُّ إلى تقبّل الرأي الآخر. ما أفضلُ تعليلٍ لذلك من أفكاره؟",
+        opts: [
+          "لأنّ الحكمة تنمو بتعدّد الآراء، وتتّضح الفكرة مع الآخرين",
+          "لأنّ الصراخ يقوّي الشخصية",
+          "لأنّ الخصام يبني الوطن",
+          "لأنّ الآخرين على خطأ دائماً"
+        ], correct: 0,
+        ans: "لأنّ الحكمة تنمو بتعدّد الآراء وتتّضح الفكرة مع الآخرين",
+        exp: "من أفكار النص الموثّقة: الحكمة تنمو بتعدد الآراء، ورسم الفكرة مع الآخرين، وقبول الاختلاف دون خصام." },
+      { id: "c", type: "tf", marks: 1, srcNote: "ص14 — نشاط الترتيب والأفكار",
+        t: "كثرةُ الآراء داخل الحوار الواحد علامةُ ضعفٍ في الفكرة.",
+        correct: false, ans: "خطأ",
+        exp: "يجعل النصُّ تعدّد الآراء سبباً لنموّ الحكمة، لا ضعفاً." }
+    ] },
+  { id: "q19", diff: "thinking", stage: 8, pages: "23", marks: 6,
+    skill: "إنتاج حوار كتابي وفق المثير الموثّق",
+    title: "نكتب حوارنا",
+    lead: "ها قد جاء دور قلمك: أنتجي حواراً حيّاً مثل حوارات درسنا.",
+    src: "المرحلة 8 — التعبير الكتابي | ص23: مثير الأخ وأخته وفكرة زيارة الحديقة",
+    parts: [
+      { id: "a", type: "write", marks: 6, minLen: 15, rows: 6, srcNote: "ص23 — نشاط الحوار الكتابي",
+        t: "تنوي الأسرة زيارةَ حديقة المدينة. اكتبي حواراً قصيراً (لا يزيد عن أربعة أسطر) بين أخٍ وأخته الصغيرة حول هذه الفكرة، مراعيةً اللطفَ وتقبّلَ الرأي الآخر.",
+        note: "اكتبي بأسلوبك؛ تُقيَّم الإجابة آلياً وفق معايير معلنة في مفتاح المعلمة، ويُستحسن أن تراجعها المعلمة.",
+        rubric: [
+          { m: 2, label: "طرفا الحوار: حضور الأخ والأخت بوصفهما المتحاورَين." },
+          { m: 2, label: "الرأي والرأي الآخر: طرح موقف أو تفضيل، وردّ عليه بقبول أو اعتراض مهذّب." },
+          { m: 1, label: "آداب الحوار: تحية أو شكر أو عبارة لطف." },
+          { m: 1, label: "البنية والوضوح: سطران فأكثر / نقطتا حوار (:) / علامة استفهام، وطول مناسب." }
+        ],
+        ans: "إجابة مفتوحة. نموذج مقبول واحد من بدائل كثيرة: «قال الأخ: ما رأيكِ أن نزور الحديقة غداً؟ قالت أختُه: فكرة جميلة! أفضّل الصباح الباكر. قال: أوافقكِ الرأي، شكراً لذوقكِ الرفيع.»",
+        exp: "المثير الموثّق في ص23: صورة أخٍ وأخته الصغيرة وفكرة زيارة الحديقة. يُقبل أيّ حوار يحقّق المعايير المعلنة دون التقيّد بالنموذج." }
+    ] },
+  { id: "q20", diff: "thinking", stage: 4, pages: "16-17", marks: 6,
+    skill: "توليد أسئلة مقابلة وتوظيف الآداب",
+    title: "نُجري مقابلةً بأنفسنا",
+    lead: "الصحفية الصغيرة اليوم أنتِ — أتقني أدواتك.",
+    src: "المرحلة 4 — المقابلة الصحفية | ص16 الآداب، ص17 التدريب",
+    parts: [
+      { id: "a", type: "choice", marks: 2, srcNote: "ص16 — افتتاح المقابلة",
+        t: "أيّ عبارةٍ أنسبُ لافتتاح مقابلة صحفية مهذّبة؟",
+        opts: [
+          "أهلاً بضيفنا الكريم، نشكر لك قبولَ الدعوة",
+          "أسئلتي كثيرة فأجِب بسرعة",
+          "لن أخبركَ بموضوع لقائنا اليوم"
+        ], correct: 0,
+        ans: "أهلاً بضيفنا الكريم، نشكر لك قبولَ الدعوة",
+        exp: "من متطلّبات المقابلة: اختيار عبارات مناسبة للافتتاح، والترحيب بالضيف." },
+      { id: "b", type: "write", marks: 4, minLen: 10, rows: 4, srcNote: "ص16-17 — تحضير الأسئلة",
+        t: "ستجرين مقابلةً مع «معلّمتكِ المتميّزة» عن موضوع: «حلمي المهني في المستقبل». اكتبي سؤالين قصيرين مناسبين ومباشرين للموضوع.",
+        note: "سؤالان قصيران متعلّقان بالموضوع مباشرة — كما تعلّمنا في خطوات المقابلة.",
+        rubric: [
+          { m: 2, label: "وجود سؤالين حقّاً بعلامة استفهام (سؤال واحد = درجة واحدة)." },
+          { m: 2, label: "ارتباط الأسئلة مباشرةً بالموضوع: الحلم/المهنة/المستقبل/الطموح (درجة لكلّ سؤال مرتبط)." }
+        ],
+        ans: "إجابة مفتوحة. نموذج مقبول واحد: «ما المهنةُ التي تحلمين أن تعملي بها في المستقبل؟» / «كيف تستعدّين لتحقيق حلمكِ المهني؟»",
+        exp: "يقيس السؤال متطلّبَي «تحضير أسئلة قصيرة متعلّقة مباشرة بالموضوع» وإنتاجها فعلياً." }
+    ] }
+];
+"use strict";
+/* =========================================================
+   المحرّك — أدوات عامة
+   ========================================================= */
+const $ = (s) => document.querySelector(s);
+const ARD = "٠١٢٣٤٥٦٧٨٩";
+const ar = (n) => String(n).replace(/\d/g, (d) => ARD[+d]);
+const pad2 = (n) => String(n).padStart(2, "0");
+function fmtDur(ms) {
+  const s = Math.max(0, Math.round(ms / 1000));
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), ss = s % 60;
+  return pad2(h) + ":" + pad2(m) + ":" + pad2(ss);
+}
+const fmtDurAr = (ms) => ar(fmtDur(ms));
+function fmtDateTime(ts) {
+  const d = new Date(ts);
+  return pad2(d.getDate()) + "/" + pad2(d.getMonth() + 1) + "/" + d.getFullYear() + " " +
+    pad2(d.getHours()) + ":" + pad2(d.getMinutes()) + ":" + pad2(d.getSeconds());
+}
+function uid() {
+  return "att-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 9);
+}
+/* تطبيع النص العربي للمقارنة العادلة */
+function norm(s) {
+  return String(s == null ? "" : s)
+    .replace(/[ً-ْٰـ]/g, "")        // التشكيل والتطويل
+    .replace(/[أإآٱ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه")
+    .replace(/[«»"'\(\)\[\]{}\.,،؛:!\?؟\-_—]/g, " ")
+    .replace(/\s+/g, " ").trim();
+}
+const has = (txt, k) => txt.indexOf(norm(k)) !== -1;
+
+/* =========================================================
+   الحالة والتخزين المحلي
+   ========================================================= */
+const KEY = "g5ar_u1l2_exam_v1";
+const HKEY = "g5ar_u1l2_history_v1";
+let S = null;
+let storageOK = true;
+function freshState() {
+  return {
+    v: 1, examId: EXAM.id, examVersion: EXAM.version,
+    attemptId: uid(), status: "idle",
+    name: "", order: [], idx: 0, optOrders: {},
+    startTs: null, submitTs: null, elapsed: 0,
+    answers: {}, playedStart: false, playedSubmit: false,
+    report: null, result: null, dlFile: "", autoDl: false
+  };
+}
+function storageFail() {
+  if (storageOK) { storageOK = false; const b = $("#storage-banner"); if (b) b.hidden = false; }
+}
+function probeStorage() {
+  try { localStorage.setItem("__probe__", "1"); localStorage.removeItem("__probe__"); storageOK = true; }
+  catch (e) { storageFail(); }
+}
+function save() {
+  if (!S) return;
+  if (!storageOK) return;
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { storageFail(); }
+}
+let saveTimer = null;
+function saveSoon() { if (saveTimer) clearTimeout(saveTimer); saveTimer = setTimeout(save, 350); }
+function loadState() {
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { storageFail(); }
+  if (s && s.examId === EXAM.id && s.v === 1) S = s; else S = freshState();
+}
+function archiveHistory() {
+  if (!storageOK || !S) return;
+  try {
+    const h = JSON.parse(localStorage.getItem(HKEY) || "[]");
+    h.unshift({
+      attemptId: S.attemptId, name: S.name, submitTs: S.submitTs,
+      score: S.result ? S.result.total : null, elapsed: S.elapsed, report: S.report
+    });
+    localStorage.setItem(HKEY, JSON.stringify(h.slice(0, 3)));
+  } catch (e) { /* التاريخ ثانوي */ }
+}
+
+/* =========================================================
+   المؤثرات الصوتية (مولّدة محلياً — تعمل دون اتصال)
+   ========================================================= */
+let AC = null;
+function actx() {
+  if (!AC) { const C = window.AudioContext || window.webkitAudioContext; AC = C ? new C() : null; }
+  if (AC && AC.state === "suspended") AC.resume();
+  return AC;
+}
+function note(ctx, freq, at, dur, type, vol) {
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = type || "sine"; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, at);
+  g.gain.exponentialRampToValueAtTime(vol, at + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(at); o.stop(at + dur + 0.05);
+}
+function playStartSound() {
+  try {
+    const c = actx(); if (!c) return; const t = c.currentTime + 0.03;
+    // رنين لطيف صاعد: C5 - E5 - G5 ثم وميض ناعم
+    note(c, 523.25, t, 0.5, "sine", 0.16);
+    note(c, 659.25, t + 0.14, 0.5, "sine", 0.16);
+    note(c, 783.99, t + 0.28, 0.65, "sine", 0.18);
+    note(c, 1567.98, t + 0.44, 0.5, "sine", 0.05);
+  } catch (e) { /* الصوت غير متاح — تابع بلا صوت */ }
+}
+function playSubmitSound() {
+  try {
+    const c = actx(); if (!c) return; const t = c.currentTime + 0.03;
+    // فَقرَة فرح مميّزة: تعاقب مثلثي صاعد مع رنين ختامي
+    const seq = [523.25, 659.25, 783.99, 1046.5];
+    seq.forEach((f, i) => note(c, f, t + i * 0.13, 0.42, "triangle", 0.15));
+    note(c, 1318.51, t + 0.56, 0.8, "sine", 0.1);
+    note(c, 1567.98, t + 0.7, 0.9, "sine", 0.07);
+  } catch (e) { /* الصوت غير متاح — تابع بلا صوت */ }
+}
+
+/* =========================================================
+   الموقّت التصاعدي (معتمد على الطوابع الزمنية)
+   ========================================================= */
+let tickInt = null;
+function elapsedNow() {
+  if (S.status === "submitted") return S.elapsed || 0;
+  return S.startTs ? Date.now() - S.startTs : 0;
+}
+function renderTimer() { const el = $("#timer-text"); if (el) el.textContent = fmtDurAr(elapsedNow()); }
+function startTicker() { stopTicker(); renderTimer(); tickInt = setInterval(renderTimer, 500); }
+function stopTicker() { if (tickInt) { clearInterval(tickInt); tickInt = null; } }
+
+/* =========================================================
+   التنقّل بين الشاشات
+   ========================================================= */
+const SCREENS = ["scr-welcome", "scr-exam", "scr-results", "scr-teacher"];
+let teacherFrom = "scr-welcome";
+function show(id) {
+  SCREENS.forEach((s) => { const el = $("#" + s); if (el) el.hidden = (s !== id); });
+  window.scrollTo(0, 0);
+}
+
+/* =========================================================
+   مساعدات الأسئلة
+   ========================================================= */
+const TOTAL_PARTS = QUESTIONS.reduce((n, q) => n + q.parts.length, 0);
+function answersOf(q) { if (!S.answers[q.id]) S.answers[q.id] = {}; return S.answers[q.id]; }
+function partAnswered(q, p) {
+  const bag = S.answers[q.id] || {}; const a = bag[p.id];
+  switch (p.type) {
+    case "choice": return typeof a === "number";
+    case "tf": return a === true || a === false;
+    case "multi": return Array.isArray(a) && a.length > 0;
+    case "fill": return typeof a === "string" && norm(a).length > 0;
+    case "write": return typeof a === "string" && a.trim().length >= (p.minLen || 3);
+    case "match": return a && Object.keys(a).length === p.lefts.length;
+    case "classify": return a && Object.keys(a).length === p.items.length;
+    case "order": return Array.isArray(a) && a.length === p.items.length;
+  }
+  return false;
+}
+function missingCount() {
+  let m = 0;
+  QUESTIONS.forEach((q) => q.parts.forEach((p) => { if (!partAnswered(q, p)) m++; }));
+  return m;
+}
+function qDone(q) { return q.parts.every((p) => partAnswered(q, p)); }
+function curQ() { return QUESTIONS[S.order[S.idx]]; }
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+/* ترتيب عرض الخيارات لكل جزء — يُولَّد مرة واحدة ويُحفَظ مع المحاولة */
+function optOrder(q, p) {
+  if (!S.optOrders) S.optOrders = {};
+  const k = q.id + "." + p.id;
+  if (!Array.isArray(S.optOrders[k])) { S.optOrders[k] = shuffle(p.opts.map((_, i) => i)); saveSoon(); }
+  return S.optOrders[k];
+}
+
+/* =========================================================
+   بدء الاختبار / استعادته
+   ========================================================= */
+function beginExam() {
+  const name = $("#in-name").value.trim().replace(/\s+/g, " ");
+  const err = $("#name-err");
+  if (name.length < 2) { err.textContent = "رجاءً اكتبي اسمك الكامل قبل البدء."; $("#in-name").focus(); return; }
+  err.textContent = "";
+  S = freshState();
+  S.name = name; S.status = "active";
+  S.order = shuffle(QUESTIONS.map((_, i) => i));
+  S.idx = 0; S.startTs = Date.now();
+  save();
+  enterExam();
+  if (!S.playedStart) { S.playedStart = true; playStartSound(); save(); }
+}
+function enterExam() {
+  $("#student-chip-name").textContent = S.name;
+  show("scr-exam");
+  renderQuestion();
+  updateProgress(); updateSubmitState(); renderReview();
+  startTicker();
+}
+function goTo(i) {
+  S.idx = Math.max(0, Math.min(QUESTIONS.length - 1, i));
+  save(); renderQuestion(); updateProgress(); updateSubmitState(); renderReview();
+}
+/* =========================================================
+   عرض السؤال وأجزائه
+   ========================================================= */
+const PART_LETTERS = ["أ", "ب", "ج", "د", "هـ"];
+const ICONS = {
+  pen: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>',
+  check: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  x: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  remove: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+  sparkle: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.2L12 3z"/></svg>'
+};
+
+function renderQuestion() {
+  if (S.status !== "active") return;
+  const q = curQ();
+  const card = $("#q-card");
+  card.style.animation = "none"; void card.offsetWidth; card.style.animation = "";
+  $("#q-badge").textContent = ar(S.idx + 1);
+  $("#q-title").textContent = q.title;
+  $("#q-lead").innerHTML = ICONS.sparkle + "<span>" + q.lead + "</span>";
+  $("#qpos-cur").textContent = ar(S.idx + 1);
+  $("#btn-prev").disabled = S.idx === 0;
+  $("#btn-next").disabled = S.idx === QUESTIONS.length - 1;
+  const host = $("#q-parts");
+  host.innerHTML = "";
+  q.parts.forEach((p, pi) => {
+    const sec = document.createElement("div");
+    sec.className = "part";
+    renderPart(q, p, pi, sec);
+    host.appendChild(sec);
+  });
+}
+
+function renderPart(q, p, pi, sec) {
+  sec.innerHTML = "";
+  const head = document.createElement("div");
+  head.innerHTML = '<span class="part-label">' + PART_LETTERS[pi] + "</span>" +
+    '<span class="part-text">' + p.t + "</span>";
+  sec.appendChild(head);
+  if (p.note) {
+    const n = document.createElement("span");
+    n.className = "part-note"; n.textContent = p.note; sec.appendChild(n);
+  }
+  const body = document.createElement("div");
+  sec.appendChild(body);
+  const val = (S.answers[q.id] || {})[p.id];
+  const commit = (v, rerender) => {
+    answersOf(q)[p.id] = v; saveSoon();
+    updateProgress(); updateSubmitState(); renderReview();
+    if (rerender) renderPart(q, p, pi, sec);
+  };
+  TYPES[p.type](body, p, val, commit, q);
+}
+
+const TYPES = {
+  /* اختيار من متعدد */
+  choice(body, p, val, commit, q) {
+    const box = document.createElement("div"); box.className = "opts";
+    optOrder(q, p).forEach((i) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "opt" + (val === i ? " sel" : "");
+      b.innerHTML = '<span class="dot"></span><span>' + p.opts[i] + "</span>";
+      b.onclick = () => commit(i, true);
+      box.appendChild(b);
+    });
+    body.appendChild(box);
+  },
+  /* صحيح / خطأ */
+  tf(body, p, val, commit) {
+    const row = document.createElement("div"); row.className = "tf-row";
+    [["صحيح", true, "t", ICONS.check], ["خطأ", false, "f", ICONS.x]].forEach(([lbl, v, cls, ic]) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "tf-btn " + cls + (val === v ? " sel" : "");
+      b.innerHTML = ic + "<span>" + lbl + "</span>";
+      b.onclick = () => commit(v, true);
+      row.appendChild(b);
+    });
+    body.appendChild(row);
+  },
+  /* اختيار متعدد */
+  multi(body, p, val, commit, q) {
+    const box = document.createElement("div"); box.className = "opts";
+    const cur = Array.isArray(val) ? val : [];
+    optOrder(q, p).forEach((i) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "opt sq" + (cur.indexOf(i) !== -1 ? " sel" : "");
+      b.innerHTML = '<span class="dot"></span><span>' + p.opts[i] + "</span>";
+      b.onclick = () => {
+        const arr = cur.slice();
+        const at = arr.indexOf(i);
+        if (at === -1) arr.push(i); else arr.splice(at, 1);
+        commit(arr, true);
+      };
+      box.appendChild(b);
+    });
+    body.appendChild(box);
+  },
+  /* ملء فراغ */
+  fill(body, p, val, commit) {
+    const inp = document.createElement("input");
+    inp.type = "text"; inp.className = "fill-in"; inp.maxLength = 60;
+    inp.placeholder = "اكتبي إجابتك هنا…"; inp.value = typeof val === "string" ? val : "";
+    inp.oninput = () => commit(inp.value, false);
+    inp.setAttribute("aria-label", p.t);
+    body.appendChild(inp);
+  },
+  /* إجابة مقالية */
+  write(body, p, val, commit) {
+    const ta = document.createElement("textarea");
+    ta.className = "write-area"; ta.rows = p.rows || 5;
+    ta.placeholder = "اكتبي هنا بأسلوبك الجميل…";
+    ta.value = typeof val === "string" ? val : "";
+    ta.setAttribute("aria-label", p.t);
+    const count = document.createElement("div");
+    count.className = "write-count num";
+    const setC = () => { count.textContent = "عدد الأحرف: " + ta.value.trim().length; };
+    setC();
+    ta.oninput = () => { setC(); commit(ta.value, false); };
+    body.appendChild(ta); body.appendChild(count);
+  },
+  /* مطابقة */
+  match(body, p, val, commit) {
+    const cur = val && typeof val === "object" ? val : {};
+    const zone = document.createElement("div"); zone.className = "match-zone";
+    p.lefts.forEach((L, li) => {
+      const row = document.createElement("div"); row.className = "match-row";
+      const lt = document.createElement("span"); lt.className = "match-left"; lt.textContent = L;
+      row.appendChild(lt);
+      const opts = document.createElement("div"); opts.className = "match-opts";
+      p.rights.forEach((R, ri) => {
+        const mine = cur[li] === ri;
+        const usedElsewhere = Object.keys(cur).some((k) => +k !== li && cur[k] === ri);
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "chip" + (mine ? " armed" : "");
+        if (usedElsewhere) b.style.opacity = ".55";
+        b.textContent = R;
+        b.onclick = () => {
+          const nx = {};
+          Object.keys(cur).forEach((k) => { if (+k !== li) nx[k] = cur[k]; });
+          if (mine) { commit(nx, true); return; }
+          Object.keys(nx).forEach((k) => { if (nx[k] === ri) delete nx[k]; });
+          nx[li] = ri;
+          commit(nx, true);
+        };
+        opts.appendChild(b);
+      });
+      row.appendChild(opts);
+      zone.appendChild(row);
+    });
+    body.appendChild(zone);
+  },
+  /* تصنيف */
+  classify(body, p, val, commit) {
+    const cur = val && typeof val === "object" ? val : {};
+    let armed = -1;
+    const wrap = document.createElement("div");
+    const pool = document.createElement("div"); pool.className = "pool";
+    const pl = document.createElement("div"); pl.className = "pool-label";
+    pl.textContent = "اضغطي على اللفظ لاختياره، ثم على العمود المناسب. ولإرجاع لفظٍ مصنَّف: اختاريه ثم اضغطي على المخزن.";
+    pool.appendChild(pl);
+    const zone = document.createElement("div"); zone.className = "classify-zone";
+    const re = () => {
+      pool.querySelectorAll(".chip").forEach((c) => c.remove());
+      p.items.forEach((it, i) => {
+        if (cur[i] === undefined) pool.appendChild(mkChip(it, i));
+      });
+      zone.querySelectorAll(".cat-items").forEach((c) => (c.innerHTML = ""));
+      p.items.forEach((it, i) => {
+        if (cur[i] !== undefined) {
+          zone.querySelectorAll(".cat-items")[cur[i]].appendChild(mkChip(it, i));
+        }
+      });
+      zone.querySelectorAll(".cat-col").forEach((c) => c.classList.toggle("armed", armed !== -1));
+      pool.classList.toggle("armed", armed !== -1);
+    };
+    const mkChip = (it, i) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "chip" + (armed === i ? " armed" : "");
+      b.textContent = it.t;
+      b.onclick = (e) => { e.stopPropagation(); armed = armed === i ? -1 : i; re(); };
+      return b;
+    };
+    p.cats.forEach((c, ci) => {
+      const col = document.createElement("div"); col.className = "cat-col";
+      col.innerHTML = "<h4>" + ICONS.sparkle + c + "</h4>";
+      const items = document.createElement("div"); items.className = "cat-items";
+      col.appendChild(items);
+      col.onclick = () => {
+        if (armed === -1) return;
+        const nx = {}; Object.keys(cur).forEach((k) => (nx[k] = cur[k]));
+        nx[armed] = ci;
+        commit(nx, true);
+      };
+      zone.appendChild(col);
+    });
+    pool.onclick = () => {
+      if (armed === -1 || cur[armed] === undefined) return;
+      const nx = {}; Object.keys(cur).forEach((k) => { if (+k !== armed) nx[k] = cur[k]; });
+      commit(nx, true);
+    };
+    wrap.appendChild(pool);
+    wrap.appendChild(zone);
+    body.appendChild(wrap);
+    re();
+  },
+  /* ترتيب */
+  order(body, p, val, commit) {
+    const cur = Array.isArray(val) ? val : [];
+    const tray = document.createElement("div"); tray.className = "order-tray";
+    p.scramble.forEach((ii) => {
+      if (cur.indexOf(ii) !== -1) return;
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "chip";
+      b.innerHTML = "<span>" + p.items[ii] + "</span>";
+      b.onclick = () => commit(cur.concat([ii]), true);
+      tray.appendChild(b);
+    });
+    if (!tray.children.length) {
+      const done = document.createElement("div");
+      done.className = "pool-label"; done.textContent = "اكتمل اختيار الترتيب.";
+      tray.appendChild(done);
+    }
+    const slots = document.createElement("div"); slots.className = "order-slots";
+    p.items.forEach((_, pos) => {
+      const s = document.createElement("div");
+      const filled = cur[pos] !== undefined;
+      s.className = "slot" + (filled ? " filled" : "");
+      let inner = '<span class="slot-num">' + ar(pos + 1) + "</span>";
+      if (filled) {
+        inner += '<span class="slot-text">' + p.items[cur[pos]] + "</span>";
+        const rm = document.createElement("button");
+        rm.type = "button"; rm.className = "rm"; rm.innerHTML = ICONS.remove;
+        rm.setAttribute("aria-label", "إزالة");
+        rm.onclick = () => { const nx = cur.slice(); nx.splice(pos, 1); commit(nx, true); };
+        s.innerHTML = inner;
+        s.appendChild(rm);
+      } else {
+        inner += '<span class="slot-text" style="color:var(--ink-faint);font-weight:600">في الانتظار…</span>';
+        s.innerHTML = inner;
+      }
+      slots.appendChild(s);
+    });
+    body.appendChild(tray); body.appendChild(slots);
+    if (cur.length) {
+      const tools = document.createElement("div"); tools.className = "mini-tools";
+      const clr = document.createElement("button");
+      clr.type = "button"; clr.className = "btn btn-ghost"; clr.style.padding = "6px 16px"; clr.style.fontSize = "13px";
+      clr.textContent = "مسح الترتيب";
+      clr.onclick = () => commit([], true);
+      tools.appendChild(clr); body.appendChild(tools);
+    }
+  }
+};
+
+/* =========================================================
+   التقدّم + التسليم + المراجعة
+   ========================================================= */
+function updateProgress() {
+  let done = 0;
+  QUESTIONS.forEach((q) => q.parts.forEach((p) => { if (partAnswered(q, p)) done++; }));
+  const pct = TOTAL_PARTS ? Math.round((done / TOTAL_PARTS) * 100) : 0;
+  $("#progress-fill").style.width = pct + "%";
+  $("#progress-label").textContent = "أُنجز " + ar(done) + " من " + ar(TOTAL_PARTS) + " جزءاً (" + ar(pct) + "%)";
+}
+function updateSubmitState() {
+  const miss = missingCount();
+  const note = $("#missing-note");
+  const btn = $("#btn-submit");
+  if (miss > 0) {
+    note.className = "missing-note";
+    note.innerHTML = ICONS.sparkle + "<span>تبقّى " + ar(miss) + " " + (miss === 1 ? "جزء" : miss === 2 ? "جزءان" : miss <= 10 ? "أجزاء" : "جزءاً") + " لم تكتمل إجابتها بعد — أكمليها لتفعيل التسليم</span>";
+    btn.disabled = true;
+  } else {
+    note.className = "missing-note ok";
+    note.innerHTML = ICONS.check + "<span>أحسنتِ! كل الأجزاء مكتملة — يمكنك التسليم الآن</span>";
+    btn.disabled = false;
+  }
+}
+function renderReview() {
+  const grid = $("#review-grid");
+  grid.innerHTML = "";
+  for (let i = 0; i < QUESTIONS.length; i++) {
+    const q = QUESTIONS[S.order[i]];
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "rv" + (qDone(q) ? " done" : "") + (i === S.idx ? " cur" : "");
+    b.textContent = ar(i + 1);
+    b.onclick = () => { goTo(i); $("#review-drawer").hidden = true; };
+    grid.appendChild(b);
+  }
+}
+/* =========================================================
+   التصحيح الآلي العادل
+   ========================================================= */
+function gradeWrite(qid, p, text) {
+  const n = norm(text);
+  const len = text.trim().length;
+  if (qid === "q19") {
+    let sc = 0;
+    if (has(n, "اخ") && has(n, "اخت")) sc += 2;
+    const opin = ["ارى", "راي", "اظن", "اعتقد", "افضل", "اوافق", "موافق", "لكن", "احب", "اريد", "نزور", "حديقه", "رايك"];
+    let hits = 0; opin.forEach((k) => { if (n.indexOf(norm(k)) !== -1) hits++; });
+    sc += hits >= 2 ? 2 : hits === 1 ? 1 : 0;
+    const polite = ["السلام", "مرحبا", "اهلا", "صباح", "مساء", "شكرا", "من فضلك", "لو سمحت", "عذرا", "تفضل", "هل يمكن"];
+    if (polite.some((k) => has(n, k))) sc += 1;
+    const lines = text.trim().split(/\n+/).filter((l) => l.trim()).length;
+    if (len >= 40 && (lines >= 2 || text.indexOf(":") !== -1 || text.indexOf("؟") !== -1)) sc += 1;
+    return Math.min(p.marks, sc);
+  }
+  if (qid === "q20") {
+    const qm = (text.match(/؟/g) || []).length;
+    let sc = qm >= 2 ? 2 : qm === 1 ? 1 : 0;
+    const kw = ["حلم", "طموح", "مستقبل", "مهنه", "وظيفه", "تصبح", "تكون", "ترغب", "تحب", "تعمل"];
+    const hits = kw.filter((k) => has(n, k)).length;
+    sc += hits >= 2 ? 2 : hits === 1 ? 1 : 0;
+    return Math.min(p.marks, sc);
+  }
+  return 0;
+}
+function gradePart(q, p) {
+  const a = (S.answers[q.id] || {})[p.id];
+  const answered = partAnswered(q, p);
+  let earned = 0, stu = "", corr = p.ans || "";
+  switch (p.type) {
+    case "choice":
+      earned = a === p.correct ? p.marks : 0;
+      stu = typeof a === "number" ? p.opts[a] : "";
+      break;
+    case "tf":
+      earned = a === p.correct ? p.marks : 0;
+      stu = a === true ? "صحيح" : a === false ? "خطأ" : "";
+      break;
+    case "multi": {
+      const sel = Array.isArray(a) ? a : [];
+      let sc = 0;
+      sel.forEach((i) => { sc += p.ok.indexOf(i) !== -1 ? p.per : -p.neg; });
+      earned = Math.max(0, Math.min(p.marks, sc));
+      stu = sel.length ? sel.map((i) => p.opts[i]).join(" ؛ ") : "";
+      break;
+    }
+    case "fill": {
+      const n = norm(a);
+      earned = n && p.accept.some((x) => norm(x) === n) ? p.marks : 0;
+      stu = typeof a === "string" ? a : "";
+      corr = p.ans + (p.alts && p.alts !== p.ans ? " (بدائل مقبولة: " + p.alts + ")" : "");
+      break;
+    }
+    case "match": {
+      let c = 0;
+      if (a) p.lefts.forEach((L, li) => { if (a[li] === p.map[li]) c++; });
+      earned = c * p.per;
+      stu = a && Object.keys(a).length ? p.lefts.map((L, li) => L + " ← " + (a[li] !== undefined ? p.rights[a[li]] : "—")).join(" ؛ ") : "";
+      break;
+    }
+    case "classify": {
+      let c = 0;
+      if (a) p.items.forEach((it, i) => { if (a[i] === it.cat) c++; });
+      earned = c * p.per;
+      stu = a && Object.keys(a).length
+        ? p.cats.map((cat, ci) => cat + ": " + (p.items.filter((it, i) => a[i] === ci).map((it) => it.t).join("، ") || "—")).join(" | ")
+        : "";
+      break;
+    }
+    case "order": {
+      let e = 0;
+      if (Array.isArray(a)) a.forEach((ii, pos) => { if (ii === pos) e += p.wts[pos]; });
+      earned = e;
+      stu = Array.isArray(a) && a.length ? a.map((ii, pos) => (pos + 1) + ") " + p.items[ii]).join("  ") : "";
+      break;
+    }
+    case "write": {
+      earned = gradeWrite(q.id, p, typeof a === "string" ? a : "");
+      stu = typeof a === "string" ? a : "";
+      corr = p.ans + "\n     معايير التصحيح: " + p.rubric.map((r) => "(" + r.m + ") " + r.label).join(" — ");
+      break;
+    }
+  }
+  const status = !answered ? "empty" : earned >= p.marks ? "full" : earned <= 0 ? "wrong" : "partial";
+  return { earned, stu, corr, status };
+}
+function gradeAll() {
+  const rows = [];
+  let total = 0, full = 0, part = 0, wrong = 0, empty = 0;
+  S.order.forEach((qi, pos) => {
+    const q = QUESTIONS[qi];
+    const pr = q.parts.map((p) => gradePart(q, p));
+    const got = pr.reduce((s, r) => s + r.earned, 0);
+    total += got;
+    pr.forEach((r) => {
+      if (r.status === "full") full++;
+      else if (r.status === "partial") part++;
+      else if (r.status === "wrong") wrong++;
+      else empty++;
+    });
+    rows.push({ q, pos: pos + 1, parts: pr, got });
+  });
+  return { rows, total, full, part, wrong, empty, pct: Math.round((total / EXAM.totalMarks) * 100) };
+}
+const STATUS_WORD = { full: "إجابة تامة", partial: "إجابة جزئية", wrong: "إجابة خاطئة", empty: "غير مُجابة" };
+
+/* =========================================================
+   تقرير TXT
+   ========================================================= */
+function makeFileName(name) {
+  let n = String(name || "").trim().replace(/\s+/g, "_").replace(/[\\/:*?"<>|-]/g, "").replace(/[ -]/g, "").replace(/^\.+/, "");
+  if (!n) n = "STUDENT";
+  return "Grade5_Arabic_Lesson2_Report_" + n + ".txt";
+}
+function buildReport(result) {
+  const R = [];
+  const line = (s) => R.push(s);
+  const bar = "═".repeat(58);
+  const thin = "─".repeat(58);
+  line(bar);
+  line("تقرير نتيجة الاختبار التفاعلي — اللغة العربية");
+  line(EXAM.title);
+  line(bar);
+  line("");
+  line("【 معلومات الطالبة والاختبار 】");
+  line("اسم الطالبة: " + S.name);
+  line("المادة: " + EXAM.subject);
+  line("الصف: " + EXAM.grade);
+  line("الوحدة: " + EXAM.unit);
+  line("الدرس: " + EXAM.lesson + " (الصفحات " + EXAM.pages + ")");
+  line("عنوان الاختبار: " + EXAM.title);
+  line("إصدار الاختبار: " + EXAM.version + " — معرّف المحاولة: " + S.attemptId);
+  line("");
+  line("【 التوقيت 】");
+  line("بدأت الاختبار في: " + fmtDateTime(S.startTs));
+  line("سلّمت الاختبار في: " + fmtDateTime(S.submitTs));
+  line("المدة الكلية المستغرقة: " + fmtDur(S.elapsed) + " (ساعة:دقيقة:ثانية)");
+  line("");
+  line("【 النتيجة الإجمالية 】");
+  line("العلامة المستحقة: " + result.total + " من " + EXAM.totalMarks + " (" + result.pct + "%)");
+  line("عدد الإجابات التامة: " + result.full);
+  line("عدد الإجابات الجزئية: " + result.part);
+  line("عدد الإجابات الخاطئة: " + result.wrong);
+  line("عدد الأجزاء غير المُجابة: " + result.empty);
+  line("إجمالي الأجزاء المقيَّمة: " + TOTAL_PARTS + " — عدد الأسئلة الرئيسة: " + QUESTIONS.length);
+  line("");
+  line("【 تغطية مراحل الدرس التسع في الاختبار 】");
+  Object.keys(STAGE_NAME).forEach((k) => {
+    const c = QUESTIONS.filter((q) => q.stage === +k || q.stage2 === +k).length;
+    line("• " + STAGE_NAME[k] + ": " + c + (c > 1 ? " أسئلة" : " سؤال"));
+  });
+  line("");
+  line(bar);
+  line("【 التحليل التفصيلي لكل سؤال وكل جزء 】(يعرض المراجع المنهجية الداخلية)");
+  line(bar);
+  result.rows.forEach((row) => {
+    const q = row.q;
+    line("");
+    line("■ السؤال " + row.pos + " — «" + q.title + "»  (العلامة القصوى: " + q.marks + " — المستحقة: " + row.got + ")");
+    line("المهارة المختبَرة: " + q.skill);
+    line("المرجع المنهجي الداخلي: " + q.src);
+    line("الصفحات المطبوعة: " + q.pages);
+    line(thin);
+    q.parts.forEach((p, pi) => {
+      const r = row.parts[pi];
+      line(PART_LETTERS[pi] + ") " + p.t);
+      line("   إجابة الطالبة: " + (r.stu && r.stu.trim() ? r.stu : "— (لم تُجَب)"));
+      line("   الإجابة الصحيحة/المقبولة: " + r.corr);
+      line("   الدرجة: " + r.earned + " من " + p.marks + " — " + STATUS_WORD[r.status]);
+      line("   التفسير: " + p.exp);
+      line("   مصدر الجزء: " + (p.srcNote ? p.srcNote : q.src));
+    });
+  });
+  line("");
+  line(bar);
+  line("【 ملاحظات 】");
+  line("• الإجابات المقالية قُيّمت آلياً وفق معايير تصحيح معلنة أعلاه؛ يُوصى بأن تراجعها المعلمة مراجعةً نهائية، وتُقبَل كل الصياغات السليمة المكافئة لا النموذج وحده.");
+  line("• أُنشئ هذا التقرير محلياً على جهاز الطالبة، ولم تُرسَل أي بيانات عبر الشبكة.");
+  line("• الأرقام والتواريخ والمدد في هذا التقرير كلها بالأرقام العربية المشرقية (0-9).");
+  line("• إعداد: المهندس سومر شاهين — 0930215022");
+  line(bar);
+  return R.join("\n");
+}
+function performDownload(text, fn) {
+  const blob = new Blob(["﻿" + text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = fn;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  return true;
+}
+
+/* =========================================================
+   التسليم بنقرة واحدة
+   ========================================================= */
+function submitExam() {
+  if (!S || S.status !== "active" || missingCount() > 0) return;
+  // 1) تجميد الإجابات — 2) طابع التسليم — 3) إيقاف الموقّت
+  S.answers = JSON.parse(JSON.stringify(S.answers));
+  S.submitTs = Date.now();
+  S.elapsed = S.submitTs - S.startTs;
+  S.status = "submitted";
+  stopTicker();
+  // 4) حساب الدرجة — 5) توليد التقرير — 6) التحقق منه
+  const result = gradeAll();
+  S.result = result;
+  S.dlFile = makeFileName(S.name);
+  let report = "";
+  try {
+    report = buildReport(result);
+    if (!report || report.length < 1500 || report.indexOf(S.name) === -1 || report.indexOf("من 100") === -1) {
+      throw new Error("report validation failed");
+    }
+    S.report = report;
+  } catch (e) { S.report = null; }
+  save();
+  // 7-9) Blob ثم عنوان كائن ثم تنزيل فوري
+  let dl = false;
+  try { if (S.report) { performDownload(S.report, S.dlFile); dl = true; } } catch (e) { dl = false; }
+  S.autoDl = dl;
+  // 10) مؤثر التسليم مرة واحدة
+  if (!S.playedSubmit) { S.playedSubmit = true; playSubmitSound(); }
+  save();
+  // 11) شاشة النتائج
+  showResults(false);
+}
+
+/* =========================================================
+   شاشة النتائج
+   ========================================================= */
+function praise(pct) {
+  if (pct >= 90) return "نتيجة مبهرة — أنتِ نجمة الحوار الحقيقية!";
+  if (pct >= 75) return "عمل رائع! خطوة واثقة نحو القمة.";
+  if (pct >= 60) return "أداء جيد — راجعي التقرير وستتألقين أكثر.";
+  if (pct >= 50) return "بداية طيبة، وبمزيد من التدريب ستبلغين الأعلى.";
+  return "لا تيأسي أبداً؛ كل خبيرة بدأت بمحاولة — أعيدي الكرّة!";
+}
+function showResults(restored) {
+  if (!S.result) return;
+  const r = S.result;
+  stopTicker();
+  $("#res-name").textContent = "الطالبة: " + S.name;
+  $("#res-praise").textContent = praise(r.pct);
+  $("#res-score").textContent = ar(r.total);
+  $("#res-pct").textContent = ar(r.pct) + "%";
+  $("#st-full").textContent = ar(r.full);
+  $("#st-part").textContent = ar(r.part);
+  $("#st-wrong").textContent = ar(r.wrong);
+  $("#st-empty").textContent = ar(r.empty);
+  $("#st-time").textContent = fmtDurAr(S.elapsed);
+  $("#attempt-info").textContent = "محاولة: " + S.attemptId + " · إصدار " + EXAM.version;
+  const note = $("#dl-note");
+  if (restored) note.textContent = "تمّت استعادة نتيجتك المحفوظة. يمكنك إعادة تنزيل التقرير نفسه بالزر بالأسفل.";
+  else if (S.autoDl) note.textContent = "أُنشئ التقرير وبدأ تنزيله تلقائياً؛ إن لم يصلك الملف فاستخدمي زر التنزيل بالأسفل.";
+  else note.textContent = "تعذّر التنزيل التلقائي من متصفحك — لا بأس، استخدمي زر التنزيل بالأسفل.";
+  show("scr-results");
+  const C = 515.2;
+  const fg = $("#ring-fg");
+  fg.style.strokeDashoffset = String(C);
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { fg.style.strokeDashoffset = String(C * (1 - r.total / 100)); });
+  });
+}
+
+/* =========================================================
+   إعادة المحاولة
+   ========================================================= */
+function tryAgain() {
+  archiveHistory();
+  S = freshState();
+  save();
+  stopTicker();
+  $("#timer-text").textContent = fmtDurAr(0);
+  $("#in-name").value = "";
+  $("#review-drawer").hidden = true;
+  show("scr-welcome");
+  $("#in-name").focus();
+}
+
+/* =========================================================
+   مفتاح المعلمة
+   ========================================================= */
+const TEACHER_PASS = "somer173";
+function renderKey() {
+  const meta = $("#blueprint-meta");
+  const dc = { basic: 0, medium: 0, advanced: 0, thinking: 0 };
+  QUESTIONS.forEach((q) => dc[q.diff]++);
+  meta.innerHTML =
+    '<span class="km-diff">أساسي: 6 × 4 = 24</span>' +
+    '<span class="km-diff">متوسط: 7 × 5 = 35</span>' +
+    '<span class="km-diff">متقدم: 4 × 6 = 24</span>' +
+    '<span class="km-diff">تفكير: 3 (5+6+6) = 17</span>' +
+    '<span class="km-marks">المجموع: 100 / عدد الأجزاء: ' + TOTAL_PARTS + "</span>" +
+    '<span class="km-stage">يُعرض هنا بالترتيب المرجعي (q01–q20)؛ ترتيب العرض للطالبة عشوائي ويُحفَظ لكل محاولة</span>';
+  const host = $("#key-list");
+  host.innerHTML = "";
+  QUESTIONS.forEach((q, qi) => {
+    const box = document.createElement("div");
+    box.className = "key-q";
+    let h = "<h3>" + ("Q" + pad2(qi + 1)) + " — " + q.title + "</h3>";
+    h += '<div class="key-meta">' +
+      '<span class="km-diff">الصعوبة: ' + DIFF_NAME[q.diff] + "</span>" +
+      '<span class="km-stage">المرحلة ' + q.stage + ": " + STAGE_NAME[q.stage] + (q.stage2 ? " + المرحلة " + q.stage2 : "") + "</span>" +
+      '<span class="km-page">ص ' + q.pages + "</span>" +
+      '<span class="km-marks">العلامة: ' + q.marks + "</span>" +
+      '<span class="km-page">المهارة: ' + q.skill + "</span></div>";
+    h += '<div style="font-size:12.5px;color:var(--ink-faint);font-weight:700;margin-bottom:6px">' + q.src + "</div>";
+    host.innerHTML += "";
+    const holder = document.createElement("div");
+    holder.innerHTML = h;
+    box.appendChild(holder);
+    q.parts.forEach((p, pi) => {
+      const kp = document.createElement("div");
+      kp.className = "key-part";
+      let ph = '<div class="kp-t">' + PART_LETTERS[pi] + ") " + p.t + ' <span class="kp-m">' + p.marks + " درجة</span></div>";
+      ph += '<div class="kp-a">الإجابة الصحيحة: ' + (p.ans || "") + (p.alts && p.alts !== p.ans ? " — البدائل المقبولة: " + p.alts : "") + "</div>";
+      if (p.type === "multi") ph += '<div class="kp-a">قاعدة الجزء: +' + p.per + " لكل اختيار صحيح، و-" + p.neg + " لكل اختيار مضلل، بحدّ أدنى 0 وحدّ أقصى " + p.marks + ".</div>";
+      if (p.type === "order") ph += '<div class="kp-a">توزيع الدرجة على المواضع: ' + p.wts.join(" + ") + " = " + p.marks + ".</div>";
+      if (p.type === "match" || p.type === "classify") ph += '<div class="kp-a">درجة جزئية: ' + p.per + " لكل عنصر صحيح (الحد الأقصى " + p.marks + ").</div>";
+      if (p.type === "write") {
+        ph += '<div class="kp-a">معيار التصحيح:</div><ul class="rubric-list">' +
+          p.rubric.map((r) => "<li>" + r.label + " (" + r.m + (r.m > 1 ? " درجات" : " درجة") + ")</li>").join("") + "</ul>";
+      }
+      ph += '<div class="kp-x">التفسير: ' + p.exp + "</div>";
+      ph += '<div class="kp-s">مصدر الجزء: ' + (p.srcNote || q.src) + " — ص " + q.pages + "</div>";
+      kp.innerHTML = ph;
+      box.appendChild(kp);
+    });
+    host.appendChild(box);
+  });
+}
+
+/* =========================================================
+   التهيئة والتوجيه
+   ========================================================= */
+function wire() {
+  $("#btn-start").onclick = beginExam;
+  $("#in-name").addEventListener("keydown", (e) => { if (e.key === "Enter") beginExam(); });
+  $("#btn-prev").onclick = () => goTo(S.idx - 1);
+  $("#btn-next").onclick = () => goTo(S.idx + 1);
+  $("#btn-review").onclick = () => { const d = $("#review-drawer"); d.hidden = !d.hidden; if (!d.hidden) renderReview(); };
+  $("#btn-submit").onclick = submitExam;
+  $("#btn-download").onclick = () => {
+    if (S.report && S.dlFile) { try { performDownload(S.report, S.dlFile); } catch (e) { alert("تعذّر التنزيل من هذا المتصفح."); } }
+  };
+  $("#btn-retry").onclick = tryAgain;
+  $("#link-teacher").onclick = () => { teacherFrom = "scr-welcome"; location.hash = "teacher"; show("scr-teacher"); };
+  $("#btn-teacher-back").onclick = () => { history.replaceState(null, "", location.pathname + location.search); show(teacherFrom); if (teacherFrom === "scr-exam") startTicker(); };
+  $("#btn-pass").onclick = tryPass;
+  $("#in-pass").addEventListener("keydown", (e) => { if (e.key === "Enter") tryPass(); });
+  const persist = () => { if (S && S.status !== "idle") save(); };
+  document.addEventListener("visibilitychange", () => { persist(); if (!document.hidden) renderTimer(); });
+  window.addEventListener("pagehide", persist);
+  window.addEventListener("beforeunload", persist);
+  window.addEventListener("hashchange", () => {
+    if (location.hash === "#teacher") { show("scr-teacher"); }
+  });
+}
+function tryPass() {
+  const v = $("#in-pass").value.trim();
+  if (v === TEACHER_PASS) {
+    $("#pass-err").textContent = "";
+    $("#teacher-gate").hidden = true;
+    $("#teacher-key").hidden = false;
+    renderKey();
+    $("#in-pass").value = "";
+  } else {
+    $("#pass-err").textContent = "كلمة المرور غير صحيحة.";
+  }
+}
+function qaSelfCheck() {
+  const marks = QUESTIONS.reduce((s, q) => s + q.marks, 0);
+  const dc = { basic: 0, medium: 0, advanced: 0, thinking: 0 };
+  let ok = true;
+  QUESTIONS.forEach((q) => {
+    dc[q.diff]++;
+    const pm = q.parts.reduce((s, p) => s + p.marks, 0);
+    if (pm !== q.marks) { ok = false; console.error("خطأ توزيع الدرجات في", q.id, pm, q.marks); }
+  });
+  if (QUESTIONS.length !== 20 || marks !== 100 || dc.basic !== 6 || dc.medium !== 7 || dc.advanced !== 4 || dc.thinking !== 3) ok = false;
+  console.info("[QA] questions=" + QUESTIONS.length + " marks=" + marks + " parts=" + TOTAL_PARTS + " diff=" + JSON.stringify(dc) + " status=" + (ok ? "passed" : "FAILED"));
+}
+function init() {
+  probeStorage();
+  loadState();
+  wire();
+  qaSelfCheck();
+  if (location.hash === "#teacher" && S.status !== "active") { show("scr-teacher"); return; }
+  if (S.status === "submitted" && S.result) { showResults(true); return; }
+  if (S.status === "active" && S.order.length === QUESTIONS.length) { enterExam(); return; }
+  if (S.status !== "idle" && S.status !== "submitted" && S.status !== "active") S = freshState();
+  show("scr-welcome");
+}
+init();
+
+</script>
+</body>
+</html>
