@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+    background-color: #0b0f19;
+    color: #f1f5f9;
+    overflow-x: hidden;
+  }
+}
+
+/* BiDi and Math notation isolation rules */
+bdi,
+.bdi-ltr,
+.math-ltr,
+[dir="ltr"] {
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+}
+
+[dir="rtl"] {
+  unicode-bidi: isolate;
+}
+
+.arabic-sentence {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: isolate !important;
+}
+
+.math-ltr {
+  display: inline-block;
+  font-family: 'JetBrains Mono', 'KaTeX_Main', monospace;
+}
+
+.math-block-ltr {
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+  text-align: center;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}

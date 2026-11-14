@@ -1,0 +1,1205 @@
+import { Question } from '../types/exam';
+
+export const EXAM_QUESTIONS: Question[] = [
+  // ==================== Q1: ALGEBRA (6 marks) ====================
+  {
+    id: 'q1',
+    questionNumber: 1,
+    subject: 'ALGEBRA',
+    title: 'العمليات الأساسية على الأعداد العادية واختزال الكسور',
+    curriculumRef: {
+      unit: 'الوحدة الأولى: الأعداد العادية والعمليات عليها',
+      lesson: 'الدرس 1 و 2: جمع وطرح وضرب الأعداد العادية',
+      pages: 'ص 3–10',
+      code: 'ALG-U1-L1-L2'
+    },
+    difficulty: 'foundational',
+    totalMarks: 6,
+    stemText: 'ليكن العددان العاديان $A$ و $B$ المعرّفان بالشكل الآتي:',
+    stemMath: 'A = \\frac{3}{4} - \\frac{5}{6} \\quad , \\quad B = \\left(-\\frac{2}{3}\\right) \\times \\left(\\frac{9}{8}\\right)',
+    subparts: [
+      {
+        id: 'q1_a',
+        subpartNumber: 'أ',
+        text: 'احسب الناتج الدقيق للعدد $A$ واكتبه على صورة كسر عادي مختزل في أبسط شكل:',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '-\\frac{1}{12}', isMath: true },
+          { id: 'opt_2', label: '-\\frac{2}{12}', isMath: true },
+          { id: 'opt_3', label: '\\frac{1}{12}', isMath: true },
+          { id: 'opt_4', label: '-\\frac{1}{2}', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'توحيد المقامات: المقام المشترك الأصغر للعددين 4 و 6 هو 12. \\n A = (3×3)/(4×3) - (5×2)/(6×2) = 9/12 - 10/12 = (9 - 10)/12 = -1/12.',
+        partialCreditCriteria: 'علامتان للاختيار الصحيح -1/12.'
+      },
+      {
+        id: 'q1_b',
+        subpartNumber: 'ب',
+        text: 'احسب ناتج ضرب العدد $B$ واختزله إلى كسر في أبسط صورة:',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '-\\frac{3}{4}', isMath: true },
+          { id: 'opt_2', label: '-\\frac{18}{24}', isMath: true },
+          { id: 'opt_3', label: '\\frac{3}{4}', isMath: true },
+          { id: 'opt_4', label: '-\\frac{2}{3}', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'ضرب كسرين: نضرب البسط بالبسط والمقام بالمقام: B = (-2 × 9) / (3 × 8) = -18 / 24. بالقسمة على القاسم المشترك الأكبر (6): B = -3/4.',
+        partialCreditCriteria: 'علامتان للاختزال الكامل الصحيح -3/4.'
+      },
+      {
+        id: 'q1_c',
+        subpartNumber: 'ج',
+        text: 'أوجد مقلوب العدد $B$، ثم حدد أي العبارات الآتية صحيحة للمقارنة بين مقلوب $B$ والعدد $A$:',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'مقلوب $B = -\\frac{4}{3}$ و $-\\frac{4}{3} < A$', isMath: true },
+          { id: 'opt_2', label: 'مقلوب $B = -\\frac{4}{3}$ و $-\\frac{4}{3} > A$', isMath: true },
+          { id: 'opt_3', label: 'مقلوب $B = \\frac{4}{3}$ و $\\frac{4}{3} > A$', isMath: true },
+          { id: 'opt_4', label: 'مقلوب $B = -\\frac{3}{4}$ و $-\\frac{3}{4} < A$', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'مقلوب B = -4/3. المقارنة مع A = -1/12: بالكسور العشرية -4/3 ≈ -1.333 بينما -1/12 ≈ -0.0833. بما أن -1.333 أصغر من -0.0833 (أبعد عن الصفر يساراً على مستقيم الأعداد)، فإن مقلوب B أصغر تماماً من A.',
+        partialCreditCriteria: 'علامتان لتحديد المقلوب الصحيح والمقارنة الرياضية السليمة.'
+      }
+    ]
+  },
+
+  // ==================== Q2: GEOMETRY (6 marks) ====================
+  {
+    id: 'q2',
+    questionNumber: 2,
+    subject: 'GEOMETRY',
+    title: 'الانسحاب وخواصه وصورة قطعة مستقيمة',
+    curriculumRef: {
+      unit: 'الوحدة الأولى: متوازيات الأضلاع والانسحاب',
+      lesson: 'الدرس 1 و 2: الانسحاب وخواصه وصورة نقطة',
+      pages: 'ص 5–12',
+      code: 'GEO-U1-L1-L2'
+    },
+    difficulty: 'foundational',
+    totalMarks: 6,
+    stemText: 'في المستوى الإحداثي، لدينا القطعة المستقيمة $[AB]$ حيث $A(2, 1)$ و $B(6, 4)$. أُجري على القطعة $[AB]$ انسحاب وِفق المتجه $\\vec{u}$ الذي ينقل النقطة $O(0,0)$ إلى النقطة $(5, 3)$ فتحصلنا على القطعة المستقيمة $[A\'B\']$ كما في الشكل الهندسي المرفق:',
+    diagram: {
+      id: 'diag_q2',
+      title: 'الشكل 1: انسحاب قطعة مستقيمة في شبكة إحداثية نظامية',
+      viewBox: '0 0 320 220',
+      type: 'translation',
+      grid: true,
+      coordinates: {
+        A: { x: 50, y: 170, label: 'A(2,1)', labelPos: 'bottom-left' },
+        B: { x: 130, y: 110, label: 'B(6,4)', labelPos: 'top-left' },
+        A_prime: { x: 150, y: 110, label: "A'(7,4)", labelPos: 'bottom-right' },
+        B_prime: { x: 230, y: 50, label: "B'(11,7)", labelPos: 'top-right' }
+      },
+      segments: [
+        { from: 'A', to: 'B', style: 'solid', color: '#38bdf8', label: '5 cm' },
+        { from: 'A_prime', to: 'B_prime', style: 'solid', color: '#10b981', label: "5 cm" },
+        { from: 'A', to: 'A_prime', style: 'vector', color: '#818cf8', label: 'u' },
+        { from: 'B', to: 'B_prime', style: 'vector', color: '#818cf8', label: 'u' }
+      ],
+      notes: 'المتجه u ينقل كل نقطة (x,y) إلى (x+5, y+3)'
+    },
+    subparts: [
+      {
+        id: 'q2_a',
+        subpartNumber: 'أ',
+        text: 'ما هي إحداثيات النقطة $A\'$ صورة النقطة $A(2, 1)$ وفق الانسحاب الموصوف؟',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: "(7, 4)", isMath: true },
+          { id: 'opt_2', label: "(4, 7)", isMath: true },
+          { id: 'opt_3', label: "(10, 3)", isMath: true },
+          { id: 'opt_4', label: "(3, 2)", isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: "الانسحاب يضيف مركبات المتجه (5, 3) إلى إحداثيات النقطة A(2, 1): x' = 2 + 5 = 7 ، y' = 1 + 3 = 4. إذن A'(7, 4).",
+        partialCreditCriteria: 'علامتان للإحداثيات الصحيحة.'
+      },
+      {
+        id: 'q2_b',
+        subpartNumber: 'ب',
+        text: 'إذا كان طول القطعة الأصلية $AB = 5\\text{ cm}$، فما طول القطعة الصورة $[A\'B\']$ وما العلاقة الهندسية بين المستقيمين $(AB)$ و $(A\'B\')؟$',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: "$A'B' = 5\\text{ cm}$ و $(AB) \\parallel (A'B')$", isMath: true },
+          { id: 'opt_2', label: "$A'B' = 10\\text{ cm}$ و $(AB) \\perp (A'B')$", isMath: true },
+          { id: 'opt_3', label: "$A'B' = 5\\text{ cm}$ والمستقيم $(AB)$ يتقاطع مع $(A'B')$", isMath: true },
+          { id: 'opt_4', label: "$A'B' = 2.5\\text{ cm}$ و $(AB) \\parallel (A'B')$", isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: "من خواص الانسحاب الأساسية: يحافظ الانسحاب على أطوال القطع المستقيمة (A'B' = AB = 5 cm)، وصورة مستقيم وفق انسحاب هي مستقيم يوازيه (AB) || (A'B').",
+        partialCreditCriteria: 'علامتان لصحة الطول والتوازي معاً.'
+      },
+      {
+        id: 'q2_c',
+        subpartNumber: 'ج',
+        text: 'ما هو النوع الهندسي الدقيق للرباعي $ABB\'A\'$ الناتج عن هذا الانسحاب؟',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'متوازي أضلاع', isMath: false },
+          { id: 'opt_2', label: 'شبه منحرف قائم', isMath: false },
+          { id: 'opt_3', label: 'مستطيل بالضرورة', isMath: false },
+          { id: 'opt_4', label: 'معين فقط', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: "بما أن النقطتين A' و B' هما صورتا A و B وفق نفس الانسحاب، فإن القطعتين [AA'] و [BB'] متوازيتان ومتساويتان في الطول ولهما نفس الجهة. إذن الرباعي ABB'A' متوازي أضلاع بحسب المبرهنة الأساسية للانسحاب.",
+        partialCreditCriteria: 'علامتان للتحديد الدقيق: متوازي أضلاع.'
+      }
+    ]
+  },
+
+  // ==================== Q3: ALGEBRA (7 marks) ====================
+  {
+    id: 'q3',
+    questionNumber: 3,
+    subject: 'ALGEBRA',
+    title: 'قواعد قوى الأعداد العادية والأسس السالبة والموجبة',
+    curriculumRef: {
+      unit: 'الوحدة الثانية: قوى الأعداد العادية',
+      lesson: 'الدرس 1 و 3 و 4: قوى الأعداد وقواعد الحساب والأسس الصحيحة',
+      pages: 'ص 25–34',
+      code: 'ALG-U2-L1-L3-L4'
+    },
+    difficulty: 'advanced',
+    totalMarks: 7,
+    stemText: 'لتكن العبارة الرياضية $E$ المكتوبة بدلالة قوى العددين $2$ و $3$:',
+    stemMath: 'E = \\frac{2^3 \\times 2^{-5} \\times \\left(3^2\\right)^3}{3^4 \\times 2^{-4}}',
+    subparts: [
+      {
+        id: 'q3_a',
+        subpartNumber: 'أ',
+        text: 'باستخدام قواعد قوى الأعداد العادية، اكتب العبارة $E$ على شكل $2^a \\times 3^b$ حيث $a$ و $b$ عددان صحيحان:',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '2^2 \\times 3^2', isMath: true },
+          { id: 'opt_2', label: '2^{-2} \\times 3^2', isMath: true },
+          { id: 'opt_3', label: '2^2 \\times 3^1', isMath: true },
+          { id: 'opt_4', label: '2^{-6} \\times 3^6', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'البسط: 2^(3 + (-5)) × 3^(2×3) = 2^(-2) × 3^6. \\n المقام: 2^(-4) × 3^4. \\n قسمة القوى: 2^(-2 - (-4)) × 3^(6 - 4) = 2^2 × 3^2. إذن a = 2 و b = 2.',
+        partialCreditCriteria: '2.5 علامة للتبسيط الصحيح الكامل.'
+      },
+      {
+        id: 'q3_b',
+        subpartNumber: 'ب',
+        text: 'احسب القيمة العددية النهائية للعبارة $E$:',
+        marks: 2.5,
+        type: 'numeric',
+        placeholder: 'أدخل القيمة العددية',
+        correctAnswer: '36',
+        acceptableAnswers: ['36', '36.0'],
+        teacherExplanation: 'E = 2^2 × 3^2 = 4 × 9 = 36 (أو (2 × 3)^2 = 6^2 = 36).',
+        partialCreditCriteria: '2.5 علامة للناتج العددي الدقيق 36.'
+      },
+      {
+        id: 'q3_c',
+        subpartNumber: 'ج',
+        text: 'ما هو المقلوب (المعكوس الضربي) للعدد $E$ مكتوباً على شكل قوة ذات أساس صحيح وأس سالب؟',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '6^{-2}', isMath: true },
+          { id: 'opt_2', label: '6^2', isMath: true },
+          { id: 'opt_3', label: '(-6)^2', isMath: true },
+          { id: 'opt_4', label: '36^{-1} \\text{ فقط دون تبسيط الأساس}', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'مقلوب العدد 36 هو 1/36. وبما أن 36 = 6^2، فإن 1/36 = 6^(-2).',
+        partialCreditCriteria: 'علامتان للتعبير الصحيح بقوة ذات أس سالب 6^(-2).'
+      }
+    ]
+  },
+
+  // ==================== Q4: GEOMETRY (7 marks) ====================
+  {
+    id: 'q4',
+    questionNumber: 4,
+    subject: 'GEOMETRY',
+    title: 'متوازي الأضلاع وخواص القطرين والزوايا وصورة شكل',
+    curriculumRef: {
+      unit: 'الوحدة الأولى: متوازيات الأضلاع والانسحاب',
+      lesson: 'الدرس 3 و 5: صورة شكل وفق انسحاب وتمرينات متوازي الأضلاع',
+      pages: 'ص 13–24',
+      code: 'GEO-U1-L3-L5'
+    },
+    difficulty: 'intermediate',
+    totalMarks: 7,
+    stemText: 'في الشكل الهندسي الآتي، $ABCD$ متوازي أضلاع يتقاطع قطراه $[AC]$ و $[BD]$ في النقطة $O$. قياس الزاوية $\\widehat{ABC} = 110^\\circ$، ومساحة المثلث $ABO$ تساوي $18\\text{ cm}^2$:',
+    diagram: {
+      id: 'diag_q4',
+      title: 'الشكل 2: متوازي الأضلاع ABCD وقطراه المتقاطعان في O',
+      viewBox: '0 0 320 220',
+      type: 'parallelogram',
+      coordinates: {
+        A: { x: 40, y: 160, label: 'A', labelPos: 'bottom-left' },
+        B: { x: 180, y: 160, label: 'B', labelPos: 'bottom-right' },
+        C: { x: 260, y: 60, label: 'C', labelPos: 'top-right' },
+        D: { x: 120, y: 60, label: 'D', labelPos: 'top-left' },
+        O: { x: 150, y: 110, label: 'O', labelPos: 'top' }
+      },
+      segments: [
+        { from: 'A', to: 'B', style: 'solid', color: '#38bdf8' },
+        { from: 'B', to: 'C', style: 'solid', color: '#38bdf8' },
+        { from: 'C', to: 'D', style: 'solid', color: '#38bdf8' },
+        { from: 'D', to: 'A', style: 'solid', color: '#38bdf8' },
+        { from: 'A', to: 'C', style: 'dashed', color: '#f59e0b' },
+        { from: 'B', to: 'D', style: 'dashed', color: '#f59e0b' }
+      ],
+      angles: [
+        { vertex: 'B', p1: 'A', p2: 'C', label: '110°', arcRadius: 22 }
+      ],
+      notes: 'O هي منتصف كل من القطرين [AC] و [BD]'
+    },
+    subparts: [
+      {
+        id: 'q4_a',
+        subpartNumber: 'أ',
+        text: 'ما هي صورة النقطة $D$ وِفق الانسحاب الذي ينقل النقطة $A$ إلى النقطة $B$؟',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'النقطة $C$، لأن المتجهين $\\vec{DC}$ و $\\vec{AB}$ متساويان', isMath: true },
+          { id: 'opt_2', label: 'النقطة $O$ مركز التناظر', isMath: false },
+          { id: 'opt_3', label: 'النقطة $A$ نفسها', isMath: false },
+          { id: 'opt_4', label: 'النقطة $B$', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'في متوازي الأضلاع ABCD، الضلعان المتقابلان [AB] و [DC] متوازيان ولهما نفس الطول ونفس الاتجاه، مما يعني أن المتجه AB يساوي المتجه DC. إذن صورة النقطة D بالانسحاب ذي المتجه AB هي النقطة C.',
+        partialCreditCriteria: '2.5 علامة للتعليل والاختيار الصحيح.'
+      },
+      {
+        id: 'q4_b',
+        subpartNumber: 'ب',
+        text: 'إذا كانت مساحة المثلث $ABO$ تساوي $18\\text{ cm}^2$، فما هي المساحة الإجمالية لمتوازي الأضلاع $ABCD$؟',
+        marks: 2.5,
+        type: 'numeric',
+        placeholder: 'أدخل المساحة بـ cm²',
+        unit: 'cm²',
+        correctAnswer: '72',
+        acceptableAnswers: ['72', '72.0'],
+        teacherExplanation: 'قطرا متوازي الأضلاع يقسمانه إلى أربعة مثلثات متكافئة (متساوية المساحة تماماً) لأن النقطة O تنصف كلاً من القطرين (المتوسط في مثلث يقسمه إلى مثلثين متساويي المساحة). إذن مساحة ABCD = 4 × مساحة ABO = 4 × 18 = 72 cm².',
+        partialCreditCriteria: '2.5 علامة للقيمة 72.'
+      },
+      {
+        id: 'q4_c',
+        subpartNumber: 'ج',
+        text: 'احسب قياسي الزاويتين $\\widehat{BCD}$ و $\\widehat{CDA}$ في متوازي الأضلاع $ABCD$:',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '\\widehat{BCD} = 70^\\circ \\quad , \\quad \\widehat{CDA} = 110^\\circ', isMath: true },
+          { id: 'opt_2', label: '\\widehat{BCD} = 110^\\circ \\quad , \\quad \\widehat{CDA} = 70^\\circ', isMath: true },
+          { id: 'opt_3', label: '\\widehat{BCD} = 90^\\circ \\quad , \\quad \\widehat{CDA} = 90^\\circ', isMath: true },
+          { id: 'opt_4', label: '\\widehat{BCD} = 55^\\circ \\quad , \\quad \\widehat{CDA} = 125^\\circ', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'في متوازي الأضلاع: كل زاويتين متتاليتين متكاملتان (مجموعهما 180°)، إذن BCD = 180° - 110° = 70°. وكل زاويتين متقابلتين متساويتان، إذن CDA = ABC = 110°.',
+        partialCreditCriteria: 'علامتان لحساب الزاويتين بدقة.'
+      }
+    ]
+  },
+
+  // ==================== Q5: GEOMETRY (7 marks) ====================
+  {
+    id: 'q5',
+    questionNumber: 5,
+    subject: 'GEOMETRY',
+    title: 'مبرهنة منتصفي ضلعين في مثلث وحساب الأطوال والمحيط',
+    curriculumRef: {
+      unit: 'الوحدة الثانية: مثلثات ومنصفات أضلاع ومستقيمات متوازية',
+      lesson: 'الدرس 1: منتصفا ضلعين في المثلث',
+      pages: 'ص 31–33',
+      code: 'GEO-U2-L1'
+    },
+    difficulty: 'advanced',
+    totalMarks: 7,
+    stemText: 'في المثلث $ABC$ الموضح في الشكل الهندسي، النقطة $M$ هي منتصف الضلع $[AB]$، والنقطة $N$ هي منتصف الضلع $[AC]$. أطوال الأضلاع: $BC = 14\\text{ cm}$، $AM = 4.5\\text{ cm}$، $AN = 5\\text{ cm}$:',
+    diagram: {
+      id: 'diag_q5',
+      title: 'الشكل 3: مبرهنة منتصفي ضلعين في المثلث ABC',
+      viewBox: '0 0 320 220',
+      type: 'midpoint_triangle',
+      coordinates: {
+        A: { x: 160, y: 30, label: 'A', labelPos: 'top' },
+        B: { x: 50, y: 190, label: 'B', labelPos: 'bottom-left' },
+        C: { x: 270, y: 190, label: 'C', labelPos: 'bottom-right' },
+        M: { x: 105, y: 110, label: 'M', labelPos: 'left' },
+        N: { x: 215, y: 110, label: 'N', labelPos: 'right' }
+      },
+      segments: [
+        { from: 'A', to: 'B', style: 'solid', color: '#94a3b8' },
+        { from: 'B', to: 'C', style: 'solid', color: '#38bdf8', label: '14 cm' },
+        { from: 'C', to: 'A', style: 'solid', color: '#94a3b8' },
+        { from: 'M', to: 'N', style: 'solid', color: '#10b981', label: 'MN = ?' },
+        { from: 'A', to: 'M', style: 'solid', color: '#f59e0b', label: '4.5 cm', tickCount: 1 },
+        { from: 'M', to: 'B', style: 'solid', color: '#f59e0b', tickCount: 1 },
+        { from: 'A', to: 'N', style: 'solid', color: '#ec4899', label: '5 cm', tickCount: 2 },
+        { from: 'N', to: 'C', style: 'solid', color: '#ec4899', tickCount: 2 }
+      ],
+      notes: 'M منتصف AB و N منتصف AC'
+    },
+    subparts: [
+      {
+        id: 'q5_a',
+        subpartNumber: 'أ',
+        text: 'ما هو النص الهندسي الدقيق لمبرهنة منتصفي ضلعين في مثلث وماذا تستنتج بشأن المستقيمين $(MN)$ و $(BC)$؟',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'القطعة المستقيمة الواصلة بين منتصفي ضلعين في مثلث توازي الضلع الثالث وطولها يساوي نصف طوله، إذن (MN) توازي (BC)', isMath: false },
+          { id: 'opt_2', label: 'القطعة المستقيمة الواصلة بين منتصفي ضلعين تعامد الضلع الثالث وطولها يساويه تماماً', isMath: false },
+          { id: 'opt_3', label: 'المستقيمان متقاطعان بالضرورة وطول MN ضعف طول BC', isMath: false },
+          { id: 'opt_4', label: 'القطعة توازي الضلع الثالث ولكن طولها يساوي ثلث طوله', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'نص المبرهنة 1 (ص 31): في مثلث، طول القطعة المستقيمة الواصلة بين منتصفي ضلعين يساوي نصف طول الضلع الثالث، والمستقيم الحامل لها يوازي المستقيم الحامل للضلع الثالث. إذن (MN) || (BC).',
+        partialCreditCriteria: '2.5 علامة لاختيار النص الدقيق والتوازي.'
+      },
+      {
+        id: 'q5_b',
+        subpartNumber: 'ب',
+        text: 'احسب الطول الدقيق للقطعة المستقيمة $[MN]$:',
+        marks: 2.5,
+        type: 'numeric',
+        placeholder: 'أدخل الطول بـ cm',
+        unit: 'cm',
+        correctAnswer: '7',
+        acceptableAnswers: ['7', '7.0'],
+        teacherExplanation: 'بحسب المبرهنة 1: MN = 1/2 BC = 1/2 × 14 = 7 cm.',
+        partialCreditCriteria: '2.5 علامة للناتج 7.'
+      },
+      {
+        id: 'q5_c',
+        subpartNumber: 'ج',
+        text: 'احسب كلاً من محيط المثلث الصغير $AMN$ ومحيط المثلث الكبير $ABC$، وما النسبة بينهما؟',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'محيط $AMN = 16.5\\text{ cm}$ ومحيط $ABC = 33\\text{ cm}$ والنسبة تساوي $\\frac{1}{2}$', isMath: true },
+          { id: 'opt_2', label: 'محيط $AMN = 14\\text{ cm}$ ومحيط $ABC = 28\\text{ cm}$ والنسبة تساوي $\\frac{1}{2}$', isMath: true },
+          { id: 'opt_3', label: 'محيط $AMN = 16.5\\text{ cm}$ ومحيط $ABC = 33\\text{ cm}$ والنسبة تساوي $\\frac{1}{4}$', isMath: true },
+          { id: 'opt_4', label: 'محيط $AMN = 21\\text{ cm}$ ومحيط $ABC = 42\\text{ cm}$ والنسبة تساوي $\\frac{1}{2}$', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'أطوال ABC: AB = 2 × 4.5 = 9 cm، AC = 2 × 5 = 10 cm، BC = 14 cm. المحيط = 9 + 10 + 14 = 33 cm. أطوال AMN: AM = 4.5 cm، AN = 5 cm، MN = 7 cm. المحيط = 4.5 + 5 + 7 = 16.5 cm. والنسبة هي 16.5 / 33 = 1/2 (نصف المحيط تماماً لأن كل ضلع في AMN نصف الضلع المناظر في ABC).',
+        partialCreditCriteria: 'علامتان للحساب الصحيح للمحيطين والنسبة.'
+      }
+    ]
+  },
+
+  // ==================== Q6: ALGEBRA (6 marks) ====================
+  {
+    id: 'q6',
+    questionNumber: 6,
+    subject: 'ALGEBRA',
+    title: 'أولويات العمليات الحسابية والعمليات المتعددة على الكسور',
+    curriculumRef: {
+      unit: 'الوحدة الأولى: الأعداد العادية والعمليات عليها',
+      lesson: 'الدرس 3: ضرب وقسمة الأعداد العادية وأولويات العمليات',
+      pages: 'ص 11–14',
+      code: 'ALG-U1-L3'
+    },
+    difficulty: 'foundational',
+    totalMarks: 6,
+    stemText: 'لتكن العبارة الحسابية التالية التي تحتوي على عمليات طرح وقسمة وأقواس:',
+    stemMath: 'M = \\frac{2}{5} - \\frac{3}{5} \\div \\left(1 - \\frac{1}{4}\\right)',
+    subparts: [
+      {
+        id: 'q6_a',
+        subpartNumber: 'أ',
+        text: 'ما هي العملية الحسابية التي يجب إنجازها أولاً وفق القواعد الرياضية لأولويات العمليات؟',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'حساب ما بين القوسين $\\left(1 - \\frac{1}{4}\\right)$', isMath: true },
+          { id: 'opt_2', label: 'طرح الكسرين $\\left(\\frac{2}{5} - \\frac{3}{5}\\right)$', isMath: true },
+          { id: 'opt_3', label: 'قسمة $\\frac{3}{5}$ على $1$', isMath: true },
+          { id: 'opt_4', label: 'البدء من اليسار إلى اليمين بالترتيب دون مراعاة الأقواس', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'أولويات الحساب في الرياضيات: الأولوية الأولى دائماً لما بين القوسين، ثم القوى، ثم الضرب والقسمة، وأخيراً الجمع والطرح. إذن نبدأ بحساب (1 - 1/4 = 3/4).',
+        partialCreditCriteria: 'علامتان لتحديد الأولوية الصحيحة.'
+      },
+      {
+        id: 'q6_b',
+        subpartNumber: 'ب',
+        text: 'أنجز عملية القسمة $\\frac{3}{5} \\div \\frac{3}{4}$ واكتب ناتجها بأبسط شكل:',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '\\frac{4}{5}', isMath: true },
+          { id: 'opt_2', label: '\\frac{9}{20}', isMath: true },
+          { id: 'opt_3', label: '\\frac{5}{4}', isMath: true },
+          { id: 'opt_4', label: '\\frac{1}{5}', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'لقسمة كسر على كسر، نضرب في مقلوب الكسر الثاني: (3/5) ÷ (3/4) = (3/5) × (4/3) = (3 × 4) / (5 × 3) = 4/5.',
+        partialCreditCriteria: 'علامتان للناتج المختزل 4/5.'
+      },
+      {
+        id: 'q6_c',
+        subpartNumber: 'ج',
+        text: 'احسب القيمة النهائية للعبارة $M = \\frac{2}{5} - \\frac{4}{5}$ واكتبها على صورة كسر عادي ثم كعدد عشري:',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '-\\frac{2}{5} = -0.4', isMath: true },
+          { id: 'opt_2', label: '\\frac{2}{5} = 0.4', isMath: true },
+          { id: 'opt_3', label: '-\\frac{1}{5} = -0.2', isMath: true },
+          { id: 'opt_4', label: '-\\frac{6}{5} = -1.2', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'M = 2/5 - 4/5 = (2 - 4)/5 = -2/5 = -0.4.',
+        partialCreditCriteria: 'علامتان للناتج النهائي -2/5 = -0.4.'
+      }
+    ]
+  },
+
+  // ==================== Q7: GEOMETRY (7 marks) ====================
+  {
+    id: 'q7',
+    questionNumber: 7,
+    subject: 'GEOMETRY',
+    title: 'تطابق المثلثات وحالات التطابق والنتائج الهندسية',
+    curriculumRef: {
+      unit: 'الوحدة الأولى: متوازيات الأضلاع والانسحاب',
+      lesson: 'الدرس 4: تطابق المثلثات وحالاته',
+      pages: 'ص 15–18',
+      code: 'GEO-U1-L4'
+    },
+    difficulty: 'intermediate',
+    totalMarks: 7,
+    stemText: 'في الشكل الهندسي المرفق، لدينا المثلثان $ABC$ و $DEF$ المعرّفان بالمعطيات الآتية: $AB = DE = 6\\text{ cm}$، $AC = DF = 8\\text{ cm}$، والزاوية المحصورة بينهما $\\widehat{BAC} = \\widehat{EDF} = 55^\\circ$. بالإضافة إلى ذلك، قياس الزاوية $\\widehat{ABC} = 75^\\circ$ وطول $BC = 7\\text{ cm}$:',
+    diagram: {
+      id: 'diag_q7',
+      title: 'الشكل 4: تطابق المثلثين ABC و DEF بحالة ض.ز.ض',
+      viewBox: '0 0 340 200',
+      type: 'triangle_congruence',
+      coordinates: {
+        A: { x: 50, y: 50, label: 'A', labelPos: 'top' },
+        B: { x: 20, y: 170, label: 'B', labelPos: 'bottom-left' },
+        C: { x: 130, y: 170, label: 'C', labelPos: 'bottom-right' },
+        D: { x: 230, y: 50, label: 'D', labelPos: 'top' },
+        E: { x: 200, y: 170, label: 'E', labelPos: 'bottom-left' },
+        F: { x: 310, y: 170, label: 'F', labelPos: 'bottom-right' }
+      },
+      segments: [
+        { from: 'A', to: 'B', style: 'solid', color: '#38bdf8', label: '6 cm', tickCount: 1 },
+        { from: 'A', to: 'C', style: 'solid', color: '#10b981', label: '8 cm', tickCount: 2 },
+        { from: 'B', to: 'C', style: 'solid', color: '#f59e0b', label: '7 cm' },
+        { from: 'D', to: 'E', style: 'solid', color: '#38bdf8', label: '6 cm', tickCount: 1 },
+        { from: 'D', to: 'F', style: 'solid', color: '#10b981', label: '8 cm', tickCount: 2 },
+        { from: 'E', to: 'F', style: 'solid', color: '#f59e0b' }
+      ],
+      angles: [
+        { vertex: 'A', p1: 'B', p2: 'C', label: '55°', arcRadius: 20 },
+        { vertex: 'D', p1: 'E', p2: 'F', label: '55°', arcRadius: 20 },
+        { vertex: 'B', p1: 'A', p2: 'C', label: '75°', arcRadius: 20 }
+      ],
+      notes: 'المثلثان يتطابقان بضلعين والزاوية المحصورة بينهما'
+    },
+    subparts: [
+      {
+        id: 'q7_a',
+        subpartNumber: 'أ',
+        text: 'ما هي حالة تطابق المثلثين $ABC$ و $DEF$؟',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'حالة (ضلع - زاوية - ضلع) (ض.ز.ض): لتطابق ضلعين والزاوية المحصورة بينهما في أحدهما مع نظائرها في الآخر', isMath: false },
+          { id: 'opt_2', label: 'حالة (زاوية - ضلع - زاوية) (ز.ض.ز)', isMath: false },
+          { id: 'opt_3', label: 'حالة (ضلع - ضلع - ضلع) (ض.ض.ض)', isMath: false },
+          { id: 'opt_4', label: 'المثلثان متشابهان فقط ولا يمكن الجزم بتطابقهما', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'في المثلثين: AB = DE = 6 cm (ضلع أول)، AC = DF = 8 cm (ضلع ثانٍ)، والزاوية المحصورة BAC = EDF = 55°. بحسب مبرهنة التطابق الأولى: يتطابق مثلثان إذا تطابق فيهما ضلعان والزاوية المحصورة بينهما (ض.ز.ض).',
+        partialCreditCriteria: '2.5 علامة لاختيار حالة التطابق الصحيحة مع التعليل.'
+      },
+      {
+        id: 'q7_b',
+        subpartNumber: 'ب',
+        text: 'من نتائج التطابق، أوجد كلاً من قياس الزاوية المناظرة $\\widehat{DEF}$ وطول الضلع المناظر $EF$:',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '$\\widehat{DEF} = 75^\\circ$ و $EF = 7\\text{ cm}$', isMath: true },
+          { id: 'opt_2', label: '$\\widehat{DEF} = 55^\\circ$ و $EF = 8\\text{ cm}$', isMath: true },
+          { id: 'opt_3', label: '$\\widehat{DEF} = 50^\\circ$ و $EF = 6\\text{ cm}$', isMath: true },
+          { id: 'opt_4', label: '$\\widehat{DEF} = 75^\\circ$ و $EF = 14\\text{ cm}$', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'ينتج عن تطابق المثلثين تطابق جميع العناصر المتناظرة المتبقية: الزاوية DEF تناظر ABC إذن DEF = 75°. والضلع EF يناظر BC إذن EF = BC = 7 cm.',
+        partialCreditCriteria: '2.5 علامة للزاوية والطول الصحيحين.'
+      },
+      {
+        id: 'q7_c',
+        subpartNumber: 'ج',
+        text: 'احسب قياس الزاوية الثالثة $\\widehat{BCA}$ في المثلث $ABC$، واستنتج قياس الزاوية المناظرة لها $\\widehat{EFD}$:',
+        marks: 2,
+        type: 'numeric',
+        placeholder: 'أدخل قياس الزاوية بالدرجات',
+        unit: '°',
+        correctAnswer: '50',
+        acceptableAnswers: ['50', '50°', '50.0'],
+        teacherExplanation: 'مجموع زوايا أي مثلث يساوي 180°. في المثلث ABC: BCA = 180° - (55° + 75°) = 180° - 130° = 50°. ومن التطابق EFD = BCA = 50°.',
+        partialCreditCriteria: 'علامتان للناتج 50°.'
+      }
+    ]
+  },
+
+  // ==================== Q8: ALGEBRA (7 marks) ====================
+  {
+    id: 'q8',
+    questionNumber: 8,
+    subject: 'ALGEBRA',
+    title: 'قوى العدد 10 والكتابة العلمية والحساب الفلكي الدقيق',
+    curriculumRef: {
+      unit: 'الوحدة الثانية: قوى الأعداد العادية',
+      lesson: 'الدرس 2 و 5: قوى العدد 10 والكتابة العلمية للأعداد',
+      pages: 'ص 28–37',
+      code: 'ALG-U2-L2-L5'
+    },
+    difficulty: 'advanced',
+    totalMarks: 7,
+    stemText: 'في دراسة فلكية لكتل الأجرام السماوية، قدرت كتلة كوكب الأرض بالقيمة $X = 5.97 \\times 10^{24}\\text{ kg}$، وقُدّرت كتلة القمر التابع له بالقيمة $Y = 7.35 \\times 10^{22}\\text{ kg}$:',
+    subparts: [
+      {
+        id: 'q8_a',
+        subpartNumber: 'أ',
+        text: 'أعد كتابة كتلة القمر $Y$ بدلالة القوة $10^{24}$ (لتوحيد رتبة القوى بهدف الجمع والمقارنة):',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'Y = 0.0735 \\times 10^{24}\\text{ kg}', isMath: true },
+          { id: 'opt_2', label: 'Y = 735 \\times 10^{24}\\text{ kg}', isMath: true },
+          { id: 'opt_3', label: 'Y = 0.735 \\times 10^{24}\\text{ kg}', isMath: true },
+          { id: 'opt_4', label: 'Y = 7.35 \\times 10^{24}\\text{ kg}', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'لتحويل 10^22 إلى 10^24 نقسم على 10^2 ونضرب القوة بـ 10^2: 7.35 × 10^22 = (7.35 / 100) × (10^22 × 10^2) = 0.0735 × 10^24.',
+        partialCreditCriteria: '2.5 علامة للتحويل الصحيح.'
+      },
+      {
+        id: 'q8_b',
+        subpartNumber: 'ب',
+        text: 'احسب الكتلة الإجمالية لمنظومة (الأرض + القمر) $X + Y$ واكتب الناتج بالكتابة العلمية النظامية $a \\times 10^n$ (حيث $1 \\le a < 10$):',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '6.0435 \\times 10^{24}\\text{ kg}', isMath: true },
+          { id: 'opt_2', label: '13.32 \\times 10^{22}\\text{ kg}', isMath: true },
+          { id: 'opt_3', label: '60.435 \\times 10^{23}\\text{ kg}', isMath: true },
+          { id: 'opt_4', label: '6.0435 \\times 10^{46}\\text{ kg}', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'X + Y = 5.97 × 10^24 + 0.0735 × 10^24 = (5.97 + 0.0735) × 10^24 = 6.0435 × 10^24 kg. وهو مكتوب بالكتابة العلمية لأن 1 ≤ 6.0435 < 10.',
+        partialCreditCriteria: '2.5 علامة لجمع القوى والكتابة العلمية الدقيقة.'
+      },
+      {
+        id: 'q8_c',
+        subpartNumber: 'ج',
+        text: 'كم ضعفاً تقريباً تعادل كتلة الأرض بالنسبة لكتلة قمرها؟ (احسب $\\frac{X}{Y}$ مقرباً لأقرب عدد صحيح):',
+        marks: 2,
+        type: 'numeric',
+        placeholder: 'أدخل عدد المرات المقرب',
+        correctAnswer: '81',
+        acceptableAnswers: ['81', '81.2', '81.22'],
+        teacherExplanation: 'X / Y = (5.97 × 10^24) / (7.35 × 10^22) = (5.97 / 7.35) × 10^2 = 0.81224 × 100 ≈ 81.22 ضعفاً، أي 81 ضعفاً بالتقريب لأقرب عدد صحيح.',
+        partialCreditCriteria: 'علامتان للنسبة المقربة الصحيحة 81.'
+      }
+    ]
+  },
+
+  // ==================== Q9: GEOMETRY (7 marks) ====================
+  {
+    id: 'q9',
+    questionNumber: 9,
+    subject: 'GEOMETRY',
+    title: 'مبرهنة الموازي لضلع من منتصف ضلع آخر وبرهان متوازي الأضلاع',
+    curriculumRef: {
+      unit: 'الوحدة الثانية: مثلثات ومنصفات أضلاع ومستقيمات متوازية',
+      lesson: 'الدرس 2: موازٍ لضلع من منتصف ضلع آخر',
+      pages: 'ص 34–35',
+      code: 'GEO-U2-L2'
+    },
+    difficulty: 'reasoning',
+    totalMarks: 7,
+    stemText: 'في المثلث $ABC$ المبين في الشكل، النقطة $M$ هي منتصف الضلع $[AB]$. رُسم من $M$ مستقيم $d$ يوازي الضلع $[BC]$، فقَطَع الضلع $[AC]$ في النقطة $N$. فإذا علمتَ أن $AC = 12\\text{ cm}$ و $BC = 16\\text{ cm}$:',
+    diagram: {
+      id: 'diag_q9',
+      title: 'الشكل 5: المستقيم المار من منتصف ضلع موازياً ضلعاً ثانياً',
+      viewBox: '0 0 320 220',
+      type: 'parallel_midpoint',
+      coordinates: {
+        A: { x: 140, y: 30, label: 'A', labelPos: 'top' },
+        B: { x: 40, y: 190, label: 'B', labelPos: 'bottom-left' },
+        C: { x: 280, y: 190, label: 'C', labelPos: 'bottom-right' },
+        M: { x: 90, y: 110, label: 'M', labelPos: 'left' },
+        N: { x: 210, y: 110, label: 'N', labelPos: 'right' }
+      },
+      segments: [
+        { from: 'A', to: 'B', style: 'solid', color: '#94a3b8' },
+        { from: 'B', to: 'C', style: 'solid', color: '#38bdf8', label: '16 cm' },
+        { from: 'C', to: 'A', style: 'solid', color: '#94a3b8', label: '12 cm' },
+        { from: 'M', to: 'N', style: 'solid', color: '#10b981', label: 'd // BC' },
+        { from: 'A', to: 'M', style: 'solid', color: '#f59e0b', tickCount: 1 },
+        { from: 'M', to: 'B', style: 'solid', color: '#f59e0b', tickCount: 1 }
+      ],
+      notes: 'M منتصف AB والمستقيم d يمر من M ويوازي BC'
+    },
+    subparts: [
+      {
+        id: 'q9_a',
+        subpartNumber: 'أ',
+        text: 'وفق مبرهنة الموازي لضلع من منتصف ضلع آخر في مثلث (المبرهنة 2)، ما هو الموقع الهندسي للنقطة $N$ على الضلع $[AC]$؟',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'النقطة N هي بالضرورة منتصف الضلع [AC]', isMath: false },
+          { id: 'opt_2', label: 'النقطة N تقع على بعد ثلث المسافة من الرأس A', isMath: false },
+          { id: 'opt_3', label: 'النقطة N نقطة كيفية وليس لها علاقة بمنتصف الضلع', isMath: false },
+          { id: 'opt_4', label: 'النقطة N تبعد مسافة متساوية عن الرأس B', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'نص المبرهنة 2 (ص 34): في مثلث، المستقيم المار من منتصف أحد أضلاعه موازياً ضلعاً ثانياً يمر من منتصف الضلع الثالث. بما أن المستقيم d يمر من M منتصف [AB] ويوازي [BC]، فإنه يمر حتماً من منتصف الضلع [AC]، أي أن N منتصف [AC].',
+        partialCreditCriteria: '2.5 علامة لتحديد موقع النقطة N كمنتصف الضلع.'
+      },
+      {
+        id: 'q9_b',
+        subpartNumber: 'ب',
+        text: 'احسب الطولين $AN$ و $MN$ بالسنتيمترات:',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '$AN = 6\\text{ cm}$ و $MN = 8\\text{ cm}$', isMath: true },
+          { id: 'opt_2', label: '$AN = 8\\text{ cm}$ و $MN = 6\\text{ cm}$', isMath: true },
+          { id: 'opt_3', label: '$AN = 12\\text{ cm}$ و $MN = 16\\text{ cm}$', isMath: true },
+          { id: 'opt_4', label: '$AN = 4\\text{ cm}$ و $MN = 8\\text{ cm}$', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'بما أن N منتصف [AC]: AN = 1/2 AC = 1/2 × 12 = 6 cm. وبما أن [MN] تصل بين منتصفي ضلعين، فطولها يساوي نصف طول الضلع الثالث: MN = 1/2 BC = 1/2 × 16 = 8 cm.',
+        partialCreditCriteria: '2.5 علامة لحساب الطولين AN و MN بدقة.'
+      },
+      {
+        id: 'q9_c',
+        subpartNumber: 'ج',
+        text: 'إذا عيّنا النقطة $P$ منتصف الضلع $[BC]$ ووصلنا بين $M, N, P$، فما هو نوع الرباعي $BMNP$ مع التعليل؟',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'متوازي أضلاع، لأن الضلعين المتقابلين [MN] و [BP] متوازيان ومتساويان في الطول (كلاهما يساوي 8 cm)', isMath: false },
+          { id: 'opt_2', label: 'شبه منحرف متساوي الساقين فقط', isMath: false },
+          { id: 'opt_3', label: 'مستطيل لأن زواياه قائمة بالضرورة', isMath: false },
+          { id: 'opt_4', label: 'رباعي لا يتمتع بأي خواص توازٍ', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'في الرباعي BMNP: المستقيم (MN) يوازي (BC) بالفرض، إذن [MN] يوازي [BP]. وطول MN = 1/2 BC = 8 cm، بينما BP = 1/2 BC = 8 cm (لأن P منتصف [BC]). إذن الضلعان [MN] و [BP] متوازيان ومتساويان، فالرباعي متوازي أضلاع بحسب الخاصية المميزة.',
+        partialCreditCriteria: 'علامتان لإثبات أنه متوازي أضلاع مع البرهان الصحيح.'
+      }
+    ]
+  },
+
+  // ==================== Q10: ALGEBRA (6 marks) ====================
+  {
+    id: 'q10',
+    questionNumber: 10,
+    subject: 'ALGEBRA',
+    title: 'مقارنة الأعداد العادية وترتيبها وأثر الأس الزوجي والفردي',
+    curriculumRef: {
+      unit: 'الوحدة الأولى والوحدة الثانية',
+      lesson: 'مقارنة الأعداد العادية وقوى الأساس السالب',
+      pages: 'ص 5–7 و ص 25–27',
+      code: 'ALG-U1-U2-COMP'
+    },
+    difficulty: 'intermediate',
+    totalMarks: 6,
+    stemText: 'لتكن الأعداد العادية الأربعة التالية:',
+    stemMath: 'p = \\left(-\\frac{2}{3}\\right)^2 \\quad , \\quad q = \\left(-\\frac{2}{3}\\right)^3 \\quad , \\quad r = -\\frac{5}{6} \\quad , \\quad s = \\frac{3}{4}',
+    subparts: [
+      {
+        id: 'q10_a',
+        subpartNumber: 'أ',
+        text: 'احسب كلاً من العددين $p$ و $q$ واذكر إشارة كل منهما:',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '$p = \\frac{4}{9}$ (موجب) و $q = -\\frac{8}{27}$ (سالب)', isMath: true },
+          { id: 'opt_2', label: '$p = -\\frac{4}{9}$ (سالب) و $q = -\\frac{8}{27}$ (سالب)', isMath: true },
+          { id: 'opt_3', label: '$p = \\frac{4}{9}$ (موجب) و $q = \\frac{8}{27}$ (موجب)', isMath: true },
+          { id: 'opt_4', label: '$p = -\\frac{4}{6}$ و $q = -\\frac{6}{9}$', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'قاعدة إشارة القوى: قوة عدد سالب تكون موجبة إذا كان الأس زوجياً (الأس 2 زوجي: p = (-2/3)^2 = 4/9 > 0). وتكون سالبة إذا كان الأس فردياً (الأس 3 فردي: q = (-2/3)^3 = -8/27 < 0).',
+        partialCreditCriteria: 'علامتان لحساب p و q مع توضيح الإشارات.'
+      },
+      {
+        id: 'q10_b',
+        subpartNumber: 'ب',
+        text: 'قارن بين العددين السالبين $q = -\\frac{8}{27}$ و $r = -\\frac{5}{6}$:',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'q > r \\quad \\left(-\\frac{8}{27} > -\\frac{5}{6}\\right)', isMath: true },
+          { id: 'opt_2', label: 'q < r \\quad \\left(-\\frac{8}{27} < -\\frac{5}{6}\\right)', isMath: true },
+          { id: 'opt_3', label: 'q = r', isMath: true },
+          { id: 'opt_4', label: 'لا يمكن المقارنة لاختلاف الأسس', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'توحيد المقامات على 54: q = -16/54 ، r = -45/54. بمقارنة البسطين: -16 > -45 (لأن -16 أقرب إلى الصفر). إذن -8/27 > -5/6 أي q > r.',
+        partialCreditCriteria: 'علامتان لصحة المقارنة الرياضية q > r.'
+      },
+      {
+        id: 'q10_c',
+        subpartNumber: 'ج',
+        text: 'الترتيب التصاعدي الصحيح من الأصغر إلى الأكبر للأعداد الأربعة هو:',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'r < q < p < s', isMath: true },
+          { id: 'opt_2', label: 'q < r < p < s', isMath: true },
+          { id: 'opt_3', label: 's < p < q < r', isMath: true },
+          { id: 'opt_4', label: 'r < q < s < p', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'القيم التقريبية: r = -5/6 ≈ -0.833 ، q = -8/27 ≈ -0.296 ، p = 4/9 ≈ 0.444 ، s = 3/4 = 0.75. الأعداد السالبة أصغر من الموجبة، و -0.833 أصغر من -0.296. والأعداد الموجبة 0.444 أصغر من 0.75. إذن الترتيب التصاعدي: r < q < p < s.',
+        partialCreditCriteria: 'علامتان للترتيب التصاعدي التام.'
+      }
+    ]
+  },
+
+  // ==================== Q11: GEOMETRY (7 marks) ====================
+  {
+    id: 'q11',
+    questionNumber: 11,
+    subject: 'GEOMETRY',
+    title: 'متوازيات الأضلاع الخاصة: المستطيل والمعين والمربع وحساب المساحة',
+    curriculumRef: {
+      unit: 'الوحدة الأولى: متوازيات الأضلاع والانسحاب',
+      lesson: 'الدرس 5 و 6: خواص متوازيات الأضلاع الخاصة وتمرينات الوحدة',
+      pages: 'ص 19–24',
+      code: 'GEO-U1-L5-L6'
+    },
+    difficulty: 'intermediate',
+    totalMarks: 7,
+    stemText: 'ليكن $KLMN$ متوازي أضلاع يتقاطع قطراه $[KM]$ و $[LN]$ في النقطة $I$. يُراد دراسة الحالات الخاصة لهذا الرباعي عند فرض شروط إضافية على قطريه:',
+    diagram: {
+      id: 'diag_q11',
+      title: 'الشكل 6: متوازي أضلاع يتعامد قطراه مع إمكانية تساويهما',
+      viewBox: '0 0 320 220',
+      type: 'special_quadrilateral',
+      coordinates: {
+        K: { x: 160, y: 20, label: 'K', labelPos: 'top' },
+        L: { x: 250, y: 110, label: 'L', labelPos: 'right' },
+        M: { x: 160, y: 200, label: 'M', labelPos: 'bottom' },
+        N: { x: 70, y: 110, label: 'N', labelPos: 'left' },
+        I: { x: 160, y: 110, label: 'I', labelPos: 'top-right' }
+      },
+      segments: [
+        { from: 'K', to: 'L', style: 'solid', color: '#38bdf8' },
+        { from: 'L', to: 'M', style: 'solid', color: '#38bdf8' },
+        { from: 'M', to: 'N', style: 'solid', color: '#38bdf8' },
+        { from: 'N', to: 'K', style: 'solid', color: '#38bdf8' },
+        { from: 'K', to: 'M', style: 'dashed', color: '#ec4899', label: 'd1' },
+        { from: 'L', to: 'N', style: 'dashed', color: '#10b981', label: 'd2' }
+      ],
+      angles: [
+        { vertex: 'I', p1: 'L', p2: 'K', isRight: true, label: '90°' }
+      ],
+      notes: 'القطران متعامدان وينصف كل منهما الآخر'
+    },
+    subparts: [
+      {
+        id: 'q11_a',
+        subpartNumber: 'أ',
+        text: 'إذا كان القطران متعامدين فقط: $(KM) \\perp (LN)$، فما هي الطبيعة الخاصة للرباعي $KLMN$؟',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'معين (متوازي أضلاع تعامد قطراه)', isMath: false },
+          { id: 'opt_2', label: 'مستطيل', isMath: false },
+          { id: 'opt_3', label: 'شبه منحرف', isMath: false },
+          { id: 'opt_4', label: 'طائرة ورقية عادية', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'بحسب مبرهنات متوازيات الأضلاع الخاصة: متوازي الأضلاع الذي يتعامد قطراه هو معين.',
+        partialCreditCriteria: '2.5 علامة لاختيار "معين".'
+      },
+      {
+        id: 'q11_b',
+        subpartNumber: 'ب',
+        text: 'إذا أضفنا إلى شرط التعامد شرطاً آخر وهو تساوى طولا القطرين $KM = LN = 10\\text{ cm}$، فماذا يصبح الرباعي وما قياس زواياه؟',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'يصبح مربعاً، وقياس كل زاوية من زواياه الأربع يساوي 90°', isMath: false },
+          { id: 'opt_2', label: 'يبقى معيناً فقط دون زوايا قائمة', isMath: false },
+          { id: 'opt_3', label: 'يصبح مستطيلاً غير معين', isMath: false },
+          { id: 'opt_4', label: 'شبه منحرف متساوي الساقين', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'متوازي الأضلاع الذي يجمع خاصتي تعامد القطرين وتساويهما هو مربع (لأن تعامد القطرين يجعله معيناً، وتساوي القطرين يجعله مستطيلاً، والرباعي الذي هو معين ومستطيل معاً هو مربع زواياه قائمة 90°).',
+        partialCreditCriteria: '2.5 علامة للتعريف السليم للمربع وقياس الزوايا 90°.'
+      },
+      {
+        id: 'q11_c',
+        subpartNumber: 'ج',
+        text: 'احسب مساحة هذا المربع بدلالة طول قطريه $KM = LN = 10\\text{ cm}$ مستخدماً قانون مساحة المعين $S = \\frac{d_1 \\times d_2}{2}$:',
+        marks: 2,
+        type: 'numeric',
+        placeholder: 'أدخل المساحة بـ cm²',
+        unit: 'cm²',
+        correctAnswer: '50',
+        acceptableAnswers: ['50', '50.0'],
+        teacherExplanation: 'بما أن المربع معين خاص: مساحته = (القطر الأول × القطر الثاني) / 2 = (10 × 10) / 2 = 100 / 2 = 50 cm².',
+        partialCreditCriteria: 'علامتان لحساب المساحة 50 cm².'
+      }
+    ]
+  },
+
+  // ==================== Q12: ALGEBRA (7 marks) ====================
+  {
+    id: 'q12',
+    questionNumber: 12,
+    subject: 'ALGEBRA',
+    title: 'مسألة حياتية جبرية متعددة المراحل: نسب الكسور والقوى والكتابة العلمية',
+    curriculumRef: {
+      unit: 'الوحدة الأولى والوحدة الثانية',
+      lesson: 'تطبيقات الأعداد العادية وقوى العدد 10',
+      pages: 'ص 14–16 و ص 36–37',
+      code: 'ALG-U1-U2-APP'
+    },
+    difficulty: 'advanced',
+    totalMarks: 7,
+    stemText: 'خزان ماء مكعب الشكل في مدرسة، استُهلك منه في الصباح الباكر $\\frac{2}{5}$ من حجمه الكلي. ثم في وقت الظهيرة، استُهلك $\\frac{1}{3}$ من الماء **المتبقي** فيه. وعند نهاية اليوم وُجد أن في الخزان ما مقداره $1600\\text{ L}$ من الماء:',
+    subparts: [
+      {
+        id: 'q12_a',
+        subpartNumber: 'أ',
+        text: 'ما هو الكسر الذي يمثل كمية الماء المتبقية بعد استهلاك الصباح، وما الكسر الذي يمثل ما استُهلك وقت الظهيرة بالنسبة للحجم الكلي؟',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'المتبقي صباحاً $= \\frac{3}{5}$ والمستهلك ظهراً من الكلي $= \\frac{1}{3} \\times \\frac{3}{5} = \\frac{1}{5}$', isMath: true },
+          { id: 'opt_2', label: 'المتبقي صباحاً $= \\frac{3}{5}$ والمستهلك ظهراً من الكلي $= \\frac{1}{3}$', isMath: true },
+          { id: 'opt_3', label: 'المتبقي صباحاً $= \\frac{2}{5}$ والمستهلك ظهراً من الكلي $= \\frac{2}{15}$', isMath: true },
+          { id: 'opt_4', label: 'المتبقي صباحاً $= \\frac{1}{5}$ والمستهلك ظهراً من الكلي $= \\frac{4}{5}$', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'الحجم الكلي يعادل 1. بعد استهلاك 2/5 يبقى: 1 - 2/5 = 3/5 من الحجم الكلي. استهلاك الظهيرة هو 1/3 من المتبقي، أي: 1/3 × 3/5 = 3/15 = 1/5 من الحجم الكلي.',
+        partialCreditCriteria: '2.5 علامة للكسرين الصحيحين 3/5 و 1/5.'
+      },
+      {
+        id: 'q12_b',
+        subpartNumber: 'ب',
+        text: 'ما هو الكسر المتبقي نهائياً في الخزان بالنسبة للحجم الكلي؟',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '$\\frac{2}{5}$ (أي $\\frac{3}{5} - \\frac{1}{5}$)', isMath: true },
+          { id: 'opt_2', label: '$\\frac{4}{15}$', isMath: true },
+          { id: 'opt_3', label: '$\\frac{1}{5}$', isMath: true },
+          { id: 'opt_4', label: '$\\frac{3}{10}$', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'الكسر المتبقي نهائياً = كسر المتبقي صباحاً - كسر المستهلك ظهراً = 3/5 - 1/5 = 2/5 من الحجم الكلي (أو 1 - (2/5 + 1/5) = 1 - 3/5 = 2/5).',
+        partialCreditCriteria: '2.5 علامة للكسر 2/5.'
+      },
+      {
+        id: 'q12_c',
+        subpartNumber: 'ج',
+        text: 'إذا كان الكسر المتبقي نهائياً يعادل $1600\\text{ L}$، فاحسب السعة الكلية $V$ للخزان باللتر واكتبها بالكتابة العلمية الدقيقة:',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'V = 4000\\text{ L} = 4 \\times 10^3\\text{ L}', isMath: true },
+          { id: 'opt_2', label: 'V = 3200\\text{ L} = 3.2 \\times 10^3\\text{ L}', isMath: true },
+          { id: 'opt_3', label: 'V = 5000\\text{ L} = 5 \\times 10^3\\text{ L}', isMath: true },
+          { id: 'opt_4', label: 'V = 40000\\text{ L} = 4 \\times 10^4\\text{ L}', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'بما أن 2/5 من السعة = 1600 لتر: V = 1600 ÷ (2/5) = 1600 × (5/2) = 800 × 5 = 4000 لتر. بالكتابة العلمية: 4 × 10^3 لتر.',
+        partialCreditCriteria: 'علامتان للسعة والكتابة العلمية 4 × 10^3.'
+      }
+    ]
+  },
+
+  // ==================== Q13: GEOMETRY (7 marks) ====================
+  {
+    id: 'q13',
+    questionNumber: 13,
+    subject: 'GEOMETRY',
+    title: 'المثلث المتوسط ونصف المحيط وتجزئة المساحة بالتطابق',
+    curriculumRef: {
+      unit: 'الوحدة الثانية: مثلثات ومنصفات أضلاع ومستقيمات متوازية',
+      lesson: 'الدرس 1 و 2: منتصفات أضلاع المثلث وتطبيقاتها',
+      pages: 'ص 31–35',
+      code: 'GEO-U2-L1-L2-APP'
+    },
+    difficulty: 'advanced',
+    totalMarks: 7,
+    stemText: 'في المثلث $ABC$، النقاط $I, J, K$ هي على الترتيب منتصفات الأضلاع $[AB], [BC], [CA]$. فإذا كانت أطوال أضلاع المثلث $ABC$ هي: $AB = 8.4\\text{ cm}$، $BC = 10.6\\text{ cm}$، $CA = 7.2\\text{ cm}$ كما في الشكل الهندسي:',
+    diagram: {
+      id: 'diag_q13',
+      title: 'الشكل 7: المثلث المتوسط IJK المتشكل من منتصفات أضلاع ABC',
+      viewBox: '0 0 320 220',
+      type: 'medial_triangle',
+      coordinates: {
+        A: { x: 150, y: 25, label: 'A', labelPos: 'top' },
+        B: { x: 40, y: 195, label: 'B', labelPos: 'bottom-left' },
+        C: { x: 280, y: 195, label: 'C', labelPos: 'bottom-right' },
+        I: { x: 95, y: 110, label: 'I', labelPos: 'left' },
+        J: { x: 160, y: 195, label: 'J', labelPos: 'bottom' },
+        K: { x: 215, y: 110, label: 'K', labelPos: 'right' }
+      },
+      segments: [
+        { from: 'A', to: 'B', style: 'solid', color: '#94a3b8', label: '8.4 cm' },
+        { from: 'B', to: 'C', style: 'solid', color: '#94a3b8', label: '10.6 cm' },
+        { from: 'C', to: 'A', style: 'solid', color: '#94a3b8', label: '7.2 cm' },
+        { from: 'I', to: 'J', style: 'solid', color: '#10b981' },
+        { from: 'J', to: 'K', style: 'solid', color: '#10b981' },
+        { from: 'K', to: 'I', style: 'solid', color: '#10b981' }
+      ],
+      notes: 'I منتصف AB، J منتصف BC، K منتصف CA'
+    },
+    subparts: [
+      {
+        id: 'q13_a',
+        subpartNumber: 'أ',
+        text: 'احسب أطوال أضلاع المثلث الصغير $IJK$ مبرراً النتيجة بمبرهنة منتصفي ضلعين في مثلث:',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '$IJ = 3.6\\text{ cm}$ و $JK = 4.2\\text{ cm}$ و $KI = 5.3\\text{ cm}$', isMath: true },
+          { id: 'opt_2', label: '$IJ = 4.2\\text{ cm}$ و $JK = 5.3\\text{ cm}$ و $KI = 3.6\\text{ cm}$', isMath: true },
+          { id: 'opt_3', label: '$IJ = 7.2\\text{ cm}$ و $JK = 8.4\\text{ cm}$ و $KI = 10.6\\text{ cm}$', isMath: true },
+          { id: 'opt_4', label: '$IJ = 1.8\\text{ cm}$ و $JK = 2.1\\text{ cm}$ و $KI = 2.65\\text{ cm}$', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'بحسب مبرهنة منتصفي ضلعين: القطعة الواصلة بين منتصفي ضلعين تساوي نصف طول الضلع المقابل: IJ تصل منتصفي AB و BC إذن IJ = 1/2 CA = 7.2 / 2 = 3.6 cm. JK تصل منتصفي BC و CA إذن JK = 1/2 AB = 8.4 / 2 = 4.2 cm. KI تصل منتصفي CA و AB إذن KI = 1/2 BC = 10.6 / 2 = 5.3 cm.',
+        partialCreditCriteria: '2.5 علامة للأطوال الثلاثة الدقيقة.'
+      },
+      {
+        id: 'q13_b',
+        subpartNumber: 'ب',
+        text: 'احسب محيط المثلث $ABC$ ومحيط المثلث $IJK$ وتحقق من النسبة بينهما:',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'محيط $ABC = 26.2\\text{ cm}$ ومحيط $IJK = 13.1\\text{ cm}$ والنسبة تساوي $\\frac{1}{2}$', isMath: true },
+          { id: 'opt_2', label: 'محيط $ABC = 26.2\\text{ cm}$ ومحيط $IJK = 6.55\\text{ cm}$ والنسبة تساوي $\\frac{1}{4}$', isMath: true },
+          { id: 'opt_3', label: 'محيط $ABC = 25\\text{ cm}$ ومحيط $IJK = 12.5\\text{ cm}$ والنسبة تساوي $\\frac{1}{2}$', isMath: true },
+          { id: 'opt_4', label: 'محيط $ABC = 26.2\\text{ cm}$ ومحيط $IJK = 26.2\\text{ cm}$ والنسبة تساوي $1$', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'محيط ABC = 8.4 + 10.6 + 7.2 = 26.2 cm. محيط IJK = 3.6 + 4.2 + 5.3 = 13.1 cm. النسبة: 13.1 / 26.2 = 1/2.',
+        partialCreditCriteria: '2.5 علامة للمحيطين والنسبة 1/2.'
+      },
+      {
+        id: 'q13_c',
+        subpartNumber: 'ج',
+        text: 'يقسم المثلث $ABC$ بالنقاط الثلاث إلى 4 مثلثات صغيرة. ما العلاقة بين هذه المثلثات الأربعة من حيث التطابق والمساحة؟',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'المثلثات الأربعة متطابقة تماماً (بحالة ض.ض.ض) وبالتالي متساوية المساحة (مساحة كل منها ربع مساحة ABC)', isMath: false },
+          { id: 'opt_2', label: 'المثلثات غير متطابقة ومساحاتها مختلفة', isMath: false },
+          { id: 'opt_3', label: 'المثلث الأوسط IJK مساحته ضعف مساحة أي مثلث طرفي', isMath: false },
+          { id: 'opt_4', label: 'تتطابق فقط المثلثات الثلاثة الطرفية مع استثناء المثلث الأوسط', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'أضلاع المثلثات الأربعة: كل مثلث من المثلثات الأربعة (AIK, BIJ, CJK, IJK) تتطابق أضلاعه الثلاثة مع أضلاع الآخر (كل منها أطوال أضلاعه 3.6 و 4.2 و 5.3 cm). إذن هي متطابقة بحالة (ض.ض.ض) ومتساوية المساحة، مساحة كل منها = 1/4 مساحة المثلث ABC.',
+        partialCreditCriteria: 'علامتان للتطابق الكامل وتساوي المساحات.'
+      }
+    ]
+  },
+
+  // ==================== Q14: ALGEBRA (7 marks) ====================
+  {
+    id: 'q14',
+    questionNumber: 14,
+    subject: 'ALGEBRA',
+    title: 'تحليل الأخطاء الرياضية الشائعة والبرهان بالأمثلة المضادة',
+    curriculumRef: {
+      unit: 'الوحدة الأولى والوحدة الثانية',
+      lesson: 'قواعد الحساب والأخطاء الشائعة في القوى والكسور',
+      pages: 'ص 9–11 و ص 32–34',
+      code: 'ALG-U1-U2-ERR'
+    },
+    difficulty: 'reasoning',
+    totalMarks: 7,
+    stemText: 'قام أحد الطلاب بإنجاز العمليات الرياضية الثلاث الآتية، لكنه وقع في أخطاء شائعة ناتجة عن خلط القواعد الرياضية:',
+    stemMath: '\\text{العملية 1: } \\frac{5}{7} - \\frac{2}{3} = \\frac{5 - 2}{7 - 3} = \\frac{3}{4} \\quad , \\quad \\text{العملية 2: } (-3)^2 \\times (-3)^4 = 9^6',
+    subparts: [
+      {
+        id: 'q14_a',
+        subpartNumber: 'أ',
+        text: 'حلل الخطأ الحسابي الذي ارتكبه الطالب في العملية 1، وما هو الناتج الدقيق الصحيح؟',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'الخطأ: طرح البسوط والمقامات مباشرة دون توحيد المقامات، والناتج الصحيح هو $\\frac{1}{21}$', isMath: true },
+          { id: 'opt_2', label: 'الخطأ في طرح البسوط فقط، والناتج الصحيح هو $\\frac{3}{21}$', isMath: true },
+          { id: 'opt_3', label: 'الحل صحيح ولا يوجد أي خطأ', isMath: false },
+          { id: 'opt_4', label: 'الخطأ: كان يجب ضرب الكسرين بدلاً من الطرح', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'طرح الكسور لا يجوز فيه طرح المقامات. يجب توحيد المقامات: المقام المشترك الأصغر لـ 7 و 3 هو 21. 5/7 = 15/21 ، 2/3 = 14/21. الناتج الصحيح: 15/21 - 14/21 = (15 - 14)/21 = 1/21.',
+        partialCreditCriteria: '2.5 علامة لكشف الخطأ وتحديد الناتج الصحيح 1/21.'
+      },
+      {
+        id: 'q14_b',
+        subpartNumber: 'ب',
+        text: 'حلل الخطأ في العملية 2: $(-3)^2 \\times (-3)^4 = 9^6$، وما هي النتيجة الصحيحة وفق قواعد قوى الأعداد العادية؟',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'الخطأ: ضرب الأساسين $(-3 \\times -3 = 9)$ مع جمع الأسس؛ بينما القاعدة الصحيحة هي الاحتفاظ بالأساس المشترك وجمع الأسس: $(-3)^{2+4} = (-3)^6 = 3^6 = 729$', isMath: true },
+          { id: 'opt_2', label: 'الخطأ: كان يجب ضرب الأسس بدلاً من جمعها: $(-3)^8$', isMath: true },
+          { id: 'opt_3', label: 'الخطأ: الناتج سالب دائماً: $-729$', isMath: true },
+          { id: 'opt_4', label: 'العملية صحيحة بالكامل', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'قاعدة ضرب القوى ذات الأساس المشترك: a^m × a^n = a^(m+n). الأساس المشترك هو (-3)، يبقى كما هو وتجمع الأسس: (-3)^(2+4) = (-3)^6 = 729 (لأن الأس 6 زوجي). الطالب أخطأ بضرب الأساسين (-3 × -3 = 9) وجمع الأسس معاً.',
+        partialCreditCriteria: '2.5 علامة للتحليل الدقيق والقاعدة الصحيحة والناتج 729.'
+      },
+      {
+        id: 'q14_c',
+        subpartNumber: 'ج',
+        text: 'ادّعى الطالب أيضاً أن المساواة $(a + b)^2 = a^2 + b^2$ صحيحة دائماً لجميع الأعداد العادية. أي الأمثلة العددية المضادة الآتية يدحض هذا الادعاء؟',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'باختيار $a = 1$ و $b = 2$: الطرف الأيسر $(1+2)^2 = 9$ بينما الأيمن $1^2 + 2^2 = 5$، وبما أن $9 \\ne 5$ فالمساواة باطلة', isMath: true },
+          { id: 'opt_2', label: 'باختيار $a = 0$ و $b = 0$ فالمساواة صحيحة وبالتالي الادعاء سليم', isMath: true },
+          { id: 'opt_3', label: 'المساواة صحيحة دائماً بحسب خواص توزيع القوى على الجمع', isMath: false },
+          { id: 'opt_4', label: 'لا توجد أعداد عادية تفشل فيها المساواة', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'القوى لا تتوزع على الجمع أبداً. مثال مضاد: لتكن a = 1 و b = 2: الطرف الأيسر (1+2)^2 = 3^2 = 9. الطرف الأيمن: 1^2 + 2^2 = 1 + 4 = 5. وبما أن 9 ≠ 5، فإن المساواة خاطئة تماماً بوجود الحد الأوسط (2ab).',
+        partialCreditCriteria: 'علامتان للمثال المضاد والبرهان السليم.'
+      }
+    ]
+  },
+
+  // ==================== Q15: GEOMETRY (7 marks) ====================
+  {
+    id: 'q15',
+    questionNumber: 15,
+    subject: 'GEOMETRY',
+    title: 'برهان هندسي تركيبي: متوازي الأضلاع وتثليث القطر',
+    curriculumRef: {
+      unit: 'الوحدة الأولى والوحدة الثانية',
+      lesson: 'تمرينات الوحدة الأولى ومبرهنة موازٍ لضلع من منتصف ضلع آخر',
+      pages: 'ص 22–24 و ص 34–35',
+      code: 'GEO-U1-U2-PROOF'
+    },
+    difficulty: 'reasoning',
+    totalMarks: 7,
+    stemText: 'ليكن $ABCD$ متوازي أضلاع. النقطة $E$ هي منتصف الضلع $[AB]$، والنقطة $F$ هي منتصف الضلع المتقابل $[CD]$. رُسم القطر $[BD]$ فقَطَع كلاً من المستقيمين $(AF)$ و $(CE)$ في النقطتين $P$ و $Q$ على التوالي كما يبيّن الشكل:',
+    diagram: {
+      id: 'diag_q15',
+      title: 'الشكل 8: برهان تثليث القطر BD في متوازي الأضلاع ABCD',
+      viewBox: '0 0 340 220',
+      type: 'combined_proof',
+      coordinates: {
+        A: { x: 40, y: 170, label: 'A', labelPos: 'bottom-left' },
+        B: { x: 220, y: 170, label: 'B', labelPos: 'bottom-right' },
+        C: { x: 300, y: 50, label: 'C', labelPos: 'top-right' },
+        D: { x: 120, y: 50, label: 'D', labelPos: 'top-left' },
+        E: { x: 130, y: 170, label: 'E', labelPos: 'bottom' },
+        F: { x: 210, y: 50, label: 'F', labelPos: 'top' },
+        P: { x: 147, y: 130, label: 'P', labelPos: 'top-left' },
+        Q: { x: 200, y: 90, label: 'Q', labelPos: 'bottom-right' }
+      },
+      segments: [
+        { from: 'A', to: 'B', style: 'solid', color: '#94a3b8' },
+        { from: 'B', to: 'C', style: 'solid', color: '#94a3b8' },
+        { from: 'C', to: 'D', style: 'solid', color: '#94a3b8' },
+        { from: 'D', to: 'A', style: 'solid', color: '#94a3b8' },
+        { from: 'B', to: 'D', style: 'solid', color: '#38bdf8', label: '18 cm' },
+        { from: 'A', to: 'F', style: 'dashed', color: '#f59e0b' },
+        { from: 'E', to: 'C', style: 'dashed', color: '#f59e0b' }
+      ],
+      notes: 'E منتصف AB و F منتصف CD. النقطتان P و Q تقسمان القطر BD'
+    },
+    subparts: [
+      {
+        id: 'q15_a',
+        subpartNumber: 'أ',
+        text: 'أثبت أن الرباعي $AECF$ هو متوازي أضلاع، وماذا تستنتج بشأن المستقيمين $(AF)$ و $(CE)$؟',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: 'متوازي أضلاع لأن الضلعين المتقابلين [AE] و [FC] متوازيان ومتساويان (نصفا ضلعين متقابلين متساويين في ABCD)، إذن (AF) توازي (CE)', isMath: false },
+          { id: 'opt_2', label: 'مستطيل لأن زواياه قائمة بالضرورة', isMath: false },
+          { id: 'opt_3', label: 'شبه منحرف فقط لتوازي ضلعين دون تساويهما', isMath: false },
+          { id: 'opt_4', label: 'لا يمكن إثبات التوازي لعدم توفر معطيات كافية', isMath: false }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'في متوازي الأضلاع ABCD: (AB) || (CD) وبالتالي (AE) || (FC). وبما أن E منتصف [AB] و F منتصف [CD] مع AB = CD، فإن AE = 1/2 AB = 1/2 CD = FC. رباعي فيه ضلعان متقابلان متوازيان ومتساويان في الطول هو متوازي أضلاع. وكنتيجة: الضلعان المتقابلان الآخران متوازيان، أي (AF) || (CE).',
+        partialCreditCriteria: '2.5 علامة للبرهان الهندسي السليم واستنتاج توازي (AF) و (CE).'
+      },
+      {
+        id: 'q15_b',
+        subpartNumber: 'ب',
+        text: 'بتطبيق مبرهنة الموازي لضلع من منتصف ضلع آخر في المثلثين $DQC$ و $ABP$، ما العلاقة بين أطوال القطع الثلاث $DP$ و $PQ$ و $QB$؟',
+        marks: 2.5,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '$DP = PQ = QB$ (القطع الثلاث متساوية تماماً، أي القطر ثُلّث بالتساوي)', isMath: true },
+          { id: 'opt_2', label: '$DP = 2 PQ = QB$', isMath: true },
+          { id: 'opt_3', label: '$PQ = DP + QB$', isMath: true },
+          { id: 'opt_4', label: '$DP = PQ \\ne QB$', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'في المثلث DQC: F منتصف [DC] والمستقيم (FP) يوازي (CQ) لأن (AF) || (CE). بحسب المبرهنة 2، النقطة P هي منتصف [DQ]، إذن DP = PQ. في المثلث ABP: E منتصف [AB] والمستقيم (EQ) يوازي (AP). بحسب المبرهنة 2، النقطة Q هي منتصف [PB]، إذن PQ = QB. بالمطابقة نستنتج: DP = PQ = QB.',
+        partialCreditCriteria: '2.5 علامة للبرهان الدقيق وتثليث القطر.'
+      },
+      {
+        id: 'q15_c',
+        subpartNumber: 'ج',
+        text: 'إذا كان طول القطر الكلي $BD = 18\\text{ cm}$، فما طول كل من القطع $DP$ و $PQ$ و $QB$؟ وما طول القطعة $[DQ]$؟',
+        marks: 2,
+        type: 'mcq',
+        options: [
+          { id: 'opt_1', label: '$DP = PQ = QB = 6\\text{ cm}$ و $DQ = 12\\text{ cm}$', isMath: true },
+          { id: 'opt_2', label: '$DP = PQ = QB = 9\\text{ cm}$ و $DQ = 18\\text{ cm}$', isMath: true },
+          { id: 'opt_3', label: '$DP = 4\\text{ cm}$ و $PQ = 6\\text{ cm}$ و $QB = 8\\text{ cm}$', isMath: true },
+          { id: 'opt_4', label: '$DP = PQ = QB = 5\\text{ cm}$ و $DQ = 10\\text{ cm}$', isMath: true }
+        ],
+        correctAnswer: 'opt_1',
+        teacherExplanation: 'بما أن القطر مقسم إلى 3 قطع متساوية: طول كل قطعة = 18 / 3 = 6 cm. القطعة [DQ] تتألف من DP + PQ = 6 + 6 = 12 cm.',
+        partialCreditCriteria: 'علامتان لحساب الأطوال 6 cm و 12 cm بدقة.'
+      }
+    ]
+  }
+];
+
+// Quick programmatic verification helper
+export const VERIFY_EXAM_INTEGRITY = () => {
+  const totalQuestions = EXAM_QUESTIONS.length;
+  const algebraQuestions = EXAM_QUESTIONS.filter(q => q.subject === 'ALGEBRA').length;
+  const geometryQuestions = EXAM_QUESTIONS.filter(q => q.subject === 'GEOMETRY').length;
+  const totalScore = EXAM_QUESTIONS.reduce((acc, q) => {
+    const qSum = q.subparts.reduce((sAcc, sub) => sAcc + sub.marks, 0);
+    return acc + qSum;
+  }, 0);
+
+  return {
+    totalQuestions,
+    algebraQuestions,
+    geometryQuestions,
+    totalScore,
+    isValid: totalQuestions === 15 && algebraQuestions === 7 && geometryQuestions === 8 && totalScore === 100
+  };
+};
