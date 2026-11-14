@@ -1,0 +1,15 @@
+{
+  "name": "grade4-english-grammar-mahmoud",
+  "private": true,
+  "version": "1.0.0",
+  "description": "English Grammar Mahmoud — Grade 4 English grammar assessment (25 questions, 100 marks): one self-contained HTML page, copied to dist/index.html for GitHub Pages.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test \"tests/*.test.mjs\"",
+    "baseline": "node tests/make-baseline.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "29.1.1"
+  }
+}
