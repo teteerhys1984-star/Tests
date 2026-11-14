@@ -26,7 +26,7 @@ export const ExamCover: React.FC<ExamCoverProps> = ({ onStart, onOpenTeacher, in
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-100px)] items-center justify-center p-4">
+    <div className="cover-screen flex min-h-[calc(100vh-100px)] items-center justify-center p-4">
       <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl border border-cyan-500/20 bg-slate-900/90 p-6 shadow-2xl shadow-cyan-950/60 backdrop-blur-xl sm:p-10">
         {/* Glow Accents */}
         <div className="pointer-events-none absolute -top-24 -left-24 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl" />
@@ -129,6 +129,7 @@ export const ExamCover: React.FC<ExamCoverProps> = ({ onStart, onOpenTeacher, in
               الاسم الكامل للطالب / الطالبة <span className="text-rose-400">* (إلزامي للتقرير)</span>
             </label>
             <input
+              id="student-name"
               type="text"
               placeholder="اكتب اسمك الثلاثي هنا..."
               value={name}
@@ -163,6 +164,13 @@ export const ExamCover: React.FC<ExamCoverProps> = ({ onStart, onOpenTeacher, in
               🔒 بوابة المدرس وسلم التصحيح المعتمد
             </button>
           </div>
+
+          {/* الخصوصية — صياغة صادقة عن الإرسال والتخزين */}
+          <p className="mt-3 max-w-lg rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-center text-[11px] leading-relaxed text-slate-400">
+            الخصوصية: تُحفظ إجاباتك في متصفحك، وعند التسليم تُرسل نتيجتك (اسمك وعلامتك وتفاصيل التصحيح) إلى
+            معلّمك عبر <bdi dir="ltr" className="font-mono text-slate-300">Google Sheets</bdi>؛ ويمكنك إعادة
+            الإرسال لاحقاً من صفحة النتيجة. لا نطلب أي معلومات شخصية غير اسمك لاسم التقرير.
+          </p>
         </form>
       </div>
     </div>

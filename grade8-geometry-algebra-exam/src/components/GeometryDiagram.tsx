@@ -86,13 +86,28 @@ export const GeometryDiagram: React.FC<GeometryDiagramProps> = ({ diagram, class
               const pB = { x: v.x + dx2 * size, y: v.y + dy2 * size };
 
               return (
-                <path
-                  key={`angle-${idx}`}
-                  d={`M ${pA.x} ${pA.y} L ${pCorner.x} ${pCorner.y} L ${pB.x} ${pB.y}`}
-                  fill="none"
-                  stroke="#ec4899"
-                  strokeWidth="1.8"
-                />
+                <g key={`angle-${idx}`}>
+                  <path
+                    d={`M ${pA.x} ${pA.y} L ${pCorner.x} ${pCorner.y} L ${pB.x} ${pB.y}`}
+                    fill="none"
+                    stroke="#ec4899"
+                    strokeWidth="1.8"
+                  />
+                  {angle.label && (
+                    <text
+                      x={pCorner.x + 7}
+                      y={pCorner.y - 5}
+                      fill="#ec4899"
+                      fontSize="10"
+                      fontWeight="bold"
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      fontFamily="JetBrains Mono, monospace"
+                    >
+                      {angle.label}
+                    </text>
+                  )}
+                </g>
               );
             } else {
               // Arc angle
@@ -104,14 +119,20 @@ export const GeometryDiagram: React.FC<GeometryDiagramProps> = ({ diagram, class
               const arcX2 = v.x + r * Math.cos(angle2);
               const arcY2 = v.y + r * Math.sin(angle2);
 
-              const midA = (angle1 + angle2) / 2;
+              // نُطبّع فرق الزاويتين إلى المدى (-180°, 180°] ليكون القوس مرسوماً
+              // بمركزه على رأس الزاوية (أعلام SVG 0/1 المصحّحة)، ويقع منتصف تسمية
+              // القوس بجوار القوس فعلاً لا في الجهة المقابلة من الرأس.
+              const TWO_PI = Math.PI * 2;
+              const delta = (((angle2 - angle1 + Math.PI) % TWO_PI) + TWO_PI) % TWO_PI - Math.PI;
+              const sweepFlag = delta < 0 ? 0 : 1;
+              const midA = angle1 + delta / 2;
               const labelX = v.x + (r + 12) * Math.cos(midA);
               const labelY = v.y + (r + 12) * Math.sin(midA);
 
               return (
                 <g key={`angle-${idx}`}>
                   <path
-                    d={`M ${arcX1} ${arcY1} A ${r} ${r} 0 0 1 ${arcX2} ${arcY2}`}
+                    d={`M ${arcX1} ${arcY1} A ${r} ${r} 0 0 ${sweepFlag} ${arcX2} ${arcY2}`}
                     fill="rgba(245, 158, 11, 0.15)"
                     stroke="#f59e0b"
                     strokeWidth="1.8"

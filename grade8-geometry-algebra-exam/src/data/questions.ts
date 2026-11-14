@@ -837,7 +837,7 @@ export const EXAM_QUESTIONS: Question[] = [
       {
         id: 'q11_b',
         subpartNumber: 'ب',
-        text: 'إذا أضفنا إلى شرط التعامد شرطاً آخر وهو تساوى طولا القطرين $KM = LN = 10\\text{ cm}$، فماذا يصبح الرباعي وما قياس زواياه؟',
+        text: 'إذا أضفنا إلى شرط التعامد شرطاً آخر وهو تساوى طولَي القطرين $KM = LN = 10\\text{ cm}$، فماذا يصبح الرباعي وما قياس زواياه؟',
         marks: 2.5,
         type: 'mcq',
         options: [
@@ -880,7 +880,7 @@ export const EXAM_QUESTIONS: Question[] = [
     },
     difficulty: 'advanced',
     totalMarks: 7,
-    stemText: 'خزان ماء مكعب الشكل في مدرسة، استُهلك منه في الصباح الباكر $\\frac{2}{5}$ من حجمه الكلي. ثم في وقت الظهيرة، استُهلك $\\frac{1}{3}$ من الماء **المتبقي** فيه. وعند نهاية اليوم وُجد أن في الخزان ما مقداره $1600\\text{ L}$ من الماء:',
+    stemText: 'خزان ماء مكعب الشكل في مدرسة، استُهلك منه في الصباح الباكر $\\frac{2}{5}$ من حجمه الكلي. ثم في وقت الظهيرة، استُهلك $\\frac{1}{3}$ من الماء المتبقي فيه. وعند نهاية اليوم وُجد أن في الخزان ما مقداره $1600\\text{ L}$ من الماء:',
     subparts: [
       {
         id: 'q12_a',
@@ -1118,8 +1118,8 @@ export const EXAM_QUESTIONS: Question[] = [
         D: { x: 120, y: 50, label: 'D', labelPos: 'top-left' },
         E: { x: 130, y: 170, label: 'E', labelPos: 'bottom' },
         F: { x: 210, y: 50, label: 'F', labelPos: 'top' },
-        P: { x: 147, y: 130, label: 'P', labelPos: 'top-left' },
-        Q: { x: 200, y: 90, label: 'Q', labelPos: 'bottom-right' }
+        P: { x: 153.33, y: 90, label: 'P', labelPos: 'left' },
+        Q: { x: 186.67, y: 130, label: 'Q', labelPos: 'right' }
       },
       segments: [
         { from: 'A', to: 'B', style: 'solid', color: '#94a3b8' },

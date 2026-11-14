@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { EXAM_QUESTIONS } from './data/questions';
 import { ExamSessionState, FinalGradingReport } from './types/exam';
 import {
@@ -8,8 +8,16 @@ import {
   createInitialSessionState
 } from './utils/storage';
 import { gradeExamSession } from './utils/grading';
-import { downloadReportFile } from './utils/reportGenerator';
+import { downloadReportFile, generateReportText } from './utils/reportGenerator';
 import { playExamStartSound, playExamSubmitSound } from './utils/audio';
+import {
+  buildPayload,
+  hasPending,
+  retryPending,
+  sendWithRetry,
+  type SendStatus,
+  type SubmissionPayload
+} from './utils/submit';
 
 import { ContactBanner } from './components/HeaderBanner';
 import { ExamCover } from './components/ExamCover';
@@ -27,6 +35,79 @@ export const App: React.FC = () => {
     }
     return null;
   });
+
+  /** حالة إرسال النتيجة إلى المعلّم — تُستعاد من آخر نتيجة محفوظة أو من القائمة المعلّقة. */
+  const [sendStatus, setSendStatus] = useState<SendStatus>(() => {
+    if (!session.isSubmitted) return 'idle';
+    if (session.sendOutcome === 'success') return 'success';
+    if (session.sendOutcome === 'failed' || hasPending(session.attemptId)) return 'failed';
+    return 'idle';
+  });
+  /** الحمولة المعروضة حالياً (يعيد زر «إعادة إرسال النتيجة» إرسالها بالمعرّف نفسه). */
+  const outbox = useRef<SubmissionPayload | null>(null);
+  const sending = useRef<SubmissionPayload | null>(null);
+  const sessionRef = useRef(session);
+  sessionRef.current = session;
+
+  const markSendOutcome = useCallback((outcome: 'success' | 'failed') => {
+    setSession(prev => {
+      if (!prev.isSubmitted || prev.sendOutcome === outcome) return prev;
+      return { ...prev, sendOutcome: outcome };
+    });
+  }, []);
+
+  const sendResult = useCallback(
+    (payload: SubmissionPayload) => {
+      if (sending.current === payload) return;
+      sending.current = payload;
+      setSendStatus('sending');
+      void sendWithRetry(payload).then(ok => {
+        if (sending.current === payload) sending.current = null;
+        // تُهمل النتيجة إن بدأ الطالب محاولة جديدة في هذه الأثناء
+        if (outbox.current !== payload) return;
+        setSendStatus(ok ? 'success' : 'failed');
+        markSendOutcome(ok ? 'success' : 'failed');
+      });
+    },
+    [markSendOutcome]
+  );
+
+  /** إعادة إرسال النتيجة بالمعرّف نفسه — مستقلة تماماً عن زر إعادة الاختبار. */
+  const handleResend = useCallback(() => {
+    if (sending.current || sendStatus === 'sending') return;
+    const current = sessionRef.current;
+    if (!current.isSubmitted) return;
+    try {
+      const report = gradeExamSession(current);
+      const payload = buildPayload({
+        attemptId: current.attemptId,
+        session: current,
+        report,
+        reportText: generateReportText(report)
+      });
+      outbox.current = payload;
+      sendResult(payload);
+    } catch {
+      setSendStatus('failed');
+    }
+  }, [sendStatus, sendResult]);
+
+  /** إعادة إرسال النتائج المعلّقة تلقائياً عند فتح الاختبار (بلا أي تدخل من الطالب). */
+  useEffect(() => {
+    let alive = true;
+    const wasPending = sessionRef.current.isSubmitted && hasPending(sessionRef.current.attemptId);
+    void retryPending().then(sent => {
+      if (!alive || !wasPending || sent === 0) return;
+      const current = sessionRef.current;
+      if (current.isSubmitted && !hasPending(current.attemptId)) {
+        setSendStatus('success');
+        markSendOutcome('success');
+      }
+    });
+    return () => {
+      alive = false;
+    };
+  }, [markSendOutcome]);
 
   // Calculate total unanswered subparts across all 15 questions
   const unansweredCount = useMemo(() => {
@@ -180,16 +261,36 @@ export const App: React.FC = () => {
     // Play triumphant submission sound
     playExamSubmitSound();
 
+    // إرسال النتيجة إلى المعلّم في الخلفية: لا ينتظره التنزيل ولا صفحة النتيجة،
+    // وأي خلل فيه لا يمسّ ظهور النتيجة ولا ملف التقرير المحمّل.
+    try {
+      const payload = buildPayload({
+        attemptId: submittedSession.attemptId,
+        session: submittedSession,
+        report,
+        reportText: generateReportText(report)
+      });
+      outbox.current = payload;
+      sendResult(payload);
+    } catch {
+      outbox.current = null;
+      setSendStatus('failed');
+      markSendOutcome('failed');
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [session, elapsed, unansweredCount]);
+  }, [session, elapsed, unansweredCount, sendResult, markSendOutcome]);
 
   // Reset exam handler for "إعادة المحاولة"
   const handleRetryExam = useCallback(() => {
     clearSessionState();
+    outbox.current = null;
+    sending.current = null;
     const freshSession = createInitialSessionState();
     setSession(freshSession);
     setElapsed(0);
     setActiveReport(null);
+    setSendStatus('idle');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
@@ -220,6 +321,8 @@ export const App: React.FC = () => {
           <ResultsDashboard
             report={activeReport}
             onRetry={handleRetryExam}
+            onResend={handleResend}
+            sendStatus={sendStatus}
             onOpenTeacher={() => setIsTeacherOpen(true)}
           />
         ) : (

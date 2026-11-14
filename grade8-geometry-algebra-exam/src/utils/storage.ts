@@ -1,12 +1,32 @@
 import { ExamSessionState } from '../types/exam';
 
-const STORAGE_KEY = 'MATHVERSE_GRADE8_EXAM_SESSION_V1';
+export const STORAGE_KEY = 'MATHVERSE_GRADE8_EXAM_SESSION_V1';
+
+/**
+ * معرّف فريد لكل محاولة جديدة: يُفضَّل crypto.randomUUID، ويُستبدل بمعرّف زمني
+ * موسّع العشوائية في المتصفحات القديمة — لا يتكرر عملياً بين محاولتين.
+ */
+function generateAttemptId(): string {
+  try {
+    const c = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+    if (c && typeof c.randomUUID === 'function') return 'ATT_' + c.randomUUID();
+  } catch {
+    /* سياق غير آمن — نستعمل البديل أدناه */
+  }
+  return (
+    'ATT_' +
+    Date.now() +
+    '_' +
+    Math.random().toString(36).substring(2, 7).toUpperCase() +
+    Math.random().toString(36).substring(2, 7).toUpperCase()
+  );
+}
 
 export function createInitialSessionState(): ExamSessionState {
   return {
     examId: 'MATHVERSE_G8_ALG_GEO',
     version: '1.0.0',
-    attemptId: 'ATT_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7).toUpperCase(),
+    attemptId: generateAttemptId(),
     studentName: '',
     isStarted: false,
     isSubmitted: false,
