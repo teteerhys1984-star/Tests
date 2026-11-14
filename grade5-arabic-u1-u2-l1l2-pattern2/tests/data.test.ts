@@ -253,6 +253,39 @@ for (let i = 0; i < baseline.questionsMeta.length; i++) {
   );
 }
 
+// توزيع أنواع الفروع مستخرج من البيانات الفعلية لا من تعريفات الأنواع.
+const KIND_LABELS: Record<Branch["kind"], string> = {
+  single_choice: "اختيار مفرد",
+  classification: "تصنيف",
+  fill_blank: "إكمال فراغ",
+  matching: "توصيل",
+  true_false: "صح/خطأ",
+  multi_select: "اختيار متعدد",
+  ordering: "ترتيب",
+};
+const kindCounts = EXAM_QUESTIONS.flatMap((question) => question.branches).reduce(
+  (counts, branch) => ({ ...counts, [branch.kind]: (counts[branch.kind] ?? 0) + 1 }),
+  {} as Partial<Record<Branch["kind"], number>>,
+);
+check(
+  "توزيع أنواع الفروع: 25 اختيار مفرد · 9 تصنيف · 5 إكمال فراغ · 3 توصيل · 1 صح/خطأ · 1 اختيار متعدد · 1 ترتيب = 45",
+  kindCounts.single_choice === 25 &&
+    kindCounts.classification === 9 &&
+    kindCounts.fill_blank === 5 &&
+    kindCounts.matching === 3 &&
+    kindCounts.true_false === 1 &&
+    kindCounts.multi_select === 1 &&
+    kindCounts.ordering === 1,
+  Object.entries(kindCounts)
+    .map(([kind, count]) => `${KIND_LABELS[kind as Branch["kind"]]} ${count}`)
+    .join(" · "),
+);
+check(
+  "مجموع أنواع الفروع يساوي 45 بلا تكرار أو نقص",
+  Object.values(kindCounts).reduce<number>((sum, count) => sum + (count ?? 0), 0) === TOTAL_BRANCHES,
+  String(Object.values(kindCounts).reduce<number>((sum, count) => sum + (count ?? 0), 0)),
+);
+
 const declaredSum = Object.values(baseline.declared).every((value) => typeof value === "number");
 check("خط الأساس نفسه متسق: 100 علامة = 45 فرعاً", declaredSum && baseline.declared.TOTAL_MARKS === baseline.totalPoints);
 
