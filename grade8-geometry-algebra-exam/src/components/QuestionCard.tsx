@@ -113,7 +113,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           return (
             <div
               key={sub.id}
-              className={`rounded-2xl border p-4 transition-all sm:p-5 ${
+              data-subpart-id={sub.id}
+              data-answered={isAnswered ? 'true' : 'false'}
+              className={`subpart-card rounded-2xl border p-4 transition-all sm:p-5 ${
                 isAnswered
                   ? 'border-cyan-500/30 bg-slate-900/80 shadow-md shadow-cyan-950/20'
                   : 'border-slate-800 bg-slate-900/60'
@@ -158,6 +160,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                       <button
                         key={opt.id}
                         type="button"
+                        data-option-id={opt.id}
                         onClick={() => onAnswerChange(question.id, sub.id, opt.id)}
                         className={`flex items-center justify-between rounded-xl border p-3.5 text-right transition-all ${
                           isSelected
@@ -201,6 +204,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                   <div className="relative flex-1">
                     <input
                       type="text"
+                      data-input-id={sub.id}
                       placeholder={sub.placeholder || 'أدخل القيمة العددية...'}
                       value={currentAnswer}
                       onChange={e => onAnswerChange(question.id, sub.id, e.target.value)}
@@ -289,7 +293,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
               </p>
             ) : (
               <p className="text-xs font-semibold text-emerald-400">
-                ✓ تم حل جميع الفقرات الـ 15 كاملة! يمكنك الآن تسليم الاختبار فورياً.
+                ✓ تم حل جميع الفقرات (45 فقرة) كاملة! يمكنك الآن تسليم الاختبار فوراً.
               </p>
             )}
 

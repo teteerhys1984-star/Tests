@@ -108,6 +108,8 @@ export interface ExamSessionState {
   startTime: number | null;
   submissionTime: number | null;
   elapsedSeconds: number;
+  /** حالة آخر محاولة إرسال للنتيجة إلى المعلّم (تُستعاد عند فتح الصفحة مجدداً). */
+  sendOutcome?: 'success' | 'failed';
 }
 
 export interface FinalGradingReport {

@@ -2,17 +2,72 @@ import React, { useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { FinalGradingReport } from '../types/exam';
 import { downloadReportFile } from '../utils/reportGenerator';
+import type { SendStatus } from '../utils/submit';
 import { FormattedText } from './MathView';
 
 interface ResultsDashboardProps {
   report: FinalGradingReport;
   onRetry: () => void;
+  onResend: () => void;
+  sendStatus: SendStatus;
   onOpenTeacher: () => void;
 }
+
+/** نصوص حالة إرسال النتيجة إلى المعلّم (بنمط واضح وألوان مميزة). */
+const SEND_META: Record<
+  Exclude<SendStatus, 'idle'>,
+  { text: string; boxClass: string; badgeClass: string }
+> = {
+  sending: {
+    text: 'جارٍ إرسال نتيجتك إلى معلّمك…',
+    boxClass: 'border-amber-500/40 bg-amber-950/40',
+    badgeClass: 'text-amber-300'
+  },
+  success: {
+    text: 'تم إرسال نتيجتك إلى معلّمك ✓',
+    boxClass: 'border-emerald-500/40 bg-emerald-950/40',
+    badgeClass: 'text-emerald-300'
+  },
+  failed: {
+    text: 'تعذّر إرسال النتيجة تلقائيًا الآن. ستُعاد محاولتها تلقائيًا عند فتح الاختبار مجدداً، ويمكنك الإرسال فورًا بالزر أدناه — النتيجة والتقرير يبقيان متاحين في كل الأحوال.',
+    boxClass: 'border-rose-500/40 bg-rose-950/40',
+    badgeClass: 'text-rose-300'
+  }
+};
+
+/** حالة إرسال النتيجة إلى المعلّم — مستقلة عن زر إعادة الاختبار. */
+const SendBanner: React.FC<{ status: SendStatus; onResend: () => void }> = ({ status, onResend }) => {
+  if (status === 'idle') return null;
+  const meta = SEND_META[status];
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      data-send-status={status}
+      className={`mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border p-3.5 text-right ${meta.boxClass}`}
+      dir="rtl"
+    >
+      <p className={`min-w-[12rem] flex-1 text-xs font-bold leading-relaxed ${meta.badgeClass}`}>
+        {meta.text}
+      </p>
+      {status === 'failed' && (
+        <button
+          type="button"
+          onClick={onResend}
+          className="shrink-0 rounded-xl border border-slate-600 bg-slate-900 px-4 py-2 text-xs font-bold text-slate-100 transition-colors hover:bg-slate-800"
+        >
+          📤 إعادة إرسال النتيجة
+        </button>
+      )}
+    </div>
+  );
+};
 
 export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
   report,
   onRetry,
+  onResend,
+  sendStatus,
   onOpenTeacher
 }) => {
   useEffect(() => {
@@ -34,7 +89,7 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
   const isGood = report.percentage >= 60 && report.percentage < 85;
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6 p-4">
+    <div className="results-screen mx-auto w-full max-w-5xl space-y-6 p-4">
       {/* Hero Score Card */}
       <div className="relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-slate-900/90 p-6 shadow-2xl shadow-cyan-950/50 backdrop-blur-xl sm:p-10">
         <div className="pointer-events-none absolute -top-20 -left-20 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
@@ -59,7 +114,7 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
               الدرجة النهائية المكتسبة
             </span>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="font-mono text-5xl font-black text-white sm:text-7xl" dir="ltr">
+              <span className="score-value font-mono text-5xl font-black text-white sm:text-7xl" dir="ltr">
                 {report.totalScore}
               </span>
               <span className="font-mono text-xl font-bold text-slate-500 sm:text-2xl" dir="ltr">
@@ -82,6 +137,11 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
                 الزمن: {report.elapsedDurationFormatted}
               </span>
             </div>
+          </div>
+
+          {/* حالة إرسال النتيجة إلى المعلّم */}
+          <div className="mx-auto w-full max-w-2xl">
+            <SendBanner status={sendStatus} onResend={onResend} />
           </div>
 
           {/* Action Buttons */}
@@ -283,6 +343,16 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
             );
           })}
         </div>
+      </div>
+
+      {/* ملاحظة الخصوصية والإرسال — صياغة صادقة وواضحة */}
+      <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-center">
+        <p className="text-xs leading-relaxed text-slate-400">
+          التقرير محفوظ محلياً على جهازك بصيغة <bdi dir="ltr" className="font-mono text-slate-300">TXT</bdi> ويبقى
+          متاحاً للتنزيل في أي وقت، وتُرسَل نسخة من نتيجتك إلكترونياً إلى معلّمك عبر{' '}
+          <bdi dir="ltr" className="font-mono text-slate-300">Google Sheets</bdi> عند التسليم (أو لاحقاً عند
+          إعادة الإرسال). لا يُطلب منك أي معلومات شخصية غير اسمك لاسم التقرير.
+        </p>
       </div>
     </div>
   );
