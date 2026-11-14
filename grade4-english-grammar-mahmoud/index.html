@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Mahmoud's Minecraft English Adventure</title>
+<title>English Grammar Mahmoud</title>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -190,6 +190,14 @@ a{color:inherit}
   background:repeating-linear-gradient(90deg,#8ade6a 0 9px,transparent 9px 18px);
   opacity:.6;
 }
+
+/* ==================== RESULT DELIVERY STATUS ==================== */
+.send-status{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin:12px 0 0;max-width:600px;padding:10px 12px;border:2.5px solid var(--line);border-radius:6px;background:var(--gold-soft);color:var(--ink);font-size:.86rem;font-weight:700;line-height:1.5}
+.send-status[data-send-status="success"]{background:#e4f6dc;color:#1f5b22}
+.send-status[data-send-status="failed"]{background:var(--red-soft);color:#8e2b25}
+.send-status-copy{flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.send-status-ar{font-family:var(--ar);direction:rtl;unicode-bidi:isolate;text-align:right;font-weight:700}
+.send-status .btn{flex:none}
 
 /* ==================== START SCREEN ==================== */
 .start-topbar{position:relative;z-index:5;padding:18px 0}
@@ -712,6 +720,10 @@ a{color:inherit}
                 <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5A3.5 3.5 0 0 0 4.5 5c0 2.6 3.5 6 3.5 6s3.5-3.4 3.5-6A3.5 3.5 0 0 0 8 1.5Zm0 4.8a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Z" fill="#2f7d2e"/></svg>
                 <span>The timer starts only after you press Start. Your answers save automatically.</span>
               </p>
+              <p class="start-note" id="send-note">
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 3.5h13v9h-13v-9Zm1.4 1.2v.5L8 8.6l5.1-3.4v-.5H2.9Zm10.2 2L8 10.1 2.9 6.7v4.6h10.2V6.7Z" fill="#2f7d2e"/></svg>
+                <span>When you submit the test, your name, result and answers are sent to your teacher.</span>
+              </p>
               <div class="resume-banner" id="resumeBanner" role="status"></div>
             </form>
             <div class="features" aria-label="Test facts">
@@ -968,6 +980,13 @@ a{color:inherit}
             <button class="btn btn-ghost" id="retryBtn" type="button">↻ Try Again</button>
           </div>
           <p class="report-note" id="reportNote" style="margin:10px 0 0">Your UTF-8 report will contain every question, your answer, the correct answer, marks, English explanations and lesson references.</p>
+          <div class="send-status" id="send-status" role="status" aria-live="polite" data-send-status="idle" hidden>
+            <div class="send-status-copy">
+              <span id="send-status-text"></span>
+              <span class="send-status-ar" id="send-status-text-ar" lang="ar" dir="rtl"></span>
+            </div>
+            <button class="btn btn-gold btn-sm" id="resend-result-btn" type="button" hidden>↻ Resend Result · <span lang="ar" dir="rtl">إعادة إرسال النتيجة</span></button>
+          </div>
         </div>
         <div class="score-panel">
           <div class="score-ring" id="scoreRing" style="--pct:0">
@@ -1006,7 +1025,7 @@ a{color:inherit}
       </div>
 
       <div class="results-footer">
-        <p class="report-note" style="margin:0">Report generated locally on this device. Use <b>Download TXT report</b> to save another copy. Your earlier downloaded report is not overwritten by a new attempt.</p>
+        <p class="report-note" style="margin:0">Report generated on this device; your result and answers are also sent to your teacher. Use <b>Download TXT report</b> to save another copy. Your earlier downloaded report is not overwritten by a new attempt.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
           <button class="btn btn-stone btn-sm" id="downloadBtnBottom" type="button">⬇ Download report</button>
           <button class="teacher-open" id="teacherOpenBtn" type="button">🔒 Teacher Answer Key</button>
@@ -1028,7 +1047,7 @@ a{color:inherit}
     <div class="grass-strip" aria-hidden="true"></div>
     <footer class="start-footer" style="padding-bottom:34px">
       <span>Mahmoud's Minecraft English Adventure — original CSS pixel design.</span>
-      <span>All marks are calculated locally on this device.</span>
+      <span>All marks are calculated on this device. Your result and answers are sent to your teacher when you submit.</span>
     </footer>
   </div>
 </section>
@@ -1613,7 +1632,7 @@ function renderQuestion() {
       return `<div class="match-row">
         <span class="match-left">${esc(pair.left)}</span>
         <span class="match-arrow" aria-hidden="true">→</span>
-        <select class="pixel-select${selected ? ' answered' : ''}" data-match="${i}" aria-label="Possessive pronoun for ${esc(pair.left)}">
+        <select class="pixel-select${selected ? ' answered' : ''}" data-match="${i}" aria-label="Match for ${esc(pair.left)}">
           <option value="">Choose…</option>
           ${q.options.map(option => `<option value="${esc(option)}"${selected === option ? ' selected' : ''}>${esc(option)}</option>`).join('')}
         </select>
@@ -1640,7 +1659,7 @@ function renderQuestion() {
       const selected = Array.isArray(answer) && answer[i] ? answer[i] : '';
       return `<div class="blank-line">
         <span class="bl-text">${esc(part.before)}</span>
-        <select class="pixel-select${selected ? ' answered' : ''}" data-blank="${i}" aria-label="Verb form for sentence ${i + 1}">
+        <select class="pixel-select${selected ? ' answered' : ''}" data-blank="${i}" aria-label="Missing word for sentence ${i + 1}">
           <option value="">Choose…</option>
           ${part.options.map(option => `<option value="${esc(option)}"${selected === option ? ' selected' : ''}>${esc(option)}</option>`).join('')}
         </select>
@@ -2044,7 +2063,7 @@ function buildReportText() {
   lines.push('LESSON BREAKDOWN');
   lines.push('------------------------------------------------------------');
   data.lessonRows.forEach(row => {
-    lines.push(`Lesson ${row.lesson.number} — ${row.lesson.name}: ${row.earned}/${row.possible} marks · ${row.percent}% · ${row.items.length} questions · internal reference: Lesson ${row.lesson.number} > course repository curriculum`);
+    lines.push(`Lesson ${row.lesson.number} — ${row.lesson.name}: ${row.earned}/${row.possible} marks · ${row.percent}% · ${row.items.length} questions`);
   });
   lines.push('');
   lines.push('------------------------------------------------------------');
@@ -2064,7 +2083,7 @@ function buildReportText() {
     lines.push('------------------------------------------------------------');
   });
   lines.push('');
-  lines.push('Generated locally by the exam page. No student answers were sent to a server.');
+  lines.push('Generated by the exam page on the student\'s device. The result and answers are also sent electronically to the teacher when the test is submitted.');
   lines.push('Teacher answer key access is available on the results page with the teacher password.');
   return lines.join('\r\n') + '\r\n';
 }
@@ -2096,6 +2115,394 @@ function downloadReport(auto = false) {
     if (note) note.textContent = `Automatic download was blocked by the browser. Use the Download TXT report button to save ${filename}.`;
   }
   return filename;
+}
+
+/* ============================================================
+   RESULT DELIVERY TO THE TEACHER (Google Apps Script web app → Google Sheets)
+   The same contract as the other examinations of this site (reference:
+   grade5-math-unit1/src/exam/submit.ts): field names, their order and types,
+   3 tries (waits of 2 s, then 5 s), 30 s limit per try, and results that could
+   not be delivered kept in localStorage under pending:<EXAM_ID>:<attemptId>.
+
+   No marking logic lives here: every number is read from buildResults() or
+   asked from gradeQuestion(). Nothing in this block writes to the console.
+   ============================================================ */
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbwqv4hE1AFy73L7MhyhFwXx0nl4QF5-Nme5jvP-ank-BY_LQr91xA8A_IiQqMuTdh8B/exec";
+const SHEETS_TOKEN = "7U25pymFzsSqmt8ejzPOTPTFJmSvj9Rm";
+/* Must equal the folder this examination is published from. */
+const EXAM_ID = "grade4-english-grammar-mahmoud";
+/* Must equal the page <title>: it is the name of the examination in the teacher's sheet. */
+const EXAM_TITLE = "English Grammar Mahmoud";
+/* Waits before the second and the third try (3 tries in total). */
+const RETRY_DELAYS_MS = Object.freeze([2000, 5000]);
+const MAX_ATTEMPTS = RETRY_DELAYS_MS.length + 1;
+/* One try: a connection that gives no reply within this time counts as a failure. */
+const ATTEMPT_TIMEOUT_MS = 30000;
+/* Stored payloads of this examination: pending:<EXAM_ID>:<attemptId> */
+const PENDING_PREFIX = 'pending:' + EXAM_ID + ':';
+function pendingKey(attemptId) { return PENDING_PREFIX + attemptId; }
+
+/* ---------------- Payload (field names are fixed by the server) ---------------- */
+
+/* Unique id of one submitted attempt. The server ignores an id it has already stored. */
+function newAttemptId() {
+  try {
+    const c = window.crypto;
+    if (c && typeof c.randomUUID === 'function') return c.randomUUID();
+  } catch (error) { /* Older browser or insecure context: use the fallback below. */ }
+  const rand = () => Math.random().toString(36).slice(2, 10);
+  return Date.now() + '-' + rand() + rand();
+}
+function lessonTitle(lesson) {
+  return `Lesson ${lesson.number} — ${lesson.name}`;
+}
+/* The separately marked parts of one question, in the wording of the results screen.
+   Marks are not worked out here: a part's marks are what gradeQuestion() gives an answer
+   that holds that part alone, so the rows always add up to the question's own marks. */
+function answerParts(q, value) {
+  const given = value === undefined || value === null ? null : value;
+  const chosen = i => (given && given[i] ? given[i] : '');
+  if (q.type === 'choice') {
+    const text = typeof given === 'string' ? given : '';
+    return [{ answered: text.length > 0, awarded: gradeQuestion(q, text), marks: gradeQuestion(q, q.answer), student: text, correct: q.answer }];
+  }
+  if (q.type === 'order') {
+    const list = Array.isArray(given) ? given : [];
+    return [{ answered: list.length === q.tokens.length, awarded: gradeQuestion(q, list), marks: gradeQuestion(q, q.answer), student: list.join(' '), correct: q.answer.join(' ') }];
+  }
+  if (q.type === 'labels') {
+    return q.parts.map((part, i) => ({
+      answered: !!chosen(i), awarded: gradeQuestion(q, { [i]: chosen(i) }), marks: gradeQuestion(q, { [i]: part.answer }),
+      student: `${part.word} = ${chosen(i)}`, correct: `${part.word} = ${part.answer}`
+    }));
+  }
+  if (q.type === 'match') {
+    return q.pairs.map((pair, i) => ({
+      answered: !!chosen(i), awarded: gradeQuestion(q, { [i]: chosen(i) }), marks: gradeQuestion(q, { [i]: pair.answer }),
+      student: `${pair.left} → ${chosen(i)}`, correct: `${pair.left} → ${pair.answer}`
+    }));
+  }
+  if (q.type === 'blanks') {
+    const only = (i, word) => q.parts.map((_, k) => (k === i ? word : ''));
+    return q.parts.map((part, i) => ({
+      answered: !!chosen(i), awarded: gradeQuestion(q, only(i, chosen(i))), marks: gradeQuestion(q, only(i, part.answer)),
+      student: `${part.before} [${chosen(i)}] ${part.after}`, correct: `${part.before} [${part.answer}] ${part.after}`
+    }));
+  }
+  return [];
+}
+/* Built from the marking result that is on the results screen and from the TXT report
+   exactly as it is downloaded. The teacher password and the key screen are never sent. */
+function buildSubmissionPayload(attemptId) {
+  const data = resultData;
+  const counts = { correct: 0, partial: 0, wrong: 0, unanswered: 0 };
+  const details = [];
+  data.graded.forEach((q, index) => {
+    const lesson = lessonTitle(LESSONS[q.lesson]);
+    answerParts(q, attempt.answers[q.id]).forEach((part, i) => {
+      const status = !part.answered ? 'Unanswered'
+        : part.awarded >= part.marks ? 'Correct'
+        : part.awarded > 0 ? 'Partially correct' : 'Incorrect';
+      if (status === 'Unanswered') counts.unanswered += 1;
+      else if (status === 'Correct') counts.correct += 1;
+      else if (status === 'Incorrect') counts.wrong += 1;
+      else counts.partial += 1;
+      details.push({
+        q: index + 1,
+        qTitle: q.originalText,
+        lessons: lesson,
+        label: String.fromCharCode(97 + i),
+        status: status,
+        awarded: part.awarded,
+        marks: part.marks,
+        studentAnswer: part.answered ? part.student : 'No answer',
+        correctAnswer: part.correct
+      });
+    });
+  });
+  return {
+    token: SHEETS_TOKEN,
+    attemptId: attemptId,
+    examId: EXAM_ID,
+    examTitle: EXAM_TITLE,
+    studentName: attempt.name,
+    startAt: new Date(attempt.startedAt).toISOString(),
+    submitAt: new Date(attempt.submittedAt).toISOString(),
+    /* Whole seconds, rounded down as formatDuration() does for the time on the results screen. */
+    elapsedSec: Math.max(0, Math.floor(data.duration / 1000)),
+    summary: {
+      total: data.score,
+      max: TOTAL_MARKS,
+      percentage: data.percentage,
+      /* The performance level already shown on the results screen and in the TXT report. */
+      gradeLabel: data.rank.title,
+      fullQuestions: data.correct,
+      partialQuestions: data.partial,
+      wrongQuestions: data.incorrect - data.partial,
+      correctSubparts: counts.correct,
+      partialSubparts: counts.partial,
+      wrongSubparts: counts.wrong,
+      unansweredSubparts: counts.unanswered
+    },
+    lessons: data.lessonRows.map(row => ({ title: lessonTitle(row.lesson), awarded: row.earned, max: row.possible })),
+    details: details,
+    reportText: '\uFEFF' + buildReportText()
+  };
+}
+
+/* ---------------- Sending ---------------- */
+
+function waitMs(ms) { return new Promise(resolve => { window.setTimeout(resolve, ms); }); }
+/* Success only when the reply was read and says ok:true, or duplicate:true (already stored). */
+function isAccepted(data) {
+  if (typeof data !== 'object' || data === null) return false;
+  return data.ok === true || data.duplicate === true;
+}
+/* One try. text/plain is deliberate: application/json triggers a CORS preflight that
+   Apps Script does not answer. A network error, an unreadable or non-JSON reply, or
+   the time limit all count as a failure (false). */
+async function postOnce(body) {
+  let timer;
+  try {
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    const init = {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: body,
+      redirect: 'follow'
+    };
+    if (controller) init.signal = controller.signal;
+    const reply = window.fetch(SHEETS_URL, init).then(response => response.text());
+    reply.catch(() => {}); /* If the time limit wins, no unhandled rejection is left behind. */
+    const timeout = new Promise((resolve, reject) => {
+      timer = window.setTimeout(() => {
+        try { if (controller) controller.abort(); } catch (error) { /* Nothing to do. */ }
+        reject(new Error('timeout'));
+      }, ATTEMPT_TIMEOUT_MS);
+    });
+    return isAccepted(JSON.parse(await Promise.race([reply, timeout])));
+  } catch (error) {
+    return false;
+  } finally {
+    if (timer !== undefined) window.clearTimeout(timer);
+  }
+}
+/* Up to 3 tries with the same payload and the same attemptId. Never throws. */
+async function runDelivery(payload) {
+  try {
+    const body = JSON.stringify(payload);
+    for (let tryNo = 0; tryNo < MAX_ATTEMPTS; tryNo++) {
+      if (tryNo > 0) await waitMs(RETRY_DELAYS_MS[tryNo - 1]);
+      if (await postOnce(body)) return true;
+    }
+  } catch (error) { /* Counts as a failure. */ }
+  return false;
+}
+/* An attempt that is already being sent is never sent a second time in parallel: every
+   caller for that attemptId receives the outcome of the delivery in progress. An attempt
+   the server has confirmed is not sent again by this page. */
+const deliveriesInProgress = new Map();
+const deliveredAttempts = new Set();
+function deliver(payload) {
+  const id = String(payload.attemptId);
+  if (deliveredAttempts.has(id)) return Promise.resolve(true);
+  const running = deliveriesInProgress.get(id);
+  if (running) return running;
+  const stopWatching = onPageExit(() => savePending(payload));
+  const run = runDelivery(payload).then(ok => {
+    stopWatching();
+    deliveriesInProgress.delete(id);
+    if (ok) {
+      deliveredAttempts.add(id);
+      dropPending(pendingKey(id));
+    } else {
+      savePending(payload);
+    }
+    return ok;
+  });
+  deliveriesInProgress.set(id, run);
+  return run;
+}
+
+/* ---------------- Local storage (every call is guarded: the test works without storage) ---------------- */
+
+function pendingStore() {
+  try { return window.localStorage || null; } catch (error) { return null; }
+}
+function savePending(payload) {
+  try {
+    const store = pendingStore();
+    if (!store) return false;
+    store.setItem(pendingKey(payload.attemptId), JSON.stringify(payload));
+    return true;
+  } catch (error) {
+    return false; /* Storage is unavailable or full. */
+  }
+}
+function dropPending(key) {
+  try {
+    const store = pendingStore();
+    if (store) store.removeItem(key);
+  } catch (error) { /* Storage is unavailable. */ }
+}
+function readPending(key) {
+  try {
+    const store = pendingStore();
+    const raw = store ? store.getItem(key) : null;
+    const data = raw ? JSON.parse(raw) : null;
+    return typeof data === 'object' && data !== null && !Array.isArray(data) && typeof data.attemptId === 'string' && pendingKey(data.attemptId) === key ? data : null;
+  } catch (error) {
+    return null;
+  }
+}
+/* If the page is closed or hidden while a delivery is still running, the payload is stored
+   at once (under the same key), so an unconfirmed result is not lost. It is removed again
+   as soon as the server confirms it. */
+function onPageExit(saveNow) {
+  try {
+    const onHide = () => saveNow();
+    const onVisibility = () => { if (document.visibilityState === 'hidden') saveNow(); };
+    window.addEventListener('pagehide', onHide);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      try {
+        window.removeEventListener('pagehide', onHide);
+        document.removeEventListener('visibilitychange', onVisibility);
+      } catch (error) { /* Nothing to do. */ }
+    };
+  } catch (error) {
+    return () => {};
+  }
+}
+/* When the test is opened: quietly re-sends the stored results of this examination and
+   removes the ones the server confirms. Resolves with how many were sent. A call made
+   while a round is running returns that same round. */
+let pendingRound = null;
+function retryPending() {
+  if (!pendingRound) {
+    pendingRound = flushPending().then(sent => {
+      pendingRound = null;
+      return sent;
+    });
+  }
+  return pendingRound;
+}
+async function flushPending() {
+  let sent = 0;
+  try {
+    const store = pendingStore();
+    if (!store) return 0;
+    const keys = [];
+    for (let i = 0; i < store.length; i++) {
+      const key = store.key(i);
+      if (key && key.indexOf(PENDING_PREFIX) === 0) keys.push(key);
+    }
+    for (const key of keys) {
+      const stored = readPending(key);
+      if (!stored) continue;
+      /* The token belongs to the current copy of the page, not to the attempt. */
+      if (await deliver(Object.assign({}, stored, { token: SHEETS_TOKEN }))) sent += 1;
+    }
+  } catch (error) { /* Quiet: tried again the next time the test is opened. */ }
+  return sent;
+}
+
+/* ---------------- Results-screen status ("idle" | "sending" | "success" | "failed") ---------------- */
+
+const SEND_STATUS_COPY = Object.freeze({
+  sending: { en: 'Sending your result to your teacher…', ar: 'جارٍ إرسال نتيجتك إلى معلّمك…' },
+  success: { en: 'Your result was sent to your teacher ✓', ar: 'تم إرسال نتيجتك إلى معلّمك ✓' },
+  failed: {
+    en: 'Your result could not be sent. Check your internet connection and press “Resend Result”, or download the TXT report and give it to your teacher.',
+    ar: 'تعذّر إرسال النتيجة. تأكّد من اتصال الإنترنت ثم اضغط «إعادة إرسال النتيجة»، أو حمّل ملف التقرير وأعطه لمعلّمك.'
+  }
+});
+/* Payload of the attempt now on the results screen (what "Resend Result" sends), and the one being sent. */
+let outboxPayload = null;
+let sendingPayload = null;
+let sendStatus = 'idle';
+
+function renderSendStatus(status) {
+  const copy = SEND_STATUS_COPY[status] || null;
+  sendStatus = copy ? status : 'idle';
+  const box = $('#send-status');
+  if (!box) return;
+  box.setAttribute('data-send-status', sendStatus);
+  const text = $('#send-status-text');
+  if (text) text.textContent = copy ? copy.en : '';
+  const arabic = $('#send-status-text-ar');
+  if (arabic) arabic.textContent = copy ? copy.ar : '';
+  const resend = $('#resend-result-btn');
+  if (resend) resend.hidden = sendStatus !== 'failed';
+  box.hidden = !copy;
+}
+function resetResultDelivery() {
+  outboxPayload = null;
+  renderSendStatus('idle');
+}
+/* Remembers the outcome in the saved attempt, so a refresh of the results screen does not send again. */
+function recordDeliveryOutcome(attemptId, ok) {
+  if (!attempt || !attempt.submittedAt || !attempt.delivery || attempt.delivery.attemptId !== attemptId) return;
+  attempt.delivery.status = ok ? 'sent' : 'failed';
+  saveAttempt();
+}
+function startResultDelivery(payload) {
+  /* Already being sent from this screen: the button cannot start a second, parallel delivery. */
+  if (sendingPayload && sendingPayload.attemptId === payload.attemptId) return;
+  sendingPayload = payload;
+  outboxPayload = payload;
+  renderSendStatus('sending');
+  deliver(payload).then(ok => {
+    if (sendingPayload === payload) sendingPayload = null;
+    /* Ignored if the student has started a new attempt in the meantime: its screen is not touched. */
+    if (outboxPayload !== payload) return;
+    recordDeliveryOutcome(payload.attemptId, ok);
+    renderSendStatus(ok ? 'success' : 'failed');
+  });
+}
+/* Called once the results are on screen. Any fault here leaves the results and the TXT report untouched. */
+function deliverSubmittedResult() {
+  try {
+    if (!attempt || !attempt.submittedAt || !resultData) return;
+    if (!attempt.delivery || typeof attempt.delivery.attemptId !== 'string' || !attempt.delivery.attemptId) {
+      attempt.delivery = { attemptId: newAttemptId(), status: 'pending' };
+      saveAttempt();
+    }
+    if (attempt.delivery.status === 'sent') {
+      outboxPayload = null;
+      renderSendStatus('success');
+      return;
+    }
+    startResultDelivery(buildSubmissionPayload(attempt.delivery.attemptId));
+  } catch (error) {
+    outboxPayload = null;
+    renderSendStatus('failed');
+  }
+}
+/* Called when a submitted attempt is restored after a refresh. */
+function resumeResultDelivery() {
+  try {
+    if (!attempt || !attempt.submittedAt) return;
+    if (attempt.delivery && attempt.delivery.status === 'sent') {
+      outboxPayload = null;
+      renderSendStatus('success');
+      return;
+    }
+    const stored = attempt.delivery && typeof attempt.delivery.attemptId === 'string' && attempt.delivery.attemptId
+      ? readPending(pendingKey(attempt.delivery.attemptId)) : null;
+    /* A stored payload is sent as it was stored: same body, hence the same attemptId. */
+    if (stored) startResultDelivery(Object.assign({}, stored, { token: SHEETS_TOKEN }));
+    else deliverSubmittedResult();
+  } catch (error) {
+    outboxPayload = null;
+    renderSendStatus('failed');
+  }
+}
+/* "Resend Result" button: the same payload, hence the same attemptId. */
+function resendResult() {
+  if (sendStatus !== 'failed') return;
+  if (outboxPayload) startResultDelivery(outboxPayload);
+  else deliverSubmittedResult();
 }
 
 /* ============================================================
@@ -2153,6 +2560,7 @@ function handleSubmit() {
   } catch (error) {
     /* The visible download button remains available. */
   }
+  deliverSubmittedResult();
 }
 
 function handleTryAgain() {
@@ -2164,6 +2572,7 @@ function handleTryAgain() {
   currentIndex = 0;
   stopTimer();
   closeTeacherModal();
+  resetResultDelivery();
   teacherUnlocked = false;
   const input = $('#candidateName');
   if (input) {
@@ -2385,6 +2794,8 @@ function bindStaticEvents() {
 
   const retry = $('#retryBtn');
   if (retry) retry.addEventListener('click', handleTryAgain);
+  const resend = $('#resend-result-btn');
+  if (resend) resend.addEventListener('click', resendResult);
 
   const teacherOpen = $('#teacherOpenBtn');
   if (teacherOpen) {
@@ -2453,6 +2864,7 @@ function initApp() {
     currentIndex = Math.max(0, Math.min(QUESTIONS.length - 1, Number(attempt.lastQuestion) || 0));
     showScreen('results');
     renderResults();
+    resumeResultDelivery();
     return;
   }
   if (attempt.name && attempt.startedAt && attempt.answers) {
@@ -2465,10 +2877,15 @@ function initApp() {
   showScreen('start');
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initApp);
-} else {
+/* Results of earlier attempts that could not be delivered are sent again, quietly. */
+function bootApp() {
   initApp();
+  retryPending();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootApp);
+} else {
+  bootApp();
 }
 
 
