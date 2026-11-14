@@ -1,4 +1,5 @@
 import { BookOpenText, GraduationCap, Star } from "lucide-react";
+import { EXAM_MODEL_LABEL } from "@/config";
 import type { ReactNode } from "react";
 
 type BrandProps = {
@@ -41,7 +42,7 @@ export function Brand({ compact = false, variant = "light" }: BrandProps) {
             isDark ? "text-[#e8dcc3]/70" : "text-[#66736e]"
           }`}
         >
-          اختبارات اللغة العربية التفاعلية
+          اختبارات اللغة العربية · {EXAM_MODEL_LABEL}
         </div>
       </div>
     </div>
@@ -69,7 +70,7 @@ export function GradeBadge() {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full border border-[#c4a15a]/35 bg-[#c4a15a]/10 px-3 py-1 text-[11px] font-semibold text-[#e9d6ac]">
       <GraduationCap className="h-3.5 w-3.5" />
-      الصف الخامس الأساسي
+      الصف الخامس الأساسي · {EXAM_MODEL_LABEL}
     </span>
   );
 }

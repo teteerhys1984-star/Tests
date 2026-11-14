@@ -1,3 +1,4 @@
+import { EXAM_MODEL_LABEL, EXAM_TITLE } from "../config";
 import {
   Branch,
   EXAM_QUESTIONS,
@@ -407,12 +408,19 @@ export const formatDuration = (totalSeconds: number): string => {
   return [hours, minutes, seconds].map((part) => String(part).padStart(2, "0")).join(":");
 };
 
+/**
+ * سلّم التقدير المعتمد في المشروع (الاختبار المرجعي grade5-math-unit1 والاختبار
+ * العربي السابق): ست درجات، وحدّ «مقبول» 65. كان في هذا الملف سلّم مختلف
+ * (90/80/65/50 وأربع درجات) فيظهر التقدير على الشاشة وفي التقرير مختلفاً عن
+ * التقدير المسجَّل في Google Sheets من الحمولة نفسها؛ وُحِّد هنا على المعتمد.
+ */
 export const gradeLabel = (percentage: number): string => {
-  if (percentage >= 90) return "ممتاز";
-  if (percentage >= 80) return "جيد جدًا";
-  if (percentage >= 65) return "جيد";
-  if (percentage >= 50) return "مقبول";
-  return "يحتاج إلى مراجعة";
+  if (percentage >= 95) return "ممتاز";
+  if (percentage >= 85) return "جيد جداً";
+  if (percentage >= 75) return "جيد";
+  if (percentage >= 65) return "مقبول";
+  if (percentage >= 50) return "ضعيف";
+  return "يحتاج إلى دعم";
 };
 
 export const formatDateTime = (date: Date): string =>
@@ -431,7 +439,15 @@ export const buildTextReport = (
   const separator = "-".repeat(56);
   const lines: string[] = [];
 
+  /**
+   * ترويسة التقرير: آخر سطر هنا (EXAM_TITLE) هو رمز التصنيف الدقيق الذي يقرأه
+   * مولّد الفهرس في landing/generate.py، وهو مطابق لعنوان <title> في index.html
+   * ومطابق لعنوان بطاقة الاختبار في الصفحة الرئيسية (الكلمة «العربية» ثم
+   * «الخامس»). الأسطر الثلاثة الأولى من التقرير نفسه لم تتغيّر.
+   */
   lines.push("تقرير اختبار اللغة العربية — الصف الخامس الأساسي");
+  lines.push(EXAM_TITLE);
+  lines.push(`(${EXAM_MODEL_LABEL})`);
   lines.push(line);
   lines.push(`اسم الطالب: ${studentName}`);
   lines.push(`تاريخ ووقت التسليم: ${formatDateTime(submittedAt)}`);
@@ -504,7 +520,7 @@ export const downloadTextReport = (
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = `تقرير_اختبار_اللغة_العربية_${sanitizeFileName(studentName)}.txt`;
+  anchor.download = `تقرير_اختبار_اللغة_العربية_النموذج_الثاني_${sanitizeFileName(studentName)}.txt`;
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();

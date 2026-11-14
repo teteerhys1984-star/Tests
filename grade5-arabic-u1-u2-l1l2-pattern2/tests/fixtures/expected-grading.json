@@ -1,0 +1,52 @@
+{
+  "perfect": {
+    "score": 100,
+    "max": 100,
+    "percentage": 100,
+    "full": 45,
+    "partial": 0,
+    "wrong": 0,
+    "answered": 45,
+    "total": 45
+  },
+  "empty": {
+    "score": 0,
+    "max": 100,
+    "percentage": 0,
+    "full": 0,
+    "partial": 0,
+    "wrong": 45,
+    "answered": 0,
+    "total": 45
+  },
+  "allWrong": {
+    "score": 0,
+    "max": 100,
+    "percentage": 0,
+    "full": 0,
+    "partial": 0,
+    "wrong": 45,
+    "answered": 44,
+    "total": 45
+  },
+  "mixed": {
+    "score": 56,
+    "max": 100,
+    "percentage": 56,
+    "full": 24,
+    "partial": 0,
+    "wrong": 21,
+    "answered": 39,
+    "total": 45
+  },
+  "partial": {
+    "score": 86.33,
+    "max": 100,
+    "percentage": 86.33,
+    "full": 32,
+    "partial": 13,
+    "wrong": 0,
+    "answered": 45,
+    "total": 45
+  }
+}
