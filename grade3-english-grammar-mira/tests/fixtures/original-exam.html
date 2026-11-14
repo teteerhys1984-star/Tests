@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mira's Lovely English Challenge — A Beautiful Journey into Beginner English</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    :root {
+      --font-body: 'Quicksand', sans-serif;
+      --font-display: 'Fredoka', cursive, sans-serif;
+      --font-ar: 'Cairo', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: #fdf8fc;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(253, 230, 240, 0.6) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(237, 233, 254, 0.6) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(224, 242, 254, 0.4) 0%, transparent 50%);
+      min-height: 100vh;
+      color: #334155;
+    }
+
+    .font-display {
+      font-family: var(--font-display);
+    }
+    .font-ar {
+      font-family: var(--font-ar);
+    }
+
+    /* Floating magical animations */
+    @keyframes floatGentle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(244, 114, 182, 0.4)); }
+      50% { transform: scale(1.04); filter: drop-shadow(0 0 16px rgba(244, 114, 182, 0.7)); }
+    }
+    @keyframes sparkleSpin {
+      0% { transform: scale(0.9) rotate(0deg); opacity: 0.8; }
+      50% { transform: scale(1.15) rotate(180deg); opacity: 1; }
+      100% { transform: scale(0.9) rotate(360deg); opacity: 0.8; }
+    }
+
+    .float-item {
+      animation: floatGentle 4s ease-in-out infinite;
+    }
+    .pulse-glow {
+      animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+    .sparkle-anim {
+      animation: sparkleSpin 5s linear infinite;
+    }
+
+    /* Custom CSS Shapes */
+    .css-flower {
+      position: relative;
+      width: 28px;
+      height: 28px;
+      background: #f472b6;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .css-flower::before, .css-flower::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 28px; height: 28px;
+      background: #f472b6;
+      border-radius: 50%;
+    }
+    .css-flower::before { transform: rotate(30deg); }
+    .css-flower::after { transform: rotate(60deg); }
+    .css-flower-center {
+      position: absolute;
+      top: 7px; left: 7px;
+      width: 14px; height: 14px;
+      background: #fef08a;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    .css-bow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .bow-wing-left {
+      width: 14px; height: 18px;
+      background: #f472b6;
+      border-radius: 50% 10% 10% 50%;
+      transform: rotate(-15deg);
+    }
+    .bow-wing-right {
+      width: 14px; height: 18px;
+      background: #f472b6;
+      border-radius: 10% 50% 50% 10%;
+      transform: rotate(15deg);
+    }
+    .bow-knot {
+      width: 8px; height: 10px;
+      background: #db2777;
+      border-radius: 4px;
+      position: absolute;
+      z-index: 2;
+    }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #fdf2f8;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #fbcfe8;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f472b6;
+    }
+  </style>
+</head>
+<body class="selection:bg-pink-200 selection:text-pink-900 flex flex-col min-h-screen">
+
+  <!-- Background Decorative Shapes -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute -top-12 -left-12 w-64 h-64 bg-pink-100 rounded-full blur-3xl opacity-60"></div>
+    <div class="absolute top-1/4 -right-16 w-80 h-80 bg-purple-100 rounded-full blur-3xl opacity-60"></div>
+    <div class="absolute -bottom-16 left-1/3 w-96 h-96 bg-sky-100 rounded-full blur-3xl opacity-50"></div>
+    <div class="absolute top-20 left-12 text-2xl float-item" style="animation-delay: 0.5s;">🌸</div>
+    <div class="absolute top-40 right-20 text-3xl float-item" style="animation-delay: 1.2s;">✨</div>
+    <div class="absolute bottom-32 left-16 text-2xl float-item" style="animation-delay: 2s;">🦋</div>
+    <div class="absolute bottom-20 right-24 text-3xl float-item" style="animation-delay: 2.8s;">🌸</div>
+    <div class="absolute top-1/3 left-8 text-xl float-item" style="animation-delay: 1.8s;">⭐</div>
+    <div class="absolute top-2/3 right-10 text-2xl float-item" style="animation-delay: 0.8s;">🎀</div>
+  </div>
+
+  <!-- Header / Navigation Bar (Always Visible) -->
+  <header class="relative z-20 border-b border-pink-100/80 bg-white/80 backdrop-blur-md sticky top-0 shadow-xs">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-400 via-rose-300 to-purple-400 flex items-center justify-center text-white text-xl shadow-md shadow-pink-200/50">
+          🌸
+        </div>
+        <div>
+          <h1 class="font-display font-bold text-lg md:text-xl text-pink-700 tracking-wide flex items-center gap-1.5">
+            MIRA'S LOVELY ENGLISH CHALLENGE
+            <span class="text-xs px-2 py-0.5 rounded-full bg-pink-100 text-pink-600 font-normal">Level 1</span>
+          </h1>
+          <p class="text-xs text-purple-600 font-medium">A Beautiful Journey into Beginner English</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Student Badge (Visible during test & results) -->
+        <div id="header-student-badge" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 border border-purple-200 text-purple-700 text-xs font-semibold">
+          <span>👧</span>
+          <span id="header-student-name">Mira</span>
+        </div>
+
+        <!-- Stopwatch -->
+        <div id="stopwatch-container" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-xl bg-pink-50 border border-pink-200 text-pink-700 font-display font-semibold text-sm">
+          <span>⏱️</span>
+          <span id="stopwatch-display">00:00:00</span>
+        </div>
+
+        <!-- Teacher Key Trigger Button -->
+        <button onclick="openTeacherModal()" title="Teacher Answer Key" class="px-2.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 transition-colors flex items-center gap-1">
+          <span>🔐</span>
+          <span class="hidden sm:inline">Teacher Key</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="relative z-10 flex-1 max-w-5xl w-full mx-auto p-4 md:p-6 flex flex-col justify-center">
+
+    <!-- SCREEN 1: WELCOME SCREEN -->
+    <section id="welcome-screen" class="w-full max-w-2xl mx-auto my-auto text-center py-6">
+      <div class="bg-white/90 backdrop-blur-md rounded-3xl p-6 md:p-10 border-2 border-pink-100 shadow-xl shadow-pink-100/50 relative overflow-hidden">
+        <!-- Decorative corner flowers -->
+        <div class="absolute -top-6 -right-6 w-24 h-24 bg-pink-100 rounded-full flex items-center justify-center text-4xl opacity-50">🌸</div>
+        <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center text-4xl opacity-50">✨</div>
+
+        <!-- Mascot Illustration -->
+        <div class="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-gradient-to-tr from-pink-200 via-rose-100 to-purple-200 shadow-lg shadow-pink-200/50 mb-5 text-5xl relative">
+          🦋
+          <span class="absolute -top-2 -right-2 text-2xl sparkle-anim">✨</span>
+          <span class="absolute -bottom-1 -left-2 text-xl float-item">🎀</span>
+        </div>
+
+        <h2 class="font-display font-bold text-2xl md:text-3xl text-pink-600 mb-2">
+          Mira's Lovely English Challenge
+        </h2>
+        <p class="text-sm md:text-base text-purple-700 font-medium mb-6">
+          A Beautiful Journey into Beginner English
+        </p>
+
+        <!-- Course Curriculum Pillars Card -->
+        <div class="bg-gradient-to-br from-pink-50/80 via-purple-50/60 to-sky-50/80 rounded-2xl p-4 md:p-5 border border-pink-100 text-left mb-6">
+          <p class="text-xs uppercase tracking-wider font-bold text-pink-500 mb-2 flex items-center gap-1">
+            <span>📚</span> Assessment Scope (6 Foundation Lessons):
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-semibold text-slate-700">
+            <div class="flex items-center gap-2 bg-white/70 px-3 py-1.5 rounded-xl border border-pink-100">
+              <span class="text-pink-500">①</span> Sentence Structure (S + V + O)
+            </div>
+            <div class="flex items-center gap-2 bg-white/70 px-3 py-1.5 rounded-xl border border-purple-100">
+              <span class="text-purple-500">②</span> Pronouns & Verb to be
+            </div>
+            <div class="flex items-center gap-2 bg-white/70 px-3 py-1.5 rounded-xl border border-sky-100">
+              <span class="text-sky-500">③</span> Verb to be: + / − / ? / Short Answers
+            </div>
+            <div class="flex items-center gap-2 bg-white/70 px-3 py-1.5 rounded-xl border border-emerald-100">
+              <span class="text-emerald-500">④</span> Nouns & Articles (a / an / the)
+            </div>
+            <div class="flex items-center gap-2 bg-white/70 px-3 py-1.5 rounded-xl border border-amber-100">
+              <span class="text-amber-500">⑤</span> Adjectives & Opposites
+            </div>
+            <div class="flex items-center gap-2 bg-white/70 px-3 py-1.5 rounded-xl border border-rose-100">
+              <span class="text-rose-500">⑥</span> Possessive Adjectives (my, your...)
+            </div>
+          </div>
+          <div class="mt-3 pt-2.5 border-t border-pink-200/50 flex flex-wrap items-center justify-between text-xs text-purple-700">
+            <span>✨ Exactly 25 Main Questions</span>
+            <span>⭐ Total Score: 100 Marks (4 marks each)</span>
+          </div>
+        </div>
+
+        <!-- Student Name Input Form -->
+        <div class="max-w-md mx-auto mb-6 text-left">
+          <label for="student-name-input" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+            Please enter your name to begin:
+          </label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-lg">🌸</span>
+            <input 
+              type="text" 
+              id="student-name-input" 
+              placeholder="e.g. Mira..." 
+              autocomplete="name"
+              class="w-full pl-11 pr-4 py-3 rounded-2xl border-2 border-pink-200 focus:border-pink-500 focus:ring-4 focus:ring-pink-100 outline-none text-slate-800 font-display font-medium text-base transition-all bg-white"
+            >
+          </div>
+          <p id="name-error-msg" class="text-rose-500 text-xs mt-1.5 hidden font-medium">Please enter your name first to start the challenge!</p>
+        </div>
+
+        <!-- Start Button -->
+        <button 
+          id="btn-start" 
+          onclick="startChallenge()"
+          class="w-full max-w-md mx-auto py-3.5 px-8 rounded-2xl bg-gradient-to-r from-pink-500 via-rose-400 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-display font-bold text-lg shadow-lg shadow-pink-300/50 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer flex items-center justify-center gap-2 pulse-glow"
+        >
+          <span>Start Challenge</span>
+          <span>✨</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: ACTIVE ASSESSMENT SCREEN -->
+    <section id="assessment-screen" class="hidden flex-col gap-5 w-full">
+
+      <!-- Progress Journey & Question Bead Matrix -->
+      <div class="bg-white/90 backdrop-blur-md rounded-2xl p-4 border border-pink-100 shadow-sm">
+        <div class="flex items-center justify-between mb-2 text-xs font-bold text-slate-600">
+          <div class="flex items-center gap-2">
+            <span class="text-pink-600 font-display text-sm">Question <span id="current-q-num">1</span> of 25</span>
+            <span class="px-2 py-0.5 rounded-full bg-pink-100 text-pink-700 text-xs font-semibold" id="q-lesson-badge">Lesson Topic</span>
+          </div>
+          <div class="text-slate-500">
+            Answered: <span id="answered-count-display" class="text-purple-600 font-bold">0</span> / 25
+          </div>
+        </div>
+
+        <!-- Continuous Progress Ribbon -->
+        <div class="w-full h-2.5 bg-pink-100 rounded-full overflow-hidden mb-3">
+          <div id="progress-ribbon" class="h-full bg-gradient-to-r from-pink-400 via-purple-400 to-rose-400 rounded-full transition-all duration-300" style="width: 4%;"></div>
+        </div>
+
+        <!-- Milestone Bead Navigation (Clickable 1 to 25) -->
+        <div class="flex flex-wrap gap-1.5 justify-center pt-1" id="bead-matrix">
+          <!-- 25 beads will be populated by JS -->
+        </div>
+      </div>
+
+      <!-- Question Card Container -->
+      <div id="question-card" class="bg-white/95 backdrop-blur-md rounded-3xl p-5 md:p-8 border-2 border-pink-100 shadow-xl shadow-pink-100/30 relative min-h-[380px] flex flex-col justify-between">
+        
+        <!-- Question Header & Instruction -->
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <div class="flex items-center gap-2">
+              <span id="q-number-pill" class="px-3 py-1 rounded-xl bg-pink-500 text-white font-display font-bold text-sm">
+                Q1
+              </span>
+              <span class="text-xs font-bold uppercase tracking-wider text-purple-600" id="q-category-tag">
+                Sentence Structure
+              </span>
+            </div>
+            <div class="px-2.5 py-1 rounded-lg bg-pink-50 text-pink-600 text-xs font-bold">
+              4 Marks
+            </div>
+          </div>
+
+          <!-- Main Question Prompt -->
+          <div id="q-prompt-box" class="mb-6">
+            <h3 id="q-prompt-text" class="text-lg md:text-xl font-bold text-slate-800 leading-relaxed mb-1">
+              Question text loads here...
+            </h3>
+            <p id="q-sub-text" class="text-sm text-slate-500 font-medium">
+              Sub-instruction loads here...
+            </p>
+          </div>
+
+          <!-- Interactive Question Body / Options Area -->
+          <div id="q-interactive-body" class="mb-6">
+            <!-- Dynamic interactive area depending on question type -->
+          </div>
+        </div>
+
+        <!-- Bottom Navigation Controls -->
+        <div class="pt-4 border-t border-pink-100 flex items-center justify-between gap-3">
+          <button 
+            id="btn-prev-q" 
+            onclick="navigateQuestion(-1)"
+            class="px-4 py-2.5 rounded-xl font-display font-semibold text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <span>←</span> Previous
+          </button>
+
+          <span class="text-xs text-slate-400 font-medium hidden sm:inline">
+            Answers save automatically ✨
+          </span>
+
+          <button 
+            id="btn-next-q" 
+            onclick="navigateQuestion(1)"
+            class="px-5 py-2.5 rounded-xl font-display font-semibold text-sm text-white bg-pink-500 hover:bg-pink-600 shadow-md shadow-pink-200 transition-all flex items-center gap-1.5 cursor-pointer"
+          >
+            Next <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- BOTTOM SUBMISSION STRIP (Mandatory Exact Arabic Label: تسليم الاختبار) -->
+      <div class="bg-white/90 backdrop-blur-md rounded-2xl p-4 md:p-5 border border-pink-100 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-center sm:text-left">
+          <p class="text-xs text-slate-500 font-medium" id="submit-status-text">
+            Please answer all 25 questions to enable submission.
+          </p>
+          <p class="text-xs font-bold text-pink-600" id="submit-counter-text">
+            Answered: 0 / 25
+          </p>
+        </div>
+
+        <!-- Exact Arabic submission button specified in Section 10 -->
+        <button 
+          id="btn-submit-exam" 
+          dir="rtl"
+          onclick="submitAssessment()" 
+          disabled
+          class="font-ar font-bold text-base md:text-lg px-8 py-3 rounded-2xl text-white transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-slate-300 disabled:shadow-none bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 shadow-emerald-200"
+        >
+          <span>تسليم الاختبار</span>
+          <span>✓</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- SCREEN 3: RESULTS PAGE -->
+    <section id="results-screen" class="hidden flex-col gap-6 w-full max-w-4xl mx-auto py-4">
+
+      <!-- Cheerful Trophy & Congratulations Banner -->
+      <div class="bg-gradient-to-br from-pink-100/90 via-purple-100/80 to-sky-100/90 rounded-3xl p-6 md:p-8 border-2 border-pink-200 shadow-xl text-center relative overflow-hidden">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white shadow-lg text-4xl mb-3 float-item">
+          🏆
+        </div>
+        <h2 class="font-display font-bold text-2xl md:text-3xl text-pink-700 mb-1">
+          Mira's Lovely English Challenge — Results
+        </h2>
+        <p class="text-sm font-semibold text-purple-700 mb-6">
+          Wonderful effort! Here is your complete performance breakdown.
+        </p>
+
+        <!-- Main Score Cards Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-2xl mx-auto mb-6">
+          <div class="bg-white/90 backdrop-blur-sm p-3.5 rounded-2xl border border-pink-100 shadow-sm">
+            <p class="text-xs uppercase font-bold text-slate-400">Student</p>
+            <p id="res-student-name" class="font-display font-bold text-base md:text-lg text-slate-800 truncate">Mira</p>
+          </div>
+          <div class="bg-white/90 backdrop-blur-sm p-3.5 rounded-2xl border border-pink-100 shadow-sm">
+            <p class="text-xs uppercase font-bold text-slate-400">Total Score</p>
+            <p class="font-display font-bold text-xl md:text-2xl text-pink-600">
+              <span id="res-score-marks">0</span> <span class="text-xs text-slate-500">/ 100</span>
+            </p>
+          </div>
+          <div class="bg-white/90 backdrop-blur-sm p-3.5 rounded-2xl border border-pink-100 shadow-sm">
+            <p class="text-xs uppercase font-bold text-slate-400">Percentage</p>
+            <p id="res-score-pct" class="font-display font-bold text-xl md:text-2xl text-purple-600">0%</p>
+          </div>
+          <div class="bg-white/90 backdrop-blur-sm p-3.5 rounded-2xl border border-pink-100 shadow-sm">
+            <p class="text-xs uppercase font-bold text-slate-400">Time Taken</p>
+            <p id="res-duration" class="font-display font-bold text-base md:text-lg text-sky-600">00:00:00</p>
+          </div>
+        </div>
+
+        <!-- Performance Summary & Encouragement -->
+        <div id="res-encouragement-box" class="bg-white/80 max-w-lg mx-auto p-4 rounded-2xl border border-pink-200 text-sm font-medium text-slate-700 shadow-xs mb-6">
+          Evaluation note loads here...
+        </div>
+
+        <!-- Action Buttons (Download TXT Report & Try Again) -->
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <button 
+            onclick="downloadTxtReport()"
+            class="px-5 py-2.5 rounded-xl font-display font-semibold text-sm text-white bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 shadow-md shadow-purple-200 transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <span>📥</span> Download Official Report (.txt)
+          </button>
+
+          <button 
+            onclick="tryAgain()"
+            class="px-5 py-2.5 rounded-xl font-display font-semibold text-sm text-slate-700 bg-white hover:bg-pink-50 border border-pink-200 shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <span>🔄</span> Try Again
+          </button>
+        </div>
+      </div>
+
+      <!-- Breakdown By Lesson Card -->
+      <div class="bg-white/90 backdrop-blur-md rounded-3xl p-5 md:p-6 border border-pink-100 shadow-sm">
+        <h3 class="font-display font-bold text-base md:text-lg text-slate-800 mb-4 flex items-center gap-2">
+          <span>📊</span> Breakdown by Curriculum Lesson
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="lesson-breakdown-grid">
+          <!-- Lesson cards populated by JS -->
+        </div>
+      </div>
+
+      <!-- Question Review Accordion (All 25 Questions) -->
+      <div class="bg-white/90 backdrop-blur-md rounded-3xl p-5 md:p-6 border border-pink-100 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-display font-bold text-base md:text-lg text-slate-800 flex items-center gap-2">
+            <span>📝</span> Detailed Question Review (1–25)
+          </h3>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-pink-100 text-pink-700">
+            25 Questions • 4 Marks Each
+          </span>
+        </div>
+
+        <div class="flex flex-col gap-4" id="detailed-review-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- TEACHER KEY MODAL (Basic Interface Lock — Password: somer173) -->
+  <div id="teacher-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 border-2 border-purple-200 shadow-2xl max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-purple-100 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🔐</span>
+          <div>
+            <h4 class="font-display font-bold text-lg text-purple-900">Teacher's Answer Key & Syllabus Reference</h4>
+            <p class="text-xs text-slate-500">Security Gate for Educators</p>
+          </div>
+        </div>
+        <button onclick="closeTeacherModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold cursor-pointer">✕</button>
+      </div>
+
+      <!-- Password input gate -->
+      <div id="teacher-gate-box" class="py-6 text-center">
+        <p class="text-sm text-slate-600 mb-3 font-medium">Please enter the teacher password to view complete answers and curriculum mappings:</p>
+        <div class="max-w-xs mx-auto flex gap-2">
+          <input 
+            type="password" 
+            id="teacher-password-input" 
+            placeholder="Password..."
+            class="flex-1 px-4 py-2 rounded-xl border border-slate-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none text-sm"
+          >
+          <button 
+            onclick="verifyTeacherPassword()" 
+            class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-sm font-semibold transition-colors cursor-pointer"
+          >
+            Unlock
+          </button>
+        </div>
+        <p id="teacher-pwd-error" class="text-rose-500 text-xs mt-2 hidden">Incorrect password. Please try again.</p>
+        <p class="text-[11px] text-slate-400 mt-4 italic">Note: Client-side gate designed as an interface privacy lock.</p>
+      </div>
+
+      <!-- Unlocked Answer Key Content -->
+      <div id="teacher-unlocked-box" class="hidden overflow-y-auto pr-1 flex-1 flex-col gap-3">
+        <div class="p-3 bg-purple-50 rounded-xl border border-purple-200 text-xs text-purple-800 font-semibold mb-2">
+          ✓ Teacher access granted. Showing answer key, scoring criteria, and repository lesson mapping.
+        </div>
+        <div id="teacher-answers-list" class="flex flex-col gap-3 text-xs">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT: COMPLETE LOGIC & DATA -->
+  <script>
+    /* ============================================================
+       1. WEB AUDIO API CHIMES (GENTLE NATIVE SYNTHESIZER)
+       ============================================================ */
+    const AudioEngine = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+      },
+      playStartChime() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 (joyful ascending)
+          const now = this.ctx.currentTime;
+          notes.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+            gain.gain.setValueAtTime(0.001, now + idx * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.2, now + idx * 0.1 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.1 + 0.5);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + idx * 0.1);
+            osc.stop(now + idx * 0.1 + 0.55);
+          });
+        } catch (e) {
+          console.warn("Audio unavailable", e);
+        }
+      },
+      playSubmitChime() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const chords = [
+            { f: 523.25, t: 0.0 }, // C5
+            { f: 659.25, t: 0.08 }, // E5
+            { f: 783.99, t: 0.16 }, // G5
+            { f: 1046.50, t: 0.24 }, // C6
+            { f: 1318.51, t: 0.32 }, // E6
+          ];
+          const now = this.ctx.currentTime;
+          chords.forEach(n => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(n.f, now + n.t);
+            gain.gain.setValueAtTime(0.001, now + n.t);
+            gain.gain.exponentialRampToValueAtTime(0.25, now + n.t + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + n.t + 0.8);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + n.t);
+            osc.stop(now + n.t + 0.85);
+          });
+        } catch (e) {
+          console.warn("Audio unavailable", e);
+        }
+      }
+    };
+
+    /* ============================================================
+       2. CURRICULUM QUESTIONS REPOSITORY (EXACTLY 25 QUESTIONS)
+       Strictly Lessons 1, 2, 3, 4, 5, 16.
+       NO Lesson 17 (mine/yours/etc.), NO Lesson 18 plural rules.
+       NO Arabic words or hints in the questions.
+       ============================================================ */
+    const QUESTIONS_DATA = [
+      // Q1 — Lesson 1 (Sentence Structure)
+      {
+        id: 1,
+        lessonNum: 1,
+        lessonTitle: "Lesson 1: Sentence Structure",
+        type: "svo_tag",
+        prompt: "Identify the Subject, Verb, and Object in this sentence:",
+        sentence: "Sara reads a book.",
+        parts: [
+          { key: "p1", word: "Sara", correct: "Subject" },
+          { key: "p2", word: "reads", correct: "Verb" },
+          { key: "p3", word: "a book", correct: "Object" }
+        ],
+        roles: ["Subject", "Verb", "Object"],
+        explanation: "Sara is the Subject (does the action), reads is the Verb (the action), and a book is the Object (receives the action)."
+      },
+
+      // Q2 — Lesson 2 (Pronouns)
+      {
+        id: 2,
+        lessonNum: 2,
+        lessonTitle: "Lesson 2: Pronouns & Verb to be",
+        type: "mcq",
+        prompt: "Choose the correct pronoun to replace the underlined words:",
+        subtext: "Khalil and Adam are friends. _____ are at school.",
+        options: ["He", "We", "They", "It"],
+        correctIndex: 2, // They
+        explanation: "Khalil and Adam are two people (plural third person), so we replace them with 'They'."
+      },
+
+      // Q3 — Lesson 3 (Verb to be Short Answers)
+      {
+        id: 3,
+        lessonNum: 3,
+        lessonTitle: "Lesson 3: Verb to be",
+        type: "mcq",
+        prompt: "Complete the dialogue with the correct short answer:",
+        subtext: "— Are you ready?\n— Yes, _____.",
+        options: ["I are.", "I am.", "you are.", "you am."],
+        correctIndex: 1, // I am.
+        explanation: "When asked 'Are you...?', you answer about yourself: 'Yes, I am.' (I takes am)."
+      },
+
+      // Q4 — Lesson 4 (Nouns & Articles a / an)
+      {
+        id: 4,
+        lessonNum: 4,
+        lessonTitle: "Lesson 4: Nouns & Articles",
+        type: "multi_choice_pair",
+        prompt: "Choose the correct article for each noun:",
+        subparts: [
+          { key: "item1", stem: "1) _____ apple", options: ["a", "an"], correct: "an" },
+          { key: "item2", stem: "2) _____ car", options: ["a", "an"], correct: "a" }
+        ],
+        explanation: "'apple' begins with a vowel sound (a), so it takes 'an'. 'car' begins with a consonant sound, so it takes 'a'."
+      },
+
+      // Q5 — Lesson 5 (Adjective Opposites)
+      {
+        id: 5,
+        lessonNum: 5,
+        lessonTitle: "Lesson 5: Adjectives",
+        type: "match_opposites",
+        prompt: "Choose the correct opposite for each adjective:",
+        subparts: [
+          { key: "opp1", word: "big", options: ["small", "slow", "weak"], correct: "small" },
+          { key: "opp2", word: "fast", options: ["slow", "cold", "sad"], correct: "slow" }
+        ],
+        explanation: "The opposite of 'big' is 'small', and the opposite of 'fast' is 'slow'."
+      },
+
+      // Q6 — Lesson 16 (Possessive Adjectives)
+      {
+        id: 6,
+        lessonNum: 16,
+        lessonTitle: "Lesson 16: Possessive Adjectives",
+        type: "mcq",
+        prompt: "Choose the correct possessive adjective:",
+        subtext: "Omar has a bicycle. _____ bicycle is blue.",
+        options: ["Her", "His", "Its", "Their"],
+        correctIndex: 1, // His
+        explanation: "The bicycle belongs to Omar (He / male singular), so we use 'His'."
+      },
+
+      // Q7 — Lesson 1 (Sentence Construction / Scramble)
+      {
+        id: 7,
+        lessonNum: 1,
+        lessonTitle: "Lesson 1: Sentence Structure",
+        type: "scramble",
+        prompt: "Arrange the words in the correct sentence order:",
+        words: ["apples", "eat", "They"],
+        correctOrder: ["They", "eat", "apples"],
+        explanation: "English simple sentences follow Subject + Verb + Object order: 'They' (Subject) + 'eat' (Verb) + 'apples' (Object)."
+      },
+
+      // Q8 — Lesson 2 (Verb to be am/is/are)
+      {
+        id: 8,
+        lessonNum: 2,
+        lessonTitle: "Lesson 2: Pronouns & Verb to be",
+        type: "mcq",
+        prompt: "Choose the correct form of Verb to be:",
+        subtext: "Sara and I _____ students.",
+        options: ["am", "is", "are", "be"],
+        correctIndex: 2, // are
+        explanation: "'Sara and I' means 'We' (first person plural), so the correct verb is 'are'."
+      },
+
+      // Q9 — Lesson 3 (Negative Formation)
+      {
+        id: 9,
+        lessonNum: 3,
+        lessonTitle: "Lesson 3: Verb to be",
+        type: "mcq",
+        prompt: "What is the correct negative form of this sentence?",
+        subtext: "Sentence: 'She is happy.'",
+        options: [
+          "She is not happy.",
+          "She not is happy.",
+          "She don't happy.",
+          "She isn't not happy."
+        ],
+        correctIndex: 0, // She is not happy.
+        explanation: "With Verb to be, we place 'not' immediately after am/is/are: 'She is not happy.'"
+      },
+
+      // Q10 — Lesson 4 (Noun Identification)
+      {
+        id: 10,
+        lessonNum: 4,
+        lessonTitle: "Lesson 4: Nouns & Articles",
+        type: "mcq",
+        prompt: "Which word in the following list is a Noun?",
+        subtext: "Choose the word that names a person, place, or thing:",
+        options: ["happy", "teacher", "run", "tall"],
+        correctIndex: 1, // teacher
+        explanation: "'teacher' is a Noun (a person). 'happy' and 'tall' are adjectives, and 'run' is a verb."
+      },
+
+      // Q11 — Lesson 5 (Adjective Word Order)
+      {
+        id: 11,
+        lessonNum: 5,
+        lessonTitle: "Lesson 5: Adjectives",
+        type: "mcq",
+        prompt: "Choose the grammatically correct sentence:",
+        subtext: "Pay attention to adjective placement:",
+        options: [
+          "She has a house big.",
+          "She has a big house.",
+          "She has big a house.",
+          "She has a house is big."
+        ],
+        correctIndex: 1, // She has a big house.
+        explanation: "In English, an adjective is placed before the noun: 'a' + Adjective (big) + Noun (house)."
+      },
+
+      // Q12 — Lesson 16 (Matching Pronoun to Possessive)
+      {
+        id: 12,
+        lessonNum: 16,
+        lessonTitle: "Lesson 16: Possessive Adjectives",
+        type: "match_possessive",
+        prompt: "Match each subject pronoun with its corresponding possessive adjective:",
+        subparts: [
+          { key: "p_i", pronoun: "I", options: ["my", "your", "their"], correct: "my" },
+          { key: "p_we", pronoun: "We", options: ["his", "her", "our"], correct: "our" }
+        ],
+        explanation: "The pronoun 'I' pairs with 'my', and the pronoun 'We' pairs with 'our'."
+      },
+
+      // Q13 — Lesson 16 (Everyday Context)
+      {
+        id: 13,
+        lessonNum: 16,
+        lessonTitle: "Lesson 16: Possessive Adjectives",
+        type: "mcq",
+        prompt: "Choose the correct possessive adjective:",
+        subtext: "Sara has a bag. _____ bag is pink.",
+        options: ["His", "Her", "Their", "Its"],
+        correctIndex: 1, // Her
+        explanation: "The bag belongs to Sara (female singular / She), so we use 'Her'."
+      },
+
+      // Q14 — Lesson 1 (Sentence Without Object)
+      {
+        id: 14,
+        lessonNum: 1,
+        lessonTitle: "Lesson 1: Sentence Structure",
+        type: "mcq",
+        prompt: "Which sentence contains ONLY a Subject and a Verb (No Object)?",
+        subtext: "Look for the sentence with no receiving object:",
+        options: [
+          "Khalil plays football.",
+          "The baby cries.",
+          "Sara reads a book.",
+          "They drink water."
+        ],
+        correctIndex: 1, // The baby cries.
+        explanation: "'The baby cries' consists of Subject (The baby) + Verb (cries). The other sentences have objects (football, a book, water)."
+      },
+
+      // Q15 — Lesson 2 (Pronoun for Things)
+      {
+        id: 15,
+        lessonNum: 2,
+        lessonTitle: "Lesson 2: Pronouns & Verb to be",
+        type: "mcq",
+        prompt: "Choose the correct pronoun to complete the sentence:",
+        subtext: "The car is new. _____ is very fast.",
+        options: ["He", "She", "It", "They"],
+        correctIndex: 2, // It
+        explanation: "'The car' is a singular non-living object, so we replace it with the pronoun 'It'."
+      },
+
+      // Q16 — Lesson 3 (Convert Statement to Question)
+      {
+        id: 16,
+        lessonNum: 3,
+        lessonTitle: "Lesson 3: Verb to be",
+        type: "mcq",
+        prompt: "Convert this statement into a correct question:",
+        subtext: "Statement: 'They are ready.'",
+        options: [
+          "Are they ready?",
+          "Do they ready?",
+          "Is they ready?",
+          "They are ready?"
+        ],
+        correctIndex: 0, // Are they ready?
+        explanation: "To form a question with Verb to be, invert the order: Verb ('Are') comes before Subject ('they')."
+      },
+
+      // Q17 — Lesson 4 (a then the Story Pattern)
+      {
+        id: 17,
+        lessonNum: 4,
+        lessonTitle: "Lesson 4: Nouns & Articles",
+        type: "mcq",
+        prompt: "Complete the story with the correct articles:",
+        subtext: "I have _____ pen. _____ pen is red.",
+        options: [
+          "a ... The",
+          "the ... A",
+          "an ... The",
+          "the ... The"
+        ],
+        correctIndex: 0, // a ... The
+        explanation: "When introducing an item for the first time, use 'a pen'. When referring to the same specific item again, use 'The pen'."
+      },
+
+      // Q18 — Lesson 5 (Adjective Pattern with Verb to be)
+      {
+        id: 18,
+        lessonNum: 5,
+        lessonTitle: "Lesson 5: Adjectives",
+        type: "mcq",
+        prompt: "Which sentence is grammatically correct?",
+        subtext: "Remember: Do not put 'a' before an adjective alone:",
+        options: [
+          "He is tall.",
+          "He is a tall.",
+          "He tall is.",
+          "He is a tall boy is."
+        ],
+        correctIndex: 0, // He is tall.
+        explanation: "An adjective standing alone after 'is' does not take an article: 'He is tall.' (not 'a tall')."
+      },
+
+      // Q19 — Lesson 16 (its vs it's)
+      {
+        id: 19,
+        lessonNum: 16,
+        lessonTitle: "Lesson 16: Possessive Adjectives",
+        type: "mcq",
+        prompt: "Choose the correct word:",
+        subtext: "The dog moved _____ tail.",
+        options: ["its", "it's", "his", "their"],
+        correctIndex: 0, // its
+        explanation: "'its' (no apostrophe) is the possessive adjective for an animal or thing. 'it's' is short for 'it is'."
+      },
+
+      // Q20 — Lesson 1 (Basic Sentence Order)
+      {
+        id: 20,
+        lessonNum: 1,
+        lessonTitle: "Lesson 1: Sentence Structure",
+        type: "mcq",
+        prompt: "Which of the following is a complete and correctly ordered English sentence?",
+        subtext: "Check Subject + Verb + Object order:",
+        options: [
+          "Eat apples.",
+          "Plays football Khalil.",
+          "Mahmoud watches TV.",
+          "The boy a book."
+        ],
+        correctIndex: 2, // Mahmoud watches TV.
+        explanation: "English requires a Subject first, followed by Verb, then Object: 'Mahmoud' (S) + 'watches' (V) + 'TV' (O)."
+      },
+
+      // Q21 — Lesson 4 (Plural with Articles Error)
+      {
+        id: 21,
+        lessonNum: 4,
+        lessonTitle: "Lesson 4: Nouns & Articles",
+        type: "mcq",
+        prompt: "Which sentence is grammatically correct?",
+        subtext: "Pay attention to plural nouns and articles:",
+        options: [
+          "They are a students.",
+          "They are students.",
+          "They are an students.",
+          "They is students."
+        ],
+        correctIndex: 1, // They are students.
+        explanation: "'a' and 'an' are only used with singular nouns. Plural nouns like 'students' do not take 'a' or 'an'."
+      },
+
+      // Q22 — Lesson 2 (Pronoun I with am)
+      {
+        id: 22,
+        lessonNum: 2,
+        lessonTitle: "Lesson 2: Pronouns & Verb to be",
+        type: "mcq",
+        prompt: "Complete the sentence with the correct form of Verb to be:",
+        subtext: "I _____ happy today.",
+        options: ["is", "am", "are", "be"],
+        correctIndex: 1, // am
+        explanation: "The pronoun 'I' always pairs with 'am' in the present tense."
+      },
+
+      // Q23 — Lesson 16 (Correct Common Mistake: She bag)
+      {
+        id: 23,
+        lessonNum: 16,
+        lessonTitle: "Lesson 16: Possessive Adjectives",
+        type: "mcq",
+        prompt: "Choose the correct sentence to fix the mistake in: 'She bag is new.'",
+        subtext: "Replace the subject pronoun with the correct possessive adjective:",
+        options: [
+          "Her bag is new.",
+          "Hers bag is new.",
+          "She is bag new.",
+          "Her is bag new."
+        ],
+        correctIndex: 0, // Her bag is new.
+        explanation: "Never use the subject pronoun 'She' directly before a noun. The possessive adjective is 'Her': 'Her bag is new.'"
+      },
+
+      // Q24 — Lesson 3 (Question with Verb to be)
+      {
+        id: 24,
+        lessonNum: 3,
+        lessonTitle: "Lesson 3: Verb to be",
+        type: "mcq",
+        prompt: "Complete the question:",
+        subtext: "_____ he your brother?",
+        options: ["Are", "Is", "Am", "Does"],
+        correctIndex: 1, // Is
+        explanation: "With the third-person singular pronoun 'he', the question starts with 'Is'."
+      },
+
+      // Q25 — Lesson 5 (Adjective Plural Rule)
+      {
+        id: 25,
+        lessonNum: 5,
+        lessonTitle: "Lesson 5: Adjectives",
+        type: "mcq",
+        prompt: "Choose the correct sentence:",
+        subtext: "Remember: Do adjectives change for plural nouns?",
+        options: [
+          "The cars are fasts.",
+          "The cars is fast.",
+          "The cars are fast.",
+          "The cars are a fast."
+        ],
+        correctIndex: 2, // The cars are fast.
+        explanation: "In English, adjectives never take an 's' for plural: 'The cars are fast', not 'fasts'."
+      }
+    ];
+
+    /* ============================================================
+       3. APPLICATION STATE MANAGEMENT & LOCAL STORAGE
+       ============================================================ */
+    const STORAGE_KEY = "mira_lovely_challenge_v1";
+
+    let state = {
+      studentName: "",
+      started: false,
+      submitted: false,
+      startTime: null,
+      submissionTime: null,
+      currentQ: 1,
+      answers: {}, // { 1: { ... }, 2: 1, ... }
+      scrambleState: {} // temporary drag/click state
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state = { ...state, ...parsed };
+        }
+      } catch (e) {
+        console.error("Failed to load saved state", e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.error("Failed to save state", e);
+      }
+    }
+
+    /* ============================================================
+       4. TIMER ENGINE (TIMESTAMP-BASED STOPWATCH SURVIVES REFRESH)
+       ============================================================ */
+    let timerInterval = null;
+
+    function formatDuration(ms) {
+      if (ms < 0) ms = 0;
+      const totalSec = Math.floor(ms / 1000);
+      const hours = Math.floor(totalSec / 3600);
+      const mins = Math.floor((totalSec % 3600) / 60);
+      const secs = totalSec % 60;
+      const pad = n => String(n).padStart(2, "0");
+      return `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+    }
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      const el = document.getElementById("stopwatch-display");
+      const update = () => {
+        if (!state.startTime) return;
+        const elapsed = state.submitted && state.submissionTime 
+          ? (state.submissionTime - state.startTime)
+          : (Date.now() - state.startTime);
+        if (el) el.textContent = formatDuration(elapsed);
+      };
+      update();
+      if (!state.submitted) {
+        timerInterval = setInterval(update, 1000);
+      }
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    /* ============================================================
+       5. INITIALIZATION & ROUTING
+       ============================================================ */
+    window.addEventListener("DOMContentLoaded", () => {
+      loadState();
+      buildBeadMatrix();
+
+      if (state.submitted) {
+        showResultsScreen();
+      } else if (state.started && state.studentName) {
+        showAssessmentScreen();
+      } else {
+        showWelcomeScreen();
+      }
+    });
+
+    function showWelcomeScreen() {
+      document.getElementById("welcome-screen").classList.remove("hidden");
+      document.getElementById("assessment-screen").classList.add("hidden");
+      document.getElementById("results-screen").classList.add("hidden");
+      document.getElementById("header-student-badge").classList.add("hidden");
+      document.getElementById("stopwatch-container").classList.add("hidden");
+
+      const input = document.getElementById("student-name-input");
+      if (input && state.studentName) input.value = state.studentName;
+    }
+
+    function showAssessmentScreen() {
+      document.getElementById("welcome-screen").classList.add("hidden");
+      document.getElementById("assessment-screen").classList.remove("hidden");
+      document.getElementById("assessment-screen").classList.add("flex");
+      document.getElementById("results-screen").classList.add("hidden");
+
+      // Header info
+      document.getElementById("header-student-badge").classList.remove("hidden");
+      document.getElementById("header-student-badge").classList.add("flex");
+      document.getElementById("header-student-name").textContent = state.studentName;
+
+      document.getElementById("stopwatch-container").classList.remove("hidden");
+      document.getElementById("stopwatch-container").classList.add("flex");
+
+      startTimer();
+      renderCurrentQuestion();
+      updateProgress();
+    }
+
+    function startChallenge() {
+      const input = document.getElementById("student-name-input");
+      const name = input ? input.value.trim() : "";
+      const errorMsg = document.getElementById("name-error-msg");
+
+      if (!name) {
+        if (errorMsg) errorMsg.classList.remove("hidden");
+        if (input) input.focus();
+        return;
+      }
+
+      if (errorMsg) errorMsg.classList.add("hidden");
+      state.studentName = name;
+      state.started = true;
+      if (!state.startTime) {
+        state.startTime = Date.now();
+      }
+      state.currentQ = state.currentQ || 1;
+      saveState();
+
+      AudioEngine.playStartChime();
+      showAssessmentScreen();
+    }
+
+    /* ============================================================
+       6. QUESTION NAVIGATION & BEAD MATRIX
+       ============================================================ */
+    function buildBeadMatrix() {
+      const matrix = document.getElementById("bead-matrix");
+      if (!matrix) return;
+      matrix.innerHTML = "";
+
+      for (let i = 1; i <= 25; i++) {
+        const bead = document.createElement("button");
+        bead.id = `bead-q-${i}`;
+        bead.textContent = i;
+        bead.title = `Jump to Question ${i}`;
+        bead.className = "w-7 h-7 sm:w-8 sm:h-8 rounded-xl font-display font-bold text-xs transition-all flex items-center justify-center cursor-pointer border";
+        bead.onclick = () => jumpToQuestion(i);
+        matrix.appendChild(bead);
+      }
+      updateBeads();
+    }
+
+    function updateBeads() {
+      for (let i = 1; i <= 25; i++) {
+        const bead = document.getElementById(`bead-q-${i}`);
+        if (!bead) continue;
+        const isCurrent = (state.currentQ === i);
+        const isAns = isQuestionAnswered(i);
+
+        if (isCurrent) {
+          bead.className = "w-7 h-7 sm:w-8 sm:h-8 rounded-xl font-display font-bold text-xs flex items-center justify-center cursor-pointer border-2 border-pink-500 bg-pink-500 text-white shadow-sm ring-2 ring-pink-200";
+        } else if (isAns) {
+          bead.className = "w-7 h-7 sm:w-8 sm:h-8 rounded-xl font-display font-bold text-xs flex items-center justify-center cursor-pointer border border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100";
+        } else {
+          bead.className = "w-7 h-7 sm:w-8 sm:h-8 rounded-xl font-display font-bold text-xs flex items-center justify-center cursor-pointer border border-slate-200 bg-slate-50 text-slate-500 hover:bg-pink-50 hover:text-pink-600";
+        }
+      }
+    }
+
+    function jumpToQuestion(qNum) {
+      if (qNum < 1 || qNum > 25) return;
+      state.currentQ = qNum;
+      saveState();
+      renderCurrentQuestion();
+      updateProgress();
+    }
+
+    function navigateQuestion(delta) {
+      const target = state.currentQ + delta;
+      if (target >= 1 && target <= 25) {
+        jumpToQuestion(target);
+      }
+    }
+
+    /* ============================================================
+       7. ANSWER STATUS CHECK & SCORING RULES
+       ============================================================ */
+    function isQuestionAnswered(qId) {
+      const q = QUESTIONS_DATA.find(item => item.id === qId);
+      if (!q) return false;
+      const ans = state.answers[qId];
+      if (ans === undefined || ans === null) return false;
+
+      if (q.type === "mcq") {
+        return typeof ans === "number";
+      } else if (q.type === "svo_tag") {
+        return ans.p1 && ans.p2 && ans.p3;
+      } else if (q.type === "multi_choice_pair" || q.type === "match_opposites" || q.type === "match_possessive") {
+        const subKeys = q.subparts.map(sp => sp.key);
+        return subKeys.every(k => ans[k]);
+      } else if (q.type === "scramble") {
+        return Array.isArray(ans) && ans.length === q.correctOrder.length;
+      }
+      return false;
+    }
+
+    function getAnsweredCount() {
+      let count = 0;
+      for (let i = 1; i <= 25; i++) {
+        if (isQuestionAnswered(i)) count++;
+      }
+      return count;
+    }
+
+    function updateProgress() {
+      const answered = getAnsweredCount();
+      const pct = (answered / 25) * 100;
+
+      const ribbon = document.getElementById("progress-ribbon");
+      if (ribbon) ribbon.style.width = `${Math.max(4, pct)}%`;
+
+      const answeredDisp = document.getElementById("answered-count-display");
+      if (answeredDisp) answeredDisp.textContent = answered;
+
+      const currentQNumDisp = document.getElementById("current-q-num");
+      if (currentQNumDisp) currentQNumDisp.textContent = state.currentQ;
+
+      // Update submit button state
+      const btnSubmit = document.getElementById("btn-submit-exam");
+      const submitStatusText = document.getElementById("submit-status-text");
+      const submitCounterText = document.getElementById("submit-counter-text");
+
+      if (submitCounterText) {
+        submitCounterText.textContent = `Answered: ${answered} / 25`;
+      }
+
+      if (answered === 25) {
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.classList.remove("opacity-50", "cursor-not-allowed");
+          btnSubmit.classList.add("pulse-glow");
+        }
+        if (submitStatusText) {
+          submitStatusText.textContent = "All 25 questions completed! Click to submit your test.";
+          submitStatusText.className = "text-xs font-bold text-emerald-600";
+        }
+      } else {
+        if (btnSubmit) {
+          btnSubmit.disabled = true;
+          btnSubmit.classList.add("opacity-50", "cursor-not-allowed");
+          btnSubmit.classList.remove("pulse-glow");
+        }
+        if (submitStatusText) {
+          submitStatusText.textContent = `Please answer all 25 questions to enable submission (${25 - answered} remaining).`;
+          submitStatusText.className = "text-xs text-slate-500 font-medium";
+        }
+      }
+
+      // Update Prev / Next buttons
+      const prevBtn = document.getElementById("btn-prev-q");
+      const nextBtn = document.getElementById("btn-next-q");
+      if (prevBtn) prevBtn.disabled = (state.currentQ === 1);
+      if (nextBtn) nextBtn.disabled = (state.currentQ === 25);
+
+      updateBeads();
+    }
+
+    /* ============================================================
+       8. QUESTION RENDERING (PURE ENGLISH, BEAUTIFUL INTERFACES)
+       ============================================================ */
+    function renderCurrentQuestion() {
+      const q = QUESTIONS_DATA.find(item => item.id === state.currentQ);
+      if (!q) return;
+
+      document.getElementById("q-number-pill").textContent = `Q${q.id}`;
+      document.getElementById("q-category-tag").textContent = q.lessonTitle.split(":")[1]?.trim() || "English Lesson";
+      document.getElementById("q-lesson-badge").textContent = `Lesson ${q.lessonNum}`;
+
+      document.getElementById("q-prompt-text").textContent = q.prompt;
+      const subEl = document.getElementById("q-sub-text");
+      if (q.subtext) {
+        subEl.textContent = q.subtext;
+        subEl.classList.remove("hidden");
+      } else {
+        subEl.classList.add("hidden");
+      }
+
+      const body = document.getElementById("q-interactive-body");
+      body.innerHTML = "";
+
+      const currentAnswer = state.answers[q.id];
+
+      // ROUTE BY QUESTION TYPE
+      if (q.type === "mcq") {
+        renderMcqQuestion(q, currentAnswer, body);
+      } else if (q.type === "svo_tag") {
+        renderSvoQuestion(q, currentAnswer, body);
+      } else if (q.type === "multi_choice_pair") {
+        renderMultiChoicePair(q, currentAnswer, body);
+      } else if (q.type === "match_opposites") {
+        renderMatchOpposites(q, currentAnswer, body);
+      } else if (q.type === "match_possessive") {
+        renderMatchPossessive(q, currentAnswer, body);
+      } else if (q.type === "scramble") {
+        renderScrambleQuestion(q, currentAnswer, body);
+      }
+    }
+
+    // MCQ RENDERER
+    function renderMcqQuestion(q, currentAns, container) {
+      const grid = document.createElement("div");
+      grid.className = "grid grid-cols-1 sm:grid-cols-2 gap-3";
+
+      const letterLabels = ["A", "B", "C", "D"];
+
+      q.options.forEach((optText, idx) => {
+        const isSelected = (currentAns === idx);
+        const card = document.createElement("button");
+        card.className = `p-4 rounded-2xl text-left border-2 transition-all flex items-center justify-between cursor-pointer ${
+          isSelected 
+            ? "border-pink-500 bg-pink-50/80 shadow-md ring-2 ring-pink-200" 
+            : "border-slate-200 bg-white hover:border-pink-300 hover:bg-pink-50/30"
+        }`;
+        card.onclick = () => selectMcqAnswer(q.id, idx);
+
+        card.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl flex items-center justify-center font-display font-bold text-sm ${
+              isSelected ? "bg-pink-500 text-white" : "bg-slate-100 text-slate-600"
+            }">
+              ${letterLabels[idx]}
+            </span>
+            <span class="font-display font-medium text-base text-slate-800">${optText}</span>
+          </div>
+          <div class="w-5 h-5 rounded-full border flex items-center justify-center ${
+            isSelected ? "border-pink-500 bg-pink-500 text-white text-xs" : "border-slate-300"
+          }">
+            ${isSelected ? "✓" : ""}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      container.appendChild(grid);
+    }
+
+    function selectMcqAnswer(qId, optionIdx) {
+      state.answers[qId] = optionIdx;
+      saveState();
+      renderCurrentQuestion();
+      updateProgress();
+    }
+
+    // SVO TAG QUESTION RENDERER (Q1)
+    function renderSvoQuestion(q, currentAns, container) {
+      const ansObj = currentAns || {};
+
+      const wrap = document.createElement("div");
+      wrap.className = "flex flex-col gap-4";
+
+      // Sentence banner
+      const sentenceBanner = document.createElement("div");
+      sentenceBanner.className = "p-4 rounded-2xl bg-purple-50/80 border border-purple-200 text-center text-lg md:text-xl font-display font-bold text-purple-900";
+      sentenceBanner.textContent = `“ ${q.sentence} ”`;
+      wrap.appendChild(sentenceBanner);
+
+      const partsGrid = document.createElement("div");
+      partsGrid.className = "grid grid-cols-1 md:grid-cols-3 gap-3";
+
+      q.parts.forEach(part => {
+        const userChoice = ansObj[part.key];
+        const card = document.createElement("div");
+        card.className = "p-3.5 rounded-2xl border-2 border-slate-200 bg-white flex flex-col justify-between gap-3";
+
+        card.innerHTML = `
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Target Word:</span>
+            <p class="font-display font-bold text-lg text-slate-800 mt-0.5">“${part.word}”</p>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            ${q.roles.map(role => {
+              const isSel = (userChoice === role);
+              return `
+                <button 
+                  onclick="selectSvoPart(${q.id}, '${part.key}', '${role}')" 
+                  class="py-2 px-3 rounded-xl text-xs font-bold transition-all text-left flex items-center justify-between cursor-pointer border ${
+                    isSel 
+                      ? "bg-pink-500 text-white border-pink-500 shadow-xs" 
+                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-pink-50 hover:border-pink-300"
+                  }">
+                  <span>${role}</span>
+                  <span>${isSel ? "✓" : ""}</span>
+                </button>
+              `;
+            }).join("")}
+          </div>
+        `;
+        partsGrid.appendChild(card);
+      });
+
+      wrap.appendChild(partsGrid);
+      container.appendChild(wrap);
+    }
+
+    function selectSvoPart(qId, partKey, role) {
+      if (!state.answers[qId] || typeof state.answers[qId] !== "object") {
+        state.answers[qId] = {};
+      }
+      state.answers[qId][partKey] = role;
+      saveState();
+      renderCurrentQuestion();
+      updateProgress();
+    }
+
+    // MULTI-CHOICE PAIR RENDERER (Q4)
+    function renderMultiChoicePair(q, currentAns, container) {
+      const ansObj = currentAns || {};
+      const wrap = document.createElement("div");
+      wrap.className = "grid grid-cols-1 sm:grid-cols-2 gap-4";
+
+      q.subparts.forEach(sp => {
+        const userChoice = ansObj[sp.key];
+        const box = document.createElement("div");
+        box.className = "p-4 rounded-2xl border-2 border-slate-200 bg-white flex flex-col justify-between gap-3";
+
+        box.innerHTML = `
+          <p class="font-display font-bold text-lg text-slate-800">${sp.stem}</p>
+          <div class="flex gap-2">
+            ${sp.options.map(opt => {
+              const isSel = (userChoice === opt);
+              return `
+                <button 
+                  onclick="selectSubpartChoice(${q.id}, '${sp.key}', '${opt}')"
+                  class="flex-1 py-2.5 rounded-xl font-display font-bold text-sm transition-all cursor-pointer border ${
+                    isSel 
+                      ? "bg-pink-500 text-white border-pink-500 shadow-md ring-2 ring-pink-200" 
+                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-pink-50"
+                  }">
+                  ${opt} ${isSel ? "✓" : ""}
+                </button>
+              `;
+            }).join("")}
+          </div>
+        `;
+        wrap.appendChild(box);
+      });
+
+      container.appendChild(wrap);
+    }
+
+    // MATCH OPPOSITES RENDERER (Q5)
+    function renderMatchOpposites(q, currentAns, container) {
+      const ansObj = currentAns || {};
+      const wrap = document.createElement("div");
+      wrap.className = "grid grid-cols-1 sm:grid-cols-2 gap-4";
+
+      q.subparts.forEach(sp => {
+        const userChoice = ansObj[sp.key];
+        const card = document.createElement("div");
+        card.className = "p-4 rounded-2xl border-2 border-slate-200 bg-white flex flex-col gap-3";
+
+        card.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-lg text-slate-800">“${sp.word}”</span>
+            <span class="text-xs text-slate-400 font-bold uppercase">↔ Opposite:</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            ${sp.options.map(opt => {
+              const isSel = (userChoice === opt);
+              return `
+                <button 
+                  onclick="selectSubpartChoice(${q.id}, '${sp.key}', '${opt}')"
+                  class="py-2.5 rounded-xl font-display font-semibold text-xs transition-all cursor-pointer border text-center ${
+                    isSel 
+                      ? "bg-pink-500 text-white border-pink-500 shadow-sm" 
+                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-pink-50"
+                  }">
+                  ${opt}
+                </button>
+              `;
+            }).join("")}
+          </div>
+        `;
+        wrap.appendChild(card);
+      });
+
+      container.appendChild(wrap);
+    }
+
+    // MATCH POSSESSIVE RENDERER (Q12)
+    function renderMatchPossessive(q, currentAns, container) {
+      const ansObj = currentAns || {};
+      const wrap = document.createElement("div");
+      wrap.className = "grid grid-cols-1 sm:grid-cols-2 gap-4";
+
+      q.subparts.forEach(sp => {
+        const userChoice = ansObj[sp.key];
+        const card = document.createElement("div");
+        card.className = "p-4 rounded-2xl border-2 border-slate-200 bg-white flex flex-col gap-3";
+
+        card.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-xl text-purple-700">${sp.pronoun}</span>
+            <span class="text-xs text-slate-400 font-bold uppercase">→ Possessive:</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            ${sp.options.map(opt => {
+              const isSel = (userChoice === opt);
+              return `
+                <button 
+                  onclick="selectSubpartChoice(${q.id}, '${sp.key}', '${opt}')"
+                  class="py-2.5 rounded-xl font-display font-semibold text-xs transition-all cursor-pointer border text-center ${
+                    isSel 
+                      ? "bg-pink-500 text-white border-pink-500 shadow-sm" 
+                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-pink-50"
+                  }">
+                  ${opt}
+                </button>
+              `;
+            }).join("")}
+          </div>
+        `;
+        wrap.appendChild(card);
+      });
+
+      container.appendChild(wrap);
+    }
+
+    function selectSubpartChoice(qId, key, val) {
+      if (!state.answers[qId] || typeof state.answers[qId] !== "object") {
+        state.answers[qId] = {};
+      }
+      state.answers[qId][key] = val;
+      saveState();
+      renderCurrentQuestion();
+      updateProgress();
+    }
+
+    // SCRAMBLE QUESTION RENDERER (Q7)
+    function renderScrambleQuestion(q, currentAns, container) {
+      const placedWords = Array.isArray(currentAns) ? currentAns : [];
+      // Remaining words
+      const remainingWords = [...q.words];
+      placedWords.forEach(w => {
+        const idx = remainingWords.indexOf(w);
+        if (idx !== -1) remainingWords.splice(idx, 1);
+      });
+
+      const wrap = document.createElement("div");
+      wrap.className = "flex flex-col gap-4";
+
+      // Target Construction Line
+      const targetBox = document.createElement("div");
+      targetBox.className = "min-h-[72px] p-3 rounded-2xl border-2 border-dashed border-pink-300 bg-pink-50/50 flex flex-wrap items-center gap-2";
+
+      if (placedWords.length === 0) {
+        targetBox.innerHTML = `<span class="text-xs text-slate-400 italic">Click words below in the correct order to build your sentence...</span>`;
+      } else {
+        placedWords.forEach((word, wIdx) => {
+          const chip = document.createElement("button");
+          chip.className = "px-3.5 py-1.5 rounded-xl bg-pink-500 text-white font-display font-bold text-sm shadow-xs flex items-center gap-1.5 cursor-pointer hover:bg-pink-600 transition-colors";
+          chip.innerHTML = `<span>${word}</span> <span class="text-xs opacity-75">✕</span>`;
+          chip.title = "Click to remove";
+          chip.onclick = () => removeScrambleWord(q.id, wIdx);
+          targetBox.appendChild(chip);
+        });
+      }
+
+      wrap.appendChild(targetBox);
+
+      // Bank of remaining words
+      const bankWrap = document.createElement("div");
+      bankWrap.className = "flex flex-col gap-2";
+      bankWrap.innerHTML = `<span class="text-xs font-bold uppercase text-slate-400">Available Words:</span>`;
+
+      const bank = document.createElement("div");
+      bank.className = "flex flex-wrap gap-2";
+
+      remainingWords.forEach(word => {
+        const chip = document.createElement("button");
+        chip.className = "px-4 py-2 rounded-xl bg-white border-2 border-slate-200 hover:border-pink-300 hover:bg-pink-50 font-display font-semibold text-sm text-slate-800 shadow-xs cursor-pointer transition-all";
+        chip.textContent = word;
+        chip.onclick = () => addScrambleWord(q.id, word);
+        bank.appendChild(chip);
+      });
+
+      if (remainingWords.length === 0) {
+        bank.innerHTML = `<span class="text-xs text-emerald-600 font-bold">✓ All words placed!</span>`;
+      }
+
+      bankWrap.appendChild(bank);
+      wrap.appendChild(bankWrap);
+
+      // Controls (Clear)
+      if (placedWords.length > 0) {
+        const resetBtn = document.createElement("button");
+        resetBtn.className = "text-xs text-slate-400 hover:text-rose-500 underline self-start cursor-pointer";
+        resetBtn.textContent = "Reset words";
+        resetBtn.onclick = () => {
+          state.answers[q.id] = [];
+          saveState();
+          renderCurrentQuestion();
+          updateProgress();
+        };
+        wrap.appendChild(resetBtn);
+      }
+
+      container.appendChild(wrap);
+    }
+
+    function addScrambleWord(qId, word) {
+      if (!Array.isArray(state.answers[qId])) {
+        state.answers[qId] = [];
+      }
+      state.answers[qId].push(word);
+      saveState();
+      renderCurrentQuestion();
+      updateProgress();
+    }
+
+    function removeScrambleWord(qId, index) {
+      if (Array.isArray(state.answers[qId])) {
+        state.answers[qId].splice(index, 1);
+        saveState();
+        renderCurrentQuestion();
+        updateProgress();
+      }
+    }
+
+    /* ============================================================
+       9. SUBMISSION & RESULTS COMPUTATION
+       Rule: Disabled until all 25 complete.
+       On submit: immediate submission without alert or extra dialog.
+       ============================================================ */
+    function submitAssessment() {
+      if (getAnsweredCount() < 25) return;
+
+      stopTimer();
+      state.submitted = true;
+      state.submissionTime = Date.now();
+      saveState();
+
+      AudioEngine.playSubmitChime();
+      showResultsScreen();
+
+      // Automatically generate & trigger txt download if permitted
+      setTimeout(() => {
+        try {
+          downloadTxtReport(true);
+        } catch (e) {
+          console.warn("Auto-download bypassed", e);
+        }
+      }, 600);
+    }
+
+    function evaluateStudent() {
+      let totalEarned = 0;
+      const lessonStats = {
+        1: { name: "Lesson 1: Sentence Structure", total: 0, earned: 0, count: 0 },
+        2: { name: "Lesson 2: Pronouns & Verb to be", total: 0, earned: 0, count: 0 },
+        3: { name: "Lesson 3: Verb to be", total: 0, earned: 0, count: 0 },
+        4: { name: "Lesson 4: Nouns & Articles", total: 0, earned: 0, count: 0 },
+        5: { name: "Lesson 5: Adjectives", total: 0, earned: 0, count: 0 },
+        16: { name: "Lesson 16: Possessive Adjectives", total: 0, earned: 0, count: 0 },
+      };
+
+      const questionReviews = [];
+
+      QUESTIONS_DATA.forEach(q => {
+        let earned = 0;
+        const studentAns = state.answers[q.id];
+        let studentAnsText = "No answer";
+        let correctAnsText = "";
+
+        if (q.type === "mcq") {
+          const isCorrect = (studentAns === q.correctIndex);
+          earned = isCorrect ? 4 : 0;
+          studentAnsText = (studentAns !== undefined && studentAns !== null) ? q.options[studentAns] : "Not answered";
+          correctAnsText = q.options[q.correctIndex];
+        } else if (q.type === "svo_tag") {
+          const ansObj = studentAns || {};
+          let matches = 0;
+          q.parts.forEach(p => {
+            if (ansObj[p.key] === p.correct) matches++;
+          });
+          earned = Number(((matches / 3) * 4).toFixed(1));
+          studentAnsText = `Sara=${ansObj.p1 || "?"}, reads=${ansObj.p2 || "?"}, a book=${ansObj.p3 || "?"}`;
+          correctAnsText = "Sara=Subject, reads=Verb, a book=Object";
+        } else if (q.type === "multi_choice_pair") {
+          const ansObj = studentAns || {};
+          let matches = 0;
+          q.subparts.forEach(sp => {
+            if (ansObj[sp.key] === sp.correct) matches++;
+          });
+          earned = Number(((matches / 2) * 4).toFixed(1));
+          studentAnsText = `1) ${ansObj.item1 || "?"}, 2) ${ansObj.item2 || "?"}`;
+          correctAnsText = "1) an, 2) a";
+        } else if (q.type === "match_opposites") {
+          const ansObj = studentAns || {};
+          let matches = 0;
+          q.subparts.forEach(sp => {
+            if (ansObj[sp.key] === sp.correct) matches++;
+          });
+          earned = Number(((matches / 2) * 4).toFixed(1));
+          studentAnsText = `big↔${ansObj.opp1 || "?"}, fast↔${ansObj.opp2 || "?"}`;
+          correctAnsText = "big↔small, fast↔slow";
+        } else if (q.type === "match_possessive") {
+          const ansObj = studentAns || {};
+          let matches = 0;
+          q.subparts.forEach(sp => {
+            if (ansObj[sp.key] === sp.correct) matches++;
+          });
+          earned = Number(((matches / 2) * 4).toFixed(1));
+          studentAnsText = `I→${ansObj.p_i || "?"}, We→${ansObj.p_we || "?"}`;
+          correctAnsText = "I→my, We→our";
+        } else if (q.type === "scramble") {
+          const placed = Array.isArray(studentAns) ? studentAns : [];
+          const isCorrect = (placed.join(" ") === q.correctOrder.join(" "));
+          earned = isCorrect ? 4 : 0;
+          studentAnsText = placed.join(" ") || "Not answered";
+          correctAnsText = q.correctOrder.join(" ");
+        }
+
+        totalEarned += earned;
+
+        // Lesson stats
+        if (lessonStats[q.lessonNum]) {
+          lessonStats[q.lessonNum].count += 1;
+          lessonStats[q.lessonNum].total += 4;
+          lessonStats[q.lessonNum].earned += earned;
+        }
+
+        questionReviews.push({
+          qId: q.id,
+          prompt: q.prompt + (q.subtext ? ` (${q.subtext})` : ""),
+          lessonNum: q.lessonNum,
+          lessonTitle: q.lessonTitle,
+          earned: earned,
+          max: 4,
+          isFull: earned === 4,
+          studentAns: studentAnsText,
+          correctAns: correctAnsText,
+          explanation: q.explanation
+        });
+      });
+
+      // Round to nearest integer if needed or keep clean decimal
+      const finalScore = Math.round(totalEarned);
+      const percentage = Math.round((finalScore / 100) * 100);
+
+      return {
+        score: finalScore,
+        percentage: percentage,
+        lessonStats: lessonStats,
+        reviews: questionReviews,
+        correctCount: questionReviews.filter(r => r.isFull).length,
+        incorrectCount: questionReviews.filter(r => !r.isFull).length,
+      };
+    }
+
+    function showResultsScreen() {
+      document.getElementById("welcome-screen").classList.add("hidden");
+      document.getElementById("assessment-screen").classList.add("hidden");
+      document.getElementById("results-screen").classList.remove("hidden");
+      document.getElementById("results-screen").classList.add("flex");
+
+      // Header update
+      document.getElementById("header-student-badge").classList.remove("hidden");
+      document.getElementById("header-student-badge").classList.add("flex");
+      document.getElementById("header-student-name").textContent = state.studentName;
+
+      document.getElementById("stopwatch-container").classList.remove("hidden");
+      document.getElementById("stopwatch-container").classList.add("flex");
+
+      const evalData = evaluateStudent();
+      const elapsedMs = (state.submissionTime && state.startTime) 
+        ? (state.submissionTime - state.startTime) 
+        : 0;
+
+      // Populate results headers
+      document.getElementById("res-student-name").textContent = state.studentName;
+      document.getElementById("res-score-marks").textContent = evalData.score;
+      document.getElementById("res-score-pct").textContent = `${evalData.percentage}%`;
+      document.getElementById("res-duration").textContent = formatDuration(elapsedMs);
+
+      // Encouragement text
+      const encBox = document.getElementById("res-encouragement-box");
+      let msg = "";
+      if (evalData.score >= 90) {
+        msg = `🌟 Outstanding work, ${state.studentName}! You have demonstrated exceptional mastery of all fundamental beginner English concepts. Keep shining!`;
+      } else if (evalData.score >= 75) {
+        msg = `🎉 Great job, ${state.studentName}! You have a very solid grasp of English basics. Review the few points below to reach perfection!`;
+      } else if (evalData.score >= 50) {
+        msg = `💪 Good effort, ${state.studentName}! You are building your English foundation step by step. Look closely at the explanations below to strengthen your skills.`;
+      } else {
+        msg = `🌸 Thank you for trying your best, ${state.studentName}! Practice makes progress. Read the answer explanations carefully and try again soon!`;
+      }
+      encBox.textContent = msg;
+
+      // Lesson breakdown
+      const breakdownGrid = document.getElementById("lesson-breakdown-grid");
+      breakdownGrid.innerHTML = "";
+      Object.keys(evalData.lessonStats).forEach(key => {
+        const stat = evalData.lessonStats[key];
+        const card = document.createElement("div");
+        card.className = "p-3.5 rounded-2xl border border-slate-200 bg-white shadow-xs flex flex-col justify-between";
+        const pct = Math.round((stat.earned / stat.total) * 100);
+        card.innerHTML = `
+          <div>
+            <p class="font-display font-bold text-xs text-slate-800">${stat.name}</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">${stat.count} Questions (${stat.total} Marks)</p>
+          </div>
+          <div class="mt-3 flex items-center justify-between">
+            <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden mr-2">
+              <div class="h-full bg-pink-500 rounded-full" style="width: ${pct}%"></div>
+            </div>
+            <span class="font-display font-bold text-xs text-pink-600">${stat.earned} / ${stat.total}</span>
+          </div>
+        `;
+        breakdownGrid.appendChild(card);
+      });
+
+      // Question-by-question review
+      const reviewList = document.getElementById("detailed-review-list");
+      reviewList.innerHTML = "";
+
+      evalData.reviews.forEach(r => {
+        const item = document.createElement("div");
+        item.className = `p-4 rounded-2xl border-2 transition-all ${
+          r.isFull 
+            ? "border-emerald-200 bg-emerald-50/40" 
+            : "border-rose-200 bg-rose-50/40"
+        }`;
+
+        item.innerHTML = `
+          <div class="flex items-start justify-between gap-2 mb-2">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-xl text-xs font-display font-bold ${
+                r.isFull ? "bg-emerald-600 text-white" : "bg-rose-600 text-white"
+              }">
+                Q${r.qId}
+              </span>
+              <span class="text-xs font-semibold text-slate-600">${r.lessonTitle}</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${
+              r.isFull ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-800"
+            }">
+              ${r.earned} / ${r.max} Marks
+            </span>
+          </div>
+
+          <p class="font-display font-medium text-sm text-slate-800 mb-2">${r.prompt}</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs mb-3">
+            <div class="p-2.5 rounded-xl bg-white border border-slate-200">
+              <span class="font-bold text-slate-500 block mb-0.5">Your Answer:</span>
+              <span class="${r.isFull ? "text-emerald-700 font-bold" : "text-rose-600 font-semibold"}">${r.studentAns}</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white border border-slate-200">
+              <span class="font-bold text-slate-500 block mb-0.5">Correct Answer:</span>
+              <span class="text-emerald-700 font-bold">${r.correctAns}</span>
+            </div>
+          </div>
+
+          <div class="p-2.5 rounded-xl bg-purple-50/70 border border-purple-100 text-xs text-purple-900 leading-relaxed">
+            <span class="font-bold">Rule & Explanation:</span> ${r.explanation}
+          </div>
+        `;
+
+        reviewList.appendChild(item);
+      });
+    }
+
+    /* ============================================================
+       10. TXT REPORT GENERATION & DOWNLOAD
+       ============================================================ */
+    function downloadTxtReport(isAuto = false) {
+      const evalData = evaluateStudent();
+      const elapsedMs = (state.submissionTime && state.startTime) 
+        ? (state.submissionTime - state.startTime) 
+        : 0;
+
+      const dateStr = new Date(state.submissionTime || Date.now()).toLocaleString();
+
+      let lines = [];
+      lines.push("================================================================================");
+      lines.push("                  MIRA'S LOVELY ENGLISH CHALLENGE                              ");
+      lines.push("               A Beautiful Journey into Beginner English                       ");
+      lines.push("================================================================================");
+      lines.push("");
+      lines.push(`Student Name     : ${state.studentName}`);
+      lines.push(`Completion Date  : ${dateStr}`);
+      lines.push(`Duration         : ${formatDuration(elapsedMs)}`);
+      lines.push(`Total Score      : ${evalData.score} / 100 Marks (${evalData.percentage}%)`);
+      lines.push(`Correct Answers  : ${evalData.correctCount} / 25 questions`);
+      lines.push(`Incorrect Answers: ${evalData.incorrectCount} / 25 questions`);
+      lines.push("");
+      lines.push("--------------------------------------------------------------------------------");
+      lines.push("                      CURRICULUM BREAKDOWN BY LESSON                            ");
+      lines.push("--------------------------------------------------------------------------------");
+      Object.keys(evalData.lessonStats).forEach(key => {
+        const s = evalData.lessonStats[key];
+        const pct = Math.round((s.earned / s.total) * 100);
+        lines.push(`• ${s.name.padEnd(35)}: ${s.earned} / ${s.total} Marks (${pct}%)`);
+      });
+      lines.push("");
+      lines.push("--------------------------------------------------------------------------------");
+      lines.push("                      DETAILED QUESTION-BY-QUESTION REVIEW                      ");
+      lines.push("--------------------------------------------------------------------------------");
+      lines.push("");
+
+      evalData.reviews.forEach(r => {
+        lines.push(`[QUESTION ${r.qId}] [${r.lessonTitle}]`);
+        lines.push(`Prompt         : ${r.prompt}`);
+        lines.push(`Student Answer : ${r.studentAns}`);
+        lines.push(`Correct Answer : ${r.correctAns}`);
+        lines.push(`Marks Awarded  : ${r.earned} / ${r.max} Marks`);
+        lines.push(`Explanation    : ${r.explanation}`);
+        lines.push("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+      });
+
+      lines.push("");
+      lines.push("================================================================================");
+      lines.push("End of Official Report. Generated by Mira's Lovely English Challenge System.");
+      lines.push("================================================================================");
+
+      const content = lines.join("\n");
+      const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Mira_English_Foundation_Report.txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    /* ============================================================
+       11. TRY AGAIN (RESET ATTEMPT)
+       ============================================================ */
+    function tryAgain() {
+      // Clear localStorage
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {
+        console.warn("Failed to remove storage", e);
+      }
+
+      state = {
+        studentName: "",
+        started: false,
+        submitted: false,
+        startTime: null,
+        submissionTime: null,
+        currentQ: 1,
+        answers: {},
+        scrambleState: {}
+      };
+
+      stopTimer();
+      showWelcomeScreen();
+      const input = document.getElementById("student-name-input");
+      if (input) {
+        input.value = "";
+        input.focus();
+      }
+    }
+
+    /* ============================================================
+       12. TEACHER ANSWER KEY MODAL (PASSWORD: somer173)
+       ============================================================ */
+    function openTeacherModal() {
+      const modal = document.getElementById("teacher-modal");
+      if (!modal) return;
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      const pwdInput = document.getElementById("teacher-password-input");
+      if (pwdInput) {
+        pwdInput.value = "";
+        pwdInput.focus();
+      }
+      const err = document.getElementById("teacher-pwd-error");
+      if (err) err.classList.add("hidden");
+    }
+
+    function closeTeacherModal() {
+      const modal = document.getElementById("teacher-modal");
+      if (!modal) return;
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function verifyTeacherPassword() {
+      const input = document.getElementById("teacher-password-input");
+      const err = document.getElementById("teacher-pwd-error");
+      const pwd = input ? input.value.trim() : "";
+
+      if (pwd === "somer173") {
+        if (err) err.classList.add("hidden");
+        document.getElementById("teacher-gate-box").classList.add("hidden");
+        const unlockedBox = document.getElementById("teacher-unlocked-box");
+        unlockedBox.classList.remove("hidden");
+        unlockedBox.classList.add("flex");
+        renderTeacherAnswerKey();
+      } else {
+        if (err) err.classList.remove("hidden");
+        if (input) input.focus();
+      }
+    }
+
+    function renderTeacherAnswerKey() {
+      const list = document.getElementById("teacher-answers-list");
+      if (!list) return;
+      list.innerHTML = "";
+
+      QUESTIONS_DATA.forEach(q => {
+        let ansDesc = "";
+        if (q.type === "mcq") {
+          ansDesc = `${q.options[q.correctIndex]} (Option ${["A", "B", "C", "D"][q.correctIndex]})`;
+        } else if (q.type === "svo_tag") {
+          ansDesc = "Sara = Subject | reads = Verb | a book = Object";
+        } else if (q.type === "multi_choice_pair") {
+          ansDesc = "1) an apple | 2) a car";
+        } else if (q.type === "match_opposites") {
+          ansDesc = "big ↔ small | fast ↔ slow";
+        } else if (q.type === "match_possessive") {
+          ansDesc = "I → my | We → our";
+        } else if (q.type === "scramble") {
+          ansDesc = q.correctOrder.join(" ");
+        }
+
+        const item = document.createElement("div");
+        item.className = "p-3 rounded-xl border border-purple-100 bg-purple-50/50 flex flex-col gap-1";
+        item.innerHTML = `
+          <div class="flex items-center justify-between font-bold text-purple-900">
+            <span>Q${q.id} — ${q.lessonTitle}</span>
+            <span class="text-emerald-700 font-bold">4 Marks</span>
+          </div>
+          <p class="text-slate-700 font-medium">${q.prompt} ${q.subtext ? `(${q.subtext})` : ""}</p>
+          <p class="text-emerald-800 font-bold bg-white p-1.5 rounded-lg border border-emerald-200 mt-1">
+            Answer Key: ${ansDesc}
+          </p>
+          <p class="text-slate-500 italic mt-0.5">
+            Rule: ${q.explanation}
+          </p>
+        `;
+        list.appendChild(item);
+      });
+    }
+  </script>
+</body>
+</html>
