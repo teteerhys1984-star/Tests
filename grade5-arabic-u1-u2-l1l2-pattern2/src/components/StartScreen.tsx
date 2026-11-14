@@ -17,6 +17,7 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react";
+import { EXAM_MODEL_LABEL } from "@/config";
 import { EXAM_QUESTIONS, LESSONS, TOTAL_BRANCHES, TOTAL_MARKS, TOTAL_QUESTIONS } from "@/data/exam";
 import { ArabicSeal, Brand, DecorativeCorner, GradeBadge } from "./Common";
 
@@ -125,8 +126,11 @@ export function StartScreen({
             <div className="animate-fade-up">
               <div className="mb-5 flex flex-wrap items-center gap-2">
                 <GradeBadge />
+                <span className="rounded-full border border-[#c4a15a]/40 bg-[#c4a15a]/15 px-3 py-1 text-[11px] font-bold text-[#f6e7c4]">
+                  {EXAM_MODEL_LABEL}
+                </span>
                 <span className="rounded-full border border-white/15 bg-white/[0.07] px-3 py-1 text-[11px] font-semibold text-[#e9e1cf]">
-                  منهاج موثّق · ٥ دروس
+                  منهاج موثّق · {arabicNumber(Object.keys(LESSONS).length)} دروس
                 </span>
               </div>
 
@@ -137,7 +141,7 @@ export function StartScreen({
               <h1 className="font-display text-[2rem] font-extrabold leading-[1.35] text-[#fffaf0] sm:text-4xl lg:text-[2.85rem]">
                 اللغة العربية
                 <span className="mt-1 block text-[1.35rem] font-bold text-[#e6d3a9] sm:text-2xl lg:text-[1.7rem]">
-                  اختبار الفصل الشامل
+                  الوحدة الأولى والدرسان الأول والثاني من الوحدة الثانية
                 </span>
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-8 text-[#d6e2dc] sm:text-[15px]">
@@ -157,6 +161,10 @@ export function StartScreen({
                 <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-medium text-[#e7e1d4]">
                   <LockKeyhole className="h-3.5 w-3.5 text-[#d9b873]" />
                   الإجابات مخفية حتى التسليم
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.05] px-3 py-1.5 text-[11px] font-medium text-[#e7e1d4]">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-[#d9b873]" />
+                  اختبار مستقل عن النموذج الأول
                 </span>
               </div>
 
@@ -324,10 +332,12 @@ export function StartScreen({
                 <BookOpen className="h-4 w-4" />
                 نطاق الاختبار
               </p>
-              <h2 className="font-display text-xl font-bold text-[#0d3b35] sm:text-2xl">خمسة دروس، اختيارٌ موثّق</h2>
+              <h2 className="font-display text-xl font-bold text-[#0d3b35] sm:text-2xl">
+              {arabicNumber(Object.keys(LESSONS).length)} دروس، اختيارٌ موثّق
+            </h2>
             </div>
             <p className="text-[11px] font-medium text-[#7b8782]">
-              {Object.values(questionsByLesson).reduce((sum, count) => sum + count, 0)} أسئلة رئيسية موزعة بواقع ٣ لكل درس
+              {arabicNumber(Object.values(questionsByLesson).reduce((sum, count) => sum + count, 0))} أسئلة رئيسية موزعة بواقع ٣ لكل درس
             </p>
           </div>
 
@@ -357,7 +367,7 @@ export function StartScreen({
                         <p className="mt-0.5 text-[10px] text-[#7b8782]">{lesson.pages}</p>
                       </div>
                       <span className="shrink-0 rounded-md bg-[#f4ecdb] px-2 py-1 text-[9px] font-bold text-[#8b692a]">
-                        {questionsByLesson[lesson.key] ?? 3} أسئلة
+                        {arabicNumber(questionsByLesson[lesson.key] ?? 0)} أسئلة
                       </span>
                     </div>
                   ))}
@@ -380,7 +390,7 @@ export function StartScreen({
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-3 px-4 text-center sm:flex-row sm:px-6 sm:text-right lg:px-8">
           <div className="flex items-center gap-2 text-[10.5px] text-[#78847e]">
             <BookOpen className="h-4 w-4 text-[#9b7938]" />
-            اختبار اللغة العربية · الصف الخامس الأساسي
+            اختبار اللغة العربية · الصف الخامس الأساسي · {EXAM_MODEL_LABEL}
           </div>
           <button
             type="button"

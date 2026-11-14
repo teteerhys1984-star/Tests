@@ -12,6 +12,7 @@ import {
   ListChecks,
   Minus,
   RotateCcw,
+  Send,
   ShieldCheck,
   Sparkles,
   Target,
@@ -28,16 +29,90 @@ import {
   formatScore,
   gradeLabel,
 } from "@/lib/grading";
+import type { SendStatus } from "@/lib/submit";
 import { Brand } from "./Common";
 
 type ResultsScreenProps = {
   studentName: string;
+  /** معرّف المحاولة المعروض (يُظهر للمعلم أن إعادة الإرسال لا تغيّره). */
+  attemptId: string;
   result: ExamResult;
   submittedAt: Date;
   elapsedSeconds: number;
+  /** حالة إرسال النتيجة إلى Google Sheets. */
+  sendStatus: SendStatus;
+  /** زر مستقل لإعادة إرسال المحاولة نفسها عند فشل الإرسال. */
+  onResend: () => void;
   onRetake: () => void;
   onOpenTeacherKey: () => void;
 };
+
+/**
+ * شريط حالة الإرسال: يظهر دائماً بعد التسليم (sending/success/failed) ولا يحجب
+ * النتيجة أو زر تنزيل التقرير. زر «إعادة إرسال النتيجة» مستقل عن التنزيل وعن
+ * إعادة المحاولة، ولا يُعرض إلا بعد فشل مؤكَّد حتى لا يُرسَل الطلب مرتين.
+ */
+function SendStatusBanner({
+  status,
+  attemptId,
+  onResend,
+}: {
+  status: SendStatus;
+  attemptId: string;
+  onResend: () => void;
+}) {
+  if (status === "idle") return null;
+
+  const styles: Record<Exclude<SendStatus, "idle">, { box: string; text: string }> = {
+    sending: {
+      box: "border-[#e7d3a1] bg-[#fcf4e2] text-[#7c5a15]",
+      text: "جارٍ إرسال نتيجتك إلى معلّمك… يمكنك متابعة المراجعة أو تنزيل التقرير الآن.",
+    },
+    success: {
+      box: "border-[#bcd9ce] bg-[#edf7f2] text-[#17664f]",
+      text: "تم إرسال نتيجتك إلى معلّمك بنجاح.",
+    },
+    failed: {
+      box: "border-[#eccfc8] bg-[#fbefec] text-[#8f4136]",
+      text: "تعذّر إرسال النتيجة تلقائياً. حُفظت النتيجة على هذا الجهاز، والنتيجة والتقرير متاحان كما هما؛ يمكنك إعادة الإرسال الآن.",
+    },
+  };
+  const current = styles[status];
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      data-send-status={status}
+      className={`mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3 text-[11.5px] font-semibold leading-6 ${current.box}`}
+    >
+      <p className="flex min-w-[12rem] flex-1 items-start gap-2">
+        {status === "success" ? (
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+        ) : status === "failed" ? (
+          <X className="mt-0.5 h-4 w-4 shrink-0" />
+        ) : (
+          <Clock3 className="mt-0.5 h-4 w-4 shrink-0" />
+        )}
+        <span>{current.text}</span>
+      </p>
+      {status === "failed" && (
+        <button
+          type="button"
+          onClick={onResend}
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#9d3f33] px-3.5 py-2 text-[11px] font-bold text-white transition hover:bg-[#873428]"
+        >
+          <Send className="h-3.5 w-3.5" />
+          إعادة إرسال النتيجة
+        </button>
+      )}
+      {status !== "failed" && (
+        <span className="shrink-0 rounded-md bg-white/60 px-2 py-1 text-[9.5px] font-bold" title={attemptId}>
+          المحاولة {attemptId.slice(0, 8)}
+        </span>
+      )}
+    </div>
+  );
+}
 
 const statusStyles = {
   full: {
@@ -60,19 +135,25 @@ const statusStyles = {
   },
 };
 
+// حدود الرسائل موحّدة مع سلّم التقدير المعتمد في gradeLabel (95/85/75/65/50)
+// حتى لا يظهر «ممتاز» مع رسالة تقول «جيد جدًا» أو العكس.
 const scoreMessage = (percentage: number): string => {
-  if (percentage >= 90) return "أداء متميز يدل على إتقان جيد لمهارات الدروس الخمسة.";
-  if (percentage >= 80) return "أداء جيد جدًا، وبقيت بعض المهارات تحتاج إلى تثبيت بسيط.";
-  if (percentage >= 65) return "أداء جيد، وراجع الأخطاء والتعليلات لتقوية المهارات.";
-  if (percentage >= 50) return "خطوات جيدة، ويحتاج بعض الدروس إلى مراجعة مركزة.";
+  if (percentage >= 95) return "أداء متميز يدل على إتقان جيد لمهارات الدروس الخمسة.";
+  if (percentage >= 85) return "أداء جيد جدًا، وبقيت بعض المهارات تحتاج إلى تثبيت بسيط.";
+  if (percentage >= 75) return "أداء جيد، وراجع الأخطاء والتعليلات لتقوية المهارات.";
+  if (percentage >= 65) return "أداء مقبول، ويحتاج بعض الدروس إلى مراجعة مركزة.";
+  if (percentage >= 50) return "خطوات أولى جيدة، وراجع كل درس على حدة ثم أعد المحاولة.";
   return "لا تيأس؛ راجع كل فرع وشرحه، ثم أعد المحاولة بعد المراجعة.";
 };
 
 export function ResultsScreen({
   studentName,
+  attemptId,
   result,
   submittedAt,
   elapsedSeconds,
+  sendStatus,
+  onResend,
   onRetake,
   onOpenTeacherKey,
 }: ResultsScreenProps) {
@@ -265,6 +346,8 @@ export function ResultsScreen({
             })}
           </div>
         </section>
+
+        <SendStatusBanner status={sendStatus} attemptId={attemptId} onResend={onResend} />
 
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           <button

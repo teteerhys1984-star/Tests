@@ -10,6 +10,43 @@ import {
   X,
 } from "lucide-react";
 import { EXAM_QUESTIONS, LESSONS, TOTAL_BRANCHES, TOTAL_MARKS } from "@/data/exam";
+import { EXAM_MODEL_LABEL } from "@/config";
+
+/**
+ * جملة توزيع العلامات مشتقّة من البيانات نفسها (لا أرقام مكتوبة يدوياً)
+ * حتى لا تنحرف عن الأسئلة إذا عُدّلت العلامات لاحقاً بدليل.
+ */
+function pointsDistribution(): { text: string; consistent: boolean } {
+  const counts = new Map<number, number>();
+  let sum = 0;
+  let branches = 0;
+  for (const question of EXAM_QUESTIONS) {
+    for (const branch of question.branches) {
+      counts.set(branch.points, (counts.get(branch.points) ?? 0) + 1);
+      sum += branch.points;
+      branches += 1;
+    }
+  }
+  // مطابقة العدد للمعدود بالعربية: 1 مفرد، 2 مثنى، 3–10 جمع، وما فوقها تمييز مفرد منصوب.
+  const arabicCount = (count: number, one: string, two: string, few: string, many: string) =>
+    count === 1 ? one : count === 2 ? two : count >= 3 && count <= 10 ? few : many;
+  const parts = [...counts.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(
+      ([points, count]) =>
+        `${count} ${arabicCount(count, "فرع", "فرعان", "فروع", "فرعًا")} ${arabicCount(
+          count,
+          "بقيمة",
+          "بقيمة",
+          "بقيمة",
+          "بقيمة",
+        )} ${points} ${arabicCount(points, "علامة", "علامتين", "علامات", "علامة")} لكل فرع`,
+    );
+  return {
+    text: `${parts.join("، و")}، والمجموع ${sum} علامة على ${branches} فرعًا.`,
+    consistent: sum === TOTAL_MARKS && branches === TOTAL_BRANCHES,
+  };
+}
 import { branchKindLabel, correctAnswerText } from "@/lib/grading";
 
 const TEACHER_PASSWORD = "somer173";
@@ -20,6 +57,7 @@ type TeacherKeyModalProps = {
 };
 
 export function TeacherKeyModal({ open, onClose }: TeacherKeyModalProps) {
+  const distribution = pointsDistribution();
   const [password, setPassword] = useState("");
   const [unlocked, setUnlocked] = useState(false);
   const [error, setError] = useState("");
@@ -89,7 +127,7 @@ export function TeacherKeyModal({ open, onClose }: TeacherKeyModalProps) {
                 Teacher Answer Key
               </h2>
               <p className="mt-0.5 text-[10px] text-[#d4dfd8] sm:text-[11px]">
-                منطقة المعلم — مفاتيح الإجابات والتعليلات والمراجع
+                منطقة المعلم — مفاتيح الإجابات والتعليلات والمراجع · {EXAM_MODEL_LABEL}
               </p>
             </div>
           </div>
@@ -186,8 +224,10 @@ export function TeacherKeyModal({ open, onClose }: TeacherKeyModalProps) {
                 </div>
               </div>
               <p className="mt-2 text-[9.5px] leading-5 text-[#6b7a73]">
-                توزيع العلامات: 35 فرعًا بقيمة علامتين لكل فرع، و10 فروع بقيمة 3 علامات لكل
-                فرع، والمجموع 100 علامة. كل فرع يعرض علامته ومرجعه وتعليله أدناه.
+                {distribution.consistent
+                  ? `توزيع العلامات: ${distribution.text}`
+                  : `تنبيه: مجموع علامات البيانات (${distribution.text}) لا يطابق ثوابت الاختبار.`}{" "}
+                كل فرع يعرض علامته ومرجعه وتعليله أدناه.
               </p>
             </div>
 

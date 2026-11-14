@@ -290,7 +290,7 @@ export function ExamScreen({
                     خريطة الأسئلة
                   </div>
                   <div className="number-tabular text-[9.5px] font-semibold text-[#7b8782]">
-                    {answeredCount}/{TOTAL_BRANCHES} فرعًا · {completedQuestions}/15 مكتمل
+                    {answeredCount}/{TOTAL_BRANCHES} فرعًا · {completedQuestions}/{EXAM_QUESTIONS.length} مكتمل
                   </div>
                 </div>
                 <div className="overflow-x-auto px-3 py-2.5">
