@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { Attempt } from "../types/exam";
 import { ALL_SUBPARTS, QUESTIONS } from "../data/questions";
 
-const ATTEMPT_STORAGE_KEY = "zahrat-almarifa:grade5-arabic-attempt:v1";
+import { ATTEMPT_STORAGE_KEY } from "../config";
 
 function newAttemptId(): string {
   try {

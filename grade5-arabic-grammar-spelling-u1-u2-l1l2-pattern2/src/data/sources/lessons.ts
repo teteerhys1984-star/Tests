@@ -100,8 +100,8 @@ export const DIFFICULTY_LABELS: Record<"basic" | "intermediate" | "advanced", st
 
 /** The five-lesson scope contains exactly 100 marks: 20 per lesson, 10 + 10. */
 export const EXAM_META = {
-  title: "اختبار اللغة العربية – الصف الخامس الأساسي",
-  subtitle: "قواعد اللغة والإملاء",
+  title: "قواعد اللغة والإملاء للوحدة الأولى وأول درسين من الوحدة الثانية — نموذج ثاني",
+  subtitle: "الصف الخامس — اللغة العربية — نموذج ثاني",
   questionCount: 30,
   totalMarks: 100,
   teacherPassword: "somer173",
