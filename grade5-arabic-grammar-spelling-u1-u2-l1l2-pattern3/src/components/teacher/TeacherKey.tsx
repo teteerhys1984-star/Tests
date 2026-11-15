@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Lock, X } from "lucide-react";
 import type { Question } from "../../data/questions/types";
 import { LESSONS } from "../../data/curriculum/lessons";
+import { EXAM_MODEL_LABEL } from "../../config";
 
 const TEACHER_PASSWORD = "somer173";
 
@@ -28,8 +29,10 @@ export default function TeacherKey({ questions, onClose }: Props) {
     <div className="fade-in mx-auto max-w-4xl px-4 py-6">
       <div className="card-soft p-6">
         <div className="flex items-center justify-between">
-          <h1 className="flex items-center gap-2 text-xl font-bold text-pink-900"><Lock className="h-6 w-6" /> مفتاح إجابات المعلم</h1>
-          <button onClick={onClose} className="btn-soft flex items-center gap-1 px-4 py-2 text-sm"><X className="h-5 w-5" /> إغلاق</button>
+          <h1 className="flex items-center gap-2 text-xl font-bold text-pink-900">
+            <Lock className="h-6 w-6" /> مفتاح إجابات المعلم ({EXAM_MODEL_LABEL})
+          </h1>
+          <button type="button" onClick={onClose} className="btn-soft flex items-center gap-1 px-4 py-2 text-sm"><X className="h-5 w-5" /> إغلاق</button>
         </div>
         <p className="mt-2 text-sm text-pink-700">
           هذا المفتاح مخصص للمعلمة فقط. ملاحظة: كلمة المرور حاجز واجهة فقط (Client-side) ولا توفر مصادقة أو تشفيرًا حقيقيًا.
