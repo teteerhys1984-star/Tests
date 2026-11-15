@@ -147,7 +147,7 @@ def main(argv):
     check('href="./' not in gate_block, "لا روابط اختبارات داخل البوابة")
     check("sessionStorage" in page and "tests-platform-gate-v1" in page,
           "حالة الدخول تُحفظ في sessionStorage")
-    check("somer2026" not in page, "كلمة المرور غير مكتوبة صريحة في الصفحة (بصمة فقط)")
+    check("CloseYourEyes173" not in page, "كلمة المرور غير مكتوبة صريحة في الصفحة (بصمة فقط)")
     for folder in folders:
         content = open(os.path.join(site, folder, "index.html"), "r", encoding="utf-8",
                        errors="ignore").read()

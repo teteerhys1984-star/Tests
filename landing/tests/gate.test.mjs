@@ -20,7 +20,7 @@ import assert from "node:assert/strict";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const TEMPLATE = join(HERE, "..", "template.html");
-const PASSWORD = "somer2026"; // كلمة المرور الافتراضية الموثّقة في landing/README.md
+const PASSWORD = "CloseYourEyes173"; // كلمة المرور الافتراضية الموثّقة في landing/README.md
 
 const html = readFileSync(TEMPLATE, "utf8");
 const match = html.match(/<script id="gate-script">([\s\S]*?)<\/script>/);
