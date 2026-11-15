@@ -410,7 +410,10 @@ class GateMarkup(Landing):
         self.assertIn('id="gate-password"', page)
         self.assertIn('type="password"', page)
         self.assertIn('id="gate-error" role="alert" hidden', page)
-        self.assertIn("لا تمنع الوصول التقني", page)
+        self.assertNotIn("بوابة عرض فقط", page)
+        self.assertNotIn("لا تمنع الوصول التقني", page)
+        self.assertNotIn('id="gate-note"', page)
+        self.assertNotIn('aria-describedby="gate-note"', page)
         self.assertIn('id="gate-script"', page)
         self.assertIn("sessionStorage", page)
 
@@ -437,6 +440,48 @@ class GateMarkup(Landing):
                            'id="gate-form"'):
                 self.assertNotIn(marker, content,
                                  "%s must not contain the index gate" % folder)
+
+
+class CairoTypography(Landing):
+    """خط Cairo الموحّد: محمَّل محليًا ومطبَّق على جميع عناصر ومشاهد المنصة."""
+
+    FONT_FILES = (
+        "cairo-arabic-wght-normal.woff2",
+        "cairo-latin-wght-normal.woff2",
+        "cairo-latin-ext-wght-normal.woff2",
+    )
+
+    def test_local_cairo_woff2_files_are_copied_and_valid(self):
+        site = make_site(self.tmp, [("grade4-adam-test", "اختبار الرياضيات — الصف الرابع")])
+        generate.main(["generate.py", site])
+        for filename in self.FONT_FILES:
+            path = os.path.join(site, "fonts", filename)
+            self.assertTrue(os.path.isfile(path), "missing font file: %s" % filename)
+            with open(path, "rb") as fh:
+                magic = fh.read(4)
+            self.assertEqual(magic, b"wOF2", "%s is not a valid WOFF2 font" % filename)
+
+    def test_cairo_is_primary_font_for_all_elements(self):
+        page = self.build([("grade4-adam-test", "اختبار الرياضيات — الصف الرابع")])
+        for filename in self.FONT_FILES:
+            self.assertIn('./fonts/%s' % filename, page)
+        self.assertEqual(len(re.findall(r'@font-face\s*\{[^}]*font-family:\s*"Cairo"', page)), 3)
+        self.assertRegex(page, r'--font:\s*"Cairo",')
+        self.assertRegex(
+            page,
+            r"button,\s*input,\s*select,\s*textarea,\s*optgroup,\s*kbd,\s*code,\s*pre,\s*samp\s*\{\s*font-family:\s*var\(--font\);\s*\}",
+        )
+        self.assertRegex(
+            page,
+            r"input::placeholder,\s*textarea::placeholder\s*\{\s*font-family:\s*var\(--font\);\s*\}",
+        )
+        style = re.search(r"<style>(.*?)</style>", page, re.S).group(1)
+        without_faces = re.sub(r"@font-face\s*\{[^}]*\}", "", style)
+        families = re.findall(r"font-family\s*:\s*([^;}]+)", without_faces)
+        self.assertTrue(families)
+        for fam in families:
+            self.assertEqual(fam.strip(), "var(--font)",
+                             "unexpected non-Cairo font-family override: %s" % fam)
 
 
 class RealSiteSemesters(unittest.TestCase):

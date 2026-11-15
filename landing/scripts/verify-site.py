@@ -148,6 +148,12 @@ def main(argv):
     check("sessionStorage" in page and "tests-platform-gate-v1" in page,
           "حالة الدخول تُحفظ في sessionStorage")
     check("CloseYourEyes173" not in page, "كلمة المرور غير مكتوبة صريحة في الصفحة (بصمة فقط)")
+    check(
+        "بوابة عرض فقط" not in page
+        and "لا تمنع الوصول التقني" not in page
+        and 'id="gate-note"' not in page,
+        "العبارة التوضيحية لبوابة الدخول غير معروضة في واجهة المستخدم",
+    )
     for folder in folders:
         content = open(os.path.join(site, folder, "index.html"), "r", encoding="utf-8",
                        errors="ignore").read()
@@ -189,6 +195,31 @@ def main(argv):
           "الطائرة لا تستقبل النقر ولا تحجب المحتوى")
     check(re.search(r"prefers-reduced-motion: reduce.*?\.sky \*[^{]*\{ animation: none !important",
                     page, re.S) is not None, "الحركة تتوقف مع prefers-reduced-motion")
+
+    print("12) خط Cairo الموحّد في جميع عناصر المنصة")
+    for font_name in (
+        "cairo-arabic-wght-normal.woff2",
+        "cairo-latin-wght-normal.woff2",
+        "cairo-latin-ext-wght-normal.woff2",
+    ):
+        font_path = os.path.join(site, "fonts", font_name)
+        valid_woff2 = os.path.isfile(font_path) and open(font_path, "rb").read(4) == b"wOF2"
+        check(valid_woff2, "ملف الخط المحلي موجود وصالح: fonts/%s" % font_name)
+    check(len(re.findall(r'@font-face\s*\{[^}]*font-family:\s*"Cairo"', page)) == 3,
+          "تعريفات @font-face لخط Cairo متوفرة (العربية واللاتينية)")
+    check(re.search(r'--font:\s*"Cairo",', page) is not None,
+          "خط Cairo هو الخط الأساسي الأول في المتغير --font")
+    check(
+        re.search(
+            r"button,\s*input,\s*select,\s*textarea,\s*optgroup,\s*kbd,\s*code,\s*pre,\s*samp\s*\{\s*font-family:\s*var\(--font\);\s*\}",
+            page,
+        ) is not None
+        and re.search(
+            r"input::placeholder,\s*textarea::placeholder\s*\{\s*font-family:\s*var\(--font\);\s*\}",
+            page,
+        ) is not None,
+        "تطبيق خط Cairo صراحةً على الأزرار والحقول وعناصر الإدخال والاختصارات",
+    )
 
     print()
     if failures:
