@@ -33,6 +33,7 @@ import html
 import json
 import os
 import re
+import shutil
 import sys
 from urllib.parse import quote
 
@@ -96,6 +97,7 @@ SUBJECT_PATTERNS = [
 
 OVERRIDES_FILE = os.path.join("landing", "exams.json")
 TEMPLATE_FILE = os.path.join("landing", "template.html")
+FONTS_DIR = os.path.join("landing", "fonts")
 
 # الأرقام الظاهرة في الواجهة إنجليزية دائمًا (0-9)؛ أي رقم عربي-هندي أو فارسي
 # يرد في عنوان اختبار يُحوَّل عند العرض فقط — البيانات والروابط لا تتغيّر.
@@ -657,8 +659,24 @@ def warn_hidden_exams(exams):
             )
 
 
+def copy_fonts(site_dir):
+    """ينسخ ملفات خط Cairo المحلية إلى _site/fonts/ لتعمل المنصة بلا طلبات خارجية."""
+    fonts_src = FONTS_DIR
+    if not os.path.isdir(fonts_src):
+        fonts_src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts")
+    if not os.path.isdir(fonts_src):
+        raise SystemExit("مجلد الخطوط غير موجود: %s" % fonts_src)
+    fonts_dst = os.path.join(site_dir, "fonts")
+    os.makedirs(fonts_dst, exist_ok=True)
+    for name in sorted(os.listdir(fonts_src)):
+        src = os.path.join(fonts_src, name)
+        if os.path.isfile(src):
+            shutil.copyfile(src, os.path.join(fonts_dst, name))
+
+
 def main(argv):
     site_dir = argv[1] if len(argv) > 1 else "_site"
+    os.makedirs(site_dir, exist_ok=True)
     template_path = TEMPLATE_FILE
     if not os.path.isfile(template_path):
         template_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "template.html")
@@ -667,6 +685,7 @@ def main(argv):
 
     exams = collect_exams(site_dir)
     warn_hidden_exams(exams)
+    copy_fonts(site_dir)
 
     page = template.replace("__STATS__", build_stats(exams)).replace(
         "__CONTENT__", build_content(exams)

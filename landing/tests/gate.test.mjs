@@ -200,3 +200,11 @@ test("مفتاح التخزين ثابت ومعلن للاختبارات الأ�
   assert.equal(gate.storageKey, "tests-platform-gate-v1");
   assert.equal(gate.sessionValue, "open");
 });
+
+test("العبارة التوضيحية مخفية بالكامل من واجهة بوابة الدخول", () => {
+  assert.equal(html.includes("بوابة عرض فقط"), false);
+  assert.equal(html.includes("لا تمنع الوصول التقني"), false);
+  assert.equal(html.includes('id="gate-note"'), false);
+  assert.equal(html.includes('aria-describedby="gate-note"'), false);
+});
+
