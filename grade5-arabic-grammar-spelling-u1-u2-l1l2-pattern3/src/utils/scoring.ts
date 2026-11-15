@@ -24,7 +24,7 @@ export function scoreSubpart(sp: Subpart, answer: string): SubpartResult {
 
   if (sp.type === "mcq" || sp.type === "select") {
     const strict = !!sp.strictHamza;
-    const ok = strict ? ans === sp.correctAnswer : normalizeArabic(ans) === normalizeArabic(sp.correctAnswer);
+    const ok = normalizeArabic(ans, strict) === normalizeArabic(sp.correctAnswer, strict);
     return { subpart: sp, studentAnswer: ans, earned: ok ? sp.maxMarks : 0, correct: ok, partial: false };
   }
 

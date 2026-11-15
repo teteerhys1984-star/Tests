@@ -98,7 +98,7 @@ const QUESTIONS: Question[] = [
     instruction: "اختر الإجابة الصحيحة عن مواضع همزة القطع.",
     prompt: "أ) الماضي الثلاثي ومصدره. ب) الماضي الرباعي وأمره ومصدره. ج) الحروف.",
     subparts: [
-      { id: "q10a", label: "أ", type: "mcq", prompt: "أيُّ زوجٍ صحيحٌ (ماضٍ ثلاثي مبدوء بهمزة ومصدره)؟", options: ["أكلَ – أكل", "أكلَ – إكل", "أكلَ – أكلٌ", "أكلَ – أكيل"], correctAnswer: "أكلَ – أكل", maxMarks: 2, skill: "همزة القطع في الماضي الثلاثي ومصدره", difficulty: "intermediate", explanation: "الماضي الثلاثي المبدوء بهمزة قطع ومصدره: أكلَ – أكل.", strictHamza: true },
+      { id: "q10a", label: "أ", type: "mcq", prompt: "أيُّ زوجٍ صحيحٌ (ماضٍ ثلاثي مبدوء بهمزة ومصدره)؟", options: ["أكلَ – أكل", "أكلَ – إكل", "أكلَ – أكلٌ", "أكلَ – أكيل"], correctAnswer: "أكلَ – أكل", maxMarks: 2, skill: "همزة القطع في الماضي الثلاثي ومصدره", difficulty: "intermediate", explanation: "الماضي الثلاثي المبدوء بهمزة قطع ومصدره: أكلَ – أكل." },
       { id: "q10b", label: "ب", type: "mcq", prompt: "أيُّ مجموعةٍ صحيحةٌ (ماضٍ رباعي وأمره ومصدره)؟", options: ["أغلقَ – أغلقْ – إغلاق", "أغلقَ – أغلقْ – أغلاق", "أغلقَ – إغلقْ – إغلاق", "أغلقَ – أغلقْ – غلق"], correctAnswer: "أغلقَ – أغلقْ – إغلاق", maxMarks: 1, skill: "همزة القطع في الماضي الرباعي وأمره ومصدره", difficulty: "advanced", explanation: "الماضي الرباعي وأمره ومصدره بهمزة قطع: أغلقَ – أغلقْ – إغلاق.", strictHamza: true },
       { id: "q10c", label: "ج", type: "select", prompt: "الحرف «إنَّ» تُكتب همزته:", options: ["همزة قطع", "همزة وصل"], correctAnswer: "همزة قطع", maxMarks: 1, skill: "همزة القطع في الحروف", difficulty: "basic", explanation: "«إنَّ» حرف تُكتب همزته همزة قطع تحت الألف." },
     ],
