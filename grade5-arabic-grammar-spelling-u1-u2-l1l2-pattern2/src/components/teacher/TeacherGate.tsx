@@ -41,12 +41,8 @@ export function TeacherGate({ onUnlock, onClose, soundEnabled, onToggleSound }: 
 
       <main className="page-container flex min-h-[74vh] items-center justify-center py-6">
         <div className="card animate-rise grid w-full max-w-3xl overflow-hidden md:grid-cols-[0.85fr_1.15fr]">
-          <div className="relative hidden min-h-[340px] md:block">
-            <img
-              src={`${import.meta.env.BASE_URL}images/floral-bouquet.jpg`}
-              alt="باقة زهور بألوان وردية وخزامية"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+          <div className="relative hidden min-h-[340px] bg-gradient-to-t from-[#f7e3e9] to-[#fdf4f6] md:block" aria-hidden="true">
+            <div className="absolute inset-0" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#552c3f]/75 via-[#6b3a50]/20 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-5 text-white">
               <span className="chip mb-2 border-white/30 bg-white/15 text-white">

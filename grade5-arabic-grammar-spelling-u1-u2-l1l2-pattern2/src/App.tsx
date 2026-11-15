@@ -12,7 +12,8 @@ import { TeacherKey } from "./components/teacher/TeacherKey";
 
 type View = "exam" | "teacher-gate" | "teacher-key";
 
-const SOUND_STORAGE_KEY = "zahrat-almarifa:sound-enabled";
+import { SOUND_STORAGE_KEY } from "./config";
+import { buildPayload, retryPending, sendWithRetry, type SendStatus } from "./utils/submit";
 
 function readSoundPreference(): boolean {
   if (typeof window === "undefined") return true;
@@ -28,6 +29,13 @@ export default function App() {
   const { attempt, startAttempt, setAnswer, goToQuestion, submitExam, clearAttempt } = useExamSession();
   const [soundEnabled, setSoundEnabled] = useState<boolean>(() => readSoundPreference());
   const [view, setView] = useState<View>("exam");
+  const [sendStatus, setSendStatus] = useState<SendStatus>("idle");
+  useEffect(() => { void retryPending(); }, []);
+  const sendResult = useCallback((att: typeof attempt) => {
+    if (!att?.submittedAt) return;
+    setSendStatus("sending");
+    void sendWithRetry(buildPayload(att)).then((ok) => setSendStatus(ok ? "success" : "failed"));
+  }, []);
   const [teacherUnlocked, setTeacherUnlocked] = useState(false);
   const autoReportedAttempt = useRef<string | null>(null);
 
@@ -72,6 +80,7 @@ export default function App() {
     if (soundEnabled) playSubmitSound();
 
     // Generate the UTF-8 TXT report automatically after submission.
+    sendResult(submitted);
     if (autoReportedAttempt.current !== submitted.id) {
       autoReportedAttempt.current = submitted.id;
       const graded = gradeAttempt(submitted);
@@ -84,7 +93,7 @@ export default function App() {
       }, 450);
     }
     window.scrollTo({ top: 0, behavior: "auto" });
-  }, [attempt, soundEnabled, submitExam]);
+  }, [attempt, soundEnabled, submitExam, sendResult]);
 
   const handleRestart = useCallback(() => {
     autoReportedAttempt.current = null;
@@ -135,6 +144,8 @@ export default function App() {
     content = (
       <ResultsScreen
         result={result}
+        sendStatus={sendStatus}
+        onResend={() => sendResult(attempt)}
         soundEnabled={soundEnabled}
         onToggleSound={toggleSound}
         onRestart={handleRestart}

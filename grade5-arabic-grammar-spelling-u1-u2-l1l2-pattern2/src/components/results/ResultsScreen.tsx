@@ -10,6 +10,8 @@ import { ReviewList } from "./ReviewList";
 
 interface ResultsScreenProps {
   result: ExamResult;
+  sendStatus?: "idle" | "sending" | "success" | "failed";
+  onResend?: () => void;
   soundEnabled: boolean;
   onToggleSound: () => void;
   onRestart: () => void;
@@ -24,7 +26,7 @@ const TONE_STYLES: Record<ExamResult["performance"]["tone"], { chip: string; tex
 };
 
 export function ResultsScreen({
-  result,
+  result, sendStatus = "idle", onResend,
   soundEnabled,
   onToggleSound,
   onRestart,
@@ -85,22 +87,16 @@ export function ResultsScreen({
               <Icon name="lock" size={14} />
               مفتاح الإجابات
             </button>
+            {onResend && (<button type="button" onClick={onResend} disabled={sendStatus === "sending"} className="btn btn-outline px-3.5 py-2 text-[11.5px]">إعادة إرسال النتيجة</button>)}
           </div>
         </div>
+        {onResend && (<p role="status" className="page-container pb-2 text-center text-[11.5px]">{sendStatus === "sending" ? "جارٍ إرسال النتيجة…" : sendStatus === "success" ? "تم إرسال النتيجة إلى المعلّمة." : sendStatus === "failed" ? "تعذّر إرسال النتيجة؛ ستُحفظ معلّقة وتُعاد تلقائيًا، ويمكنك إعادة المحاولة بالزر أعلاه. نتيجتك وتقريرك متاحان الآن." : ""}</p>)}
       </header>
 
       <main className="page-container py-6">
         {/* Result hero */}
         <section className="card relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-56 opacity-35 md:block">
-            <img
-              src={`${import.meta.env.BASE_URL}images/floral-bouquet.jpg`}
-              alt=""
-              aria-hidden="true"
-              className="h-full w-full object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-gradient-to-l from-[#fffdfa] via-[#fffdfa]/55 to-transparent" />
-          </div>
+          <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-56 opacity-35 md:block" aria-hidden="true"><div className="h-full w-full bg-gradient-to-l from-[#f7e3e9] via-[#fdf4f6]/60 to-transparent" /></div>
 
           <div className="relative grid gap-5 p-5 sm:p-7 md:grid-cols-[auto_minmax(0,1fr)] md:items-center">
             <div className="mx-auto md:mx-0">

@@ -169,11 +169,7 @@ export function StartScreen({ onStart, soundEnabled, onToggleSound, onOpenTeache
           <aside className="flex flex-col gap-4">
             <div className="card relative overflow-hidden p-0">
               <div className="relative h-56 sm:h-64">
-                <img
-                  src={`${import.meta.env.BASE_URL}images/floral-bouquet.jpg`}
-                  alt="باقة زهور وردية وخزامية بأسلوب مائي هادئ"
-                  className="h-full w-full object-cover object-center"
-                />
+                <div className="h-full w-full bg-gradient-to-br from-[#f7d9e4] via-[#e9def7] to-[#fdebd7]" aria-hidden="true" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#5d3042]/55 via-[#5d3042]/5 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-5 text-white">
                   <div className="mb-1 flex items-center gap-2 text-[11px] font-bold opacity-90">
@@ -220,18 +216,9 @@ export function StartScreen({ onStart, soundEnabled, onToggleSound, onOpenTeache
         <footer className="mt-7 flex flex-col items-center justify-between gap-3 border-t border-[#eedfda] pt-5 text-center sm:flex-row sm:text-right">
           <p className="flex items-center gap-1.5 text-[11px] text-[#9d8b90]">
             <Icon name="lock" size={13} />
-            تُحفظ الإجابات في هذا المتصفح فقط، ولا تُرسل بيانات الطالبة إلى أي خدمة خارجية.
+            إشعار الخصوصية: تُحفظ إجاباتك في هذا المتصفح، وعند التسليم تُرسل نسخة من الاسم والنتيجة والإجابات إلى المعلّمة عبر Google Sheets؛ وإن فشل الاتصال تُحفظ النتيجة معلّقة في المتصفح وتُعاد تلقائيًا.
           </p>
           <div className="flex items-center gap-3 text-[11px] font-semibold text-[#9d8b90]">
-            <a
-              className="inline-flex items-center gap-1.5 text-[#9c5a74] underline decoration-[#dfbcc7] underline-offset-4 hover:text-[#71384f]"
-              href={`${import.meta.env.BASE_URL}downloads/arabic-grade5-grammar-spelling.zip`}
-              download
-            >
-              <Icon name="download" size={13} />
-              تحميل ملفات المشروع ZIP
-            </a>
-            <span aria-hidden="true">•</span>
             <span>{EXAM_META.subtitle}</span>
           </div>
         </footer>
