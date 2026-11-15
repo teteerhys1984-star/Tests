@@ -16,6 +16,8 @@ interface Props {
   answers: Answers;
   result: ExamResult;
   onDownload: () => void;
+  onSend: () => void;
+  sendStatus: string;
   onRestart: () => void;
   onTeacher: () => void;
 }
@@ -29,7 +31,7 @@ const STATUS: Record<SubStatus, { label: string; cls: string }> = {
 
 const pctOf = (a: number, b: number) => (b ? Math.round((a / b) * 100) : 0);
 
-export function ResultsView({ name, submittedAt, elapsedMs, answers, result: r, onDownload, onRestart, onTeacher }: Props) {
+export function ResultsView({ name, submittedAt, elapsedMs, answers, result: r, onDownload, onSend, sendStatus, onRestart, onTeacher }: Props) {
   const weak = LESSON_ORDER.flatMap((l) => {
     const b = r.byLesson[l];
     const out: string[] = [];
@@ -59,9 +61,11 @@ export function ResultsView({ name, submittedAt, elapsedMs, answers, result: r, 
         </div>
         <div className="flex flex-wrap justify-center gap-3 mt-6 no-print">
           <button type="button" className="btn btn-primary" onClick={onDownload}><IconDownload /> تحميل التقرير TXT</button>
+          <button type="button" className="btn btn-soft" onClick={onSend} disabled={sendStatus === 'sending'}>إعادة إرسال النتيجة</button>
           <button type="button" className="btn btn-soft" onClick={onRestart}><IconRefresh /> إعادة الاختبار</button>
           <button type="button" className="btn btn-soft" onClick={onTeacher}><IconLock /> مفتاح الإجابة للمعلمة</button>
         </div>
+        <p role="status" className="mt-3">{sendStatus === 'sending' ? 'جارٍ إرسال النتيجة…' : sendStatus === 'success' ? 'تم إرسال النتيجة.' : sendStatus === 'failed' ? 'تعذّر الإرسال. يمكنك إعادة المحاولة؛ يُحفظ الإرسال المعلّق إن كان التخزين متاحًا.' : ''}</p>
       </section>
 
       <section className="card p-5 sm:p-8 mt-6">

@@ -14,7 +14,7 @@ export interface ExamSession {
   soundOn: boolean;
 }
 
-const KEY = 'arabic-g5-grammar-spelling-exam:v1';
+const KEY = 'grade5-arabic-grammar-spelling-u1-u2-l1l2:session:v1';
 
 export function newSession(soundOn = true): ExamSession {
   return {
@@ -51,6 +51,7 @@ export function saveSession(s: ExamSession) {
 }
 
 export function makeAttemptId(): string {
+  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
   const rnd = Math.random().toString(36).slice(2, 8).toUpperCase();
   return `ATT-${Date.now().toString(36).toUpperCase()}-${rnd}`;
 }

@@ -6,12 +6,14 @@ import { ResultsView } from './components/results/ResultsView';
 import { TeacherArea } from './components/teacher/TeacherArea';
 import { useExamSession } from './hooks/useExamSession';
 import { downloadReport, type ReportInput } from './utils/report';
+import { buildPayload, retryPending, sendWithRetry } from './utils/submit';
 import { scoreExam } from './utils/scoring';
 import { playStartSound, playSubmitSound } from './utils/sound';
 
 export default function App() {
   const { session, start, setAnswer, goTo, submit, reset, toggleSound } = useExamSession();
   const [teacherOpen, setTeacherOpen] = useState(false);
+  const [sendStatus, setSendStatus] = useState('idle');
   const justSubmitted = useRef(false);
 
   const result = useMemo(
@@ -31,11 +33,16 @@ export default function App() {
         }
       : null;
 
+  useEffect(() => { void retryPending(); }, []);
+  const send = (input: ReportInput) => {
+    setSendStatus('sending');
+    void sendWithRetry(buildPayload(input)).then(ok => setSendStatus(ok ? 'success' : 'failed'));
+  };
   // Automatically download the TXT report once, right after submission.
   useEffect(() => {
     if (justSubmitted.current && reportInput) {
       justSubmitted.current = false;
-      downloadReport(reportInput);
+      try { downloadReport(reportInput); } finally { send(reportInput); }
     }
   }, [reportInput]);
 
@@ -80,6 +87,8 @@ export default function App() {
           answers={session.answers}
           result={result}
           onDownload={() => downloadReport(reportInput)}
+          onSend={() => send(reportInput)}
+          sendStatus={sendStatus}
           onRestart={reset}
           onTeacher={() => setTeacherOpen(true)}
         />

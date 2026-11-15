@@ -117,7 +117,7 @@ export const U1L2_QUESTIONS: Question[] = [
   },
   {
     id: 'U1L2-S3', lessonId: 'U1L2', section: 'spelling', difficulty: 'intermediate',
-    instruction: 'صحِّحي الخطأَ الإملائيَّ في الكلمةِ التي تحتَها خطّ، واكتبيها صحيحةً، ثمّ علّلي:',
+    instruction: 'صحِّحي الخطأَ الإملائيَّ في الكلمةِ التي فيها خطأٌ، واكتبيها صحيحةً، ثمّ علّلي:',
     subparts: [
       {
         id: 'a', kind: 'text', marks: 1.5, skill: 'تصحيح خطأ في همزة القطع (ماضٍ رباعي)',

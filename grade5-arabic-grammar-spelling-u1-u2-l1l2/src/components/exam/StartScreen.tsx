@@ -30,6 +30,7 @@ export function StartScreen({ onStart, onTeacher }: Props) {
           <li>• الدرجة الكلية: {toArabicDigits(100)} درجة.</li>
           <li>• يبدأ المؤقّت عند الضغط على زر «ابدئي الاختبار».</li>
           <li>• تُحفظ إجاباتكِ تلقائيًّا، ويمكنكِ التنقّل بين الأسئلة بحرية.</li>
+          <li>• عند التسليم يُرسل اسمكِ ونتيجتكِ وإجاباتكِ وتقريركِ إلى المعلّمة عبر Google Sheets. تُحفظ المحاولات غير المرسلة على هذا الجهاز لإعادة إرسالها لاحقًا.</li>
           <li>• لا يظهر التصحيح إلا بعد تسليم الاختبار.</li>
           <li>• يُفعَّل زر التسليم بعد الإجابة عن جميع البنود.</li>
         </ul>
@@ -55,7 +56,7 @@ export function StartScreen({ onStart, onTeacher }: Props) {
             placeholder="مثال: سلمى أحمد الخطيب"
             className="w-full rounded-2xl border-2 border-blush-200 bg-white px-4 py-3 text-lg outline-none focus:border-lav-400"
             aria-invalid={touched && !valid}
-            aria-describedby="name-err"
+            aria-describedby={touched && !valid ? 'name-err' : undefined}
           />
           {touched && !valid && (
             <p id="name-err" className="mt-2 text-sm text-blush-700">
@@ -71,9 +72,6 @@ export function StartScreen({ onStart, onTeacher }: Props) {
         <button type="button" onClick={onTeacher} className="btn btn-soft text-sm">
           <IconLock className="w-4 h-4" /> مفتاح الإجابة للمعلمة
         </button>
-        <a href="./arabic-grade5-grammar-spelling.zip" download className="block mt-3 text-xs text-lav-600 underline">
-          تحميل ملفات المشروع (ZIP)
-        </a>
       </div>
     </div>
   );
