@@ -3,7 +3,18 @@
 """توليد صفحة الفهرس (_site/index.html) لمنصة الاختبارات.
 
 السكربت يقرأ المجلدات المنشورة داخل _site (مجلد لكل اختبار، وفيه index.html)
-ويبني صفحة عربية واحدة تعرض الاختبارات في ثلاث خطوات: الصف ← المادة ← الاختبار.
+ويبني صفحة عربية واحدة تعرض الاختبارات في أربع خطوات:
+
+    الصف ← الفصل الدراسي ← المادة ← الاختبار
+
+لكل اختبار فصل دراسي (semester) صريح في بياناته، ويُشتق كالتالي:
+
+    1) حقل "semester" في landing/exams.json إن وُجد (أعلى أولوية).
+    2) كلمات صريحة في العنوان أو اسم المجلد، مثل «الفصل الثاني» أو
+       «semester 2» أو «s2» أو «term 2».
+    3) وإلا يُسند الاختبار إلى الفصل الأول (SEMESTER_DEFAULT = 1) — وهو ما
+       ينطبق على كل اختبارات المنصة الحالية، لأنها كلها من الفصل الأول.
+       تُطبع في سجل التوليد عبارة توضّح عدد الاختبارات التي أُسندت افتراضيًا.
 
 قواعد ظهور المواد مضبوطة في SUBJECTS أدناه، ويمكن تعديلها من مكان واحد:
 
@@ -30,6 +41,33 @@ from urllib.parse import quote
 # ---------------------------------------------------------------------------
 GRADES = ["الأول", "الثاني", "الثالث", "الرابع", "الخامس", "السادس", "السابع", "الثامن", "التاسع"]
 GRADE_MIN, GRADE_MAX = 1, 9
+
+# ---------------------------------------------------------------------------
+# 1-ب. الفصل الدراسي: طبقة بين الصف والمادة (تعديل القاعدة من هنا فقط)
+# ---------------------------------------------------------------------------
+# key, الرقم, الاسم المعروض, رمز الأيقونة, درجة اللون (hue)
+SEMESTERS = [
+    ("s1", 1, "الفصل الأول",  "#s-sun",  210),
+    ("s2", 2, "الفصل الثاني", "#s-leaf", 278),
+]
+
+# الفصل الافتراضي لأي اختبار لا يحمل معلومة فصل صريحة.
+# كل اختبارات المنصة الحالية تخص الفصل الأول، لذا تُسند إليه تلقائيًا.
+SEMESTER_DEFAULT = 1
+
+# أنماط استخراج الفصل من العنوان أو اسم المجلد (بعد التطبيع إلى أحرف صغيرة)
+SEMESTER_PATTERNS = [
+    (2, re.compile(
+        r"الفصل\s+الثاني|الفصل\s+الثانى|الفصل\s+الثانوي|الترم\s+الثاني|الترم\s+الثانى"
+        r"|semester\s*[-_ ]?\s*(?:2|ii)\b|term\s*[-_ ]?\s*2\b"
+        r"|(?<![a-z0-9])s2(?![0-9])|(?<![a-z0-9])sem2(?![0-9])"
+    )),
+    (1, re.compile(
+        r"الفصل\s+الأول|الفصل\s+الاول|الترم\s+الأول|الترم\s+الاول"
+        r"|semester\s*[-_ ]?\s*(?:1|i)\b|term\s*[-_ ]?\s*1\b"
+        r"|(?<![a-z0-9])s1(?![0-9])|(?<![a-z0-9])sem1(?![0-9])"
+    )),
+]
 
 # key, الاسم المعروض, رمز الأيقونة, درجة اللون (hue), الصفوف التي تظهر فيها
 SUBJECTS = [
@@ -155,6 +193,28 @@ def detect_subject(evidence):
     return ""
 
 
+def detect_semester(evidence):
+    """يعيد (رقم الفصل, مصدره) أو (0, "") إن لم توجد معلومة صريحة."""
+    for number, pattern in SEMESTER_PATTERNS:
+        if pattern.search(evidence):
+            return number, "detected"
+    return 0, ""
+
+
+def as_semester(value):
+    """يحوّل قيمة يدوية (1 / 2 / "1" / "2" / "s1" / "s2") إلى رقم فصل."""
+    if isinstance(value, bool):
+        return 0
+    if isinstance(value, int):
+        return value if value in (1, 2) else 0
+    text = normalize(str(value or ""))
+    if text in ("1", "s1", "sem1", "الفصل الاول", "الاول"):
+        return 1
+    if text in ("2", "s2", "sem2", "الفصل الثاني", "الثاني"):
+        return 2
+    return 0
+
+
 def collect_exams(site_dir):
     """يقرأ المجلدات المنشورة ويعيد قائمة الاختبارات المصنّفة."""
     exams = []
@@ -171,14 +231,23 @@ def collect_exams(site_dir):
         match = re.search(r"<title>(.*?)</title>", content, re.IGNORECASE | re.DOTALL)
         title = html.unescape(match.group(1)).strip() if match else name
         # العنوان هو المرجع الأول للتصنيف، واسم المجلد احتياط (كما في السكربت القديم).
-        evidence = (title + " " + name).lower()
-        grade = detect_grade(evidence)
-        subject = detect_subject(evidence)
+        evidence = title + " " + name
+        plain = evidence.lower()   # العربية لا تتغيّر، والأنماط اللاتينية صغيرة
+        grade = detect_grade(plain)
+        subject = detect_subject(plain)
+        semester, semester_source = detect_semester(plain + " " + normalize(evidence))
 
         override = overrides.get(name) or {}
         grade = int(override.get("grade", grade) or 0)
         subject = override.get("subject", subject) or subject
         title = override.get("title", title) or title
+        if "semester" in override:
+            manual = as_semester(override.get("semester"))
+            if manual:
+                semester, semester_source = manual, "override"
+        # قاعدة الأمان: أي اختبار بلا معلومة فصل صريحة يُسند إلى الفصل الأول.
+        if not semester:
+            semester, semester_source = SEMESTER_DEFAULT, "default"
         if not grade or not subject:
             continue
         exams.append(
@@ -187,6 +256,10 @@ def collect_exams(site_dir):
                 "title": title,
                 "grade": grade,
                 "subject": subject,
+                "semester": semester,
+                "semester_key": semester_key(semester),
+                "semester_label": semester_name(semester),
+                "semester_source": semester_source,
                 "url": "./%s/" % quote(name),
             }
         )
@@ -218,6 +291,29 @@ def subject_hue(key):
     return 222
 
 
+def semester_row(number):
+    for row in SEMESTERS:
+        if row[1] == number:
+            return row
+    return SEMESTERS[0]
+
+
+def semester_key(number):
+    return semester_row(number)[0]
+
+
+def semester_name(number):
+    return semester_row(number)[2]
+
+
+def semester_icon(number):
+    return semester_row(number)[3]
+
+
+def semester_hue(number):
+    return semester_row(number)[4]
+
+
 # ---------------------------------------------------------------------------
 # 4. بناء الواجهة
 # ---------------------------------------------------------------------------
@@ -226,16 +322,33 @@ def grade_name(grade):
 
 
 def build_home(exams_by_cell):
+    """مشهد الصفوف: يبقى كما هو، وتُحسب فيه اختبارات الفصلين معًا."""
     cards = []
     for grade in range(GRADE_MIN, GRADE_MAX + 1):
         rows = subjects_for_grade(grade)
-        total = sum(len(exams_by_cell.get((grade, row[0]), [])) for row in rows)
-        active = [row for row in rows if exams_by_cell.get((grade, row[0]))]
+        total = sum(
+            len(exams_by_cell.get((grade, row[1], subject[0]), []))
+            for row in SEMESTERS
+            for subject in rows
+        )
+        active = [
+            subject for subject in rows
+            if any(exams_by_cell.get((grade, row[1], subject[0])) for row in SEMESTERS)
+        ]
         dots = []
-        for row in rows:
-            on = bool(exams_by_cell.get((grade, row[0])))
-            dots.append('<i style="--h2:%d" class="%s"></i>' % (row[3], "is-on" if on else "is-off"))
-        meta = "%s · %s" % (count_subjects(len(active)), count_exams(total)) if total else EMPTY_EXAM_TEXT
+        for subject in rows:
+            on = any(
+                exams_by_cell.get((grade, row[1], subject[0])) for row in SEMESTERS
+            )
+            dots.append(
+                '<i style="--h2:%d" class="%s"></i>'
+                % (subject[3], "is-on" if on else "is-off")
+            )
+        meta = (
+            "%s · %s" % (count_subjects(len(active)), count_exams(total))
+            if total
+            else EMPTY_EXAM_TEXT
+        )
         cards.append(
 """      <a class="grade-card%s stagger" style="--h:%d;--i:%d" href="#g%d">
         <span class="go" aria-hidden="true">%s</span>
@@ -269,13 +382,81 @@ def build_home(exams_by_cell):
 
 
 def build_grade_view(grade, exams_by_cell):
+    """مشهد الصف: بطاقتان واضحتان فقط — الفصل الأول والفصل الثاني."""
     cards = []
-    for index, (key, label, icon_name, hue, _) in enumerate(subjects_for_grade(grade)):
-        items = exams_by_cell.get((grade, key), [])
+    total_all = 0
+    for index, (sem_key, sem_number, sem_label, sem_icon, sem_hue) in enumerate(SEMESTERS):
+        pairs = [
+            (subject, exams_by_cell.get((grade, sem_key, subject[0]), []))
+            for subject in subjects_for_grade(grade)
+        ]
+        total = sum(len(items) for _, items in pairs)
+        total_all += total
+        active = [subject for subject, items in pairs if items]
+        meta = (
+            "%s · %s" % (count_subjects(len(active)), count_exams(total))
+            if total
+            else EMPTY_EXAM_TEXT
+        )
+        cards.append(
+"""      <a class="sem-card%s stagger" style="--h:%d;--i:%d" data-semester="%s" href="#g%d/%s">
+        <span class="go" aria-hidden="true">%s</span>
+        <span class="sem-card__icon" aria-hidden="true">%s<b class="sem-card__badge">%s</b></span>
+        <span class="sem-card__name">%s</span>
+        <span class="sem-card__meta">%s</span>
+      </a>
+"""
+            % (
+                " is-empty" if not total else "",
+                sem_hue,
+                index,
+                sem_key,
+                grade,
+                sem_key,
+                icon("#s-chev", "ic-fwd"),
+                icon(sem_icon),
+                num(sem_number),
+                sem_label,
+                meta,
+            )
+        )
+    return """  <section class="view" id="view-grade-%d" data-label="%s" style="--h:%d" hidden>
+    <div class="view-head">
+      <button type="button" class="back" data-go="">%s كل الصفوف</button>
+      <span class="view-head__icon" aria-hidden="true">%s</span>
+      <div class="view-head__text">
+        <h2>%s</h2>
+        <p>اختر الفصل الدراسي — %s</p>
+      </div>
+    </div>
+    <h2 class="sect-title">الفصل الدراسي <span>%s</span></h2>
+    <div class="grid grid--semesters">
+%s    </div>
+  </section>
+""" % (
+        grade,
+        e(grade_name(grade)),
+        GRADE_HUES[grade],
+        icon("#s-chev", "ic-back"),
+        icon("#s-grades"),
+        grade_name(grade),
+        count_exams(total_all),
+        count_semesters(len(SEMESTERS)),
+        "".join(cards),
+    )
+
+
+def build_semester_view(grade, sem_row, exams_by_cell):
+    """مشهد الفصل: المواد الموجودة ضمن هذا الفصل في هذا الصف."""
+    sem_key, sem_number, sem_label, sem_icon, sem_hue = sem_row
+    cards = []
+    total = 0
+    for index, (key, label, subject_icon_name, hue, _) in enumerate(subjects_for_grade(grade)):
+        items = exams_by_cell.get((grade, sem_key, key), [])
+        total += len(items)
         if items:
-            meta = count_exams(len(items))
             cards.append(
-                """      <a class="subject-card stagger" style="--h:%d;--i:%d" data-subject="%s" href="#g%d/%s">
+                """      <a class="subject-card stagger" style="--h:%d;--i:%d" data-subject="%s" data-semester="%s" href="#g%d/%s/%s">
         <span class="subject-card__icon">%s</span>
         <span class="subject-card__name">%s</span>
         <span class="subject-card__meta">%s</span>
@@ -286,31 +467,34 @@ def build_grade_view(grade, exams_by_cell):
                     hue,
                     index,
                     key,
+                    sem_key,
                     grade,
+                    sem_key,
                     key,
-                    icon(icon_name),
+                    icon(subject_icon_name),
                     label,
-                    meta,
+                    count_exams(len(items)),
                     icon("#s-chev", "ic-fwd"),
                 )
             )
         else:
             cards.append(
-                """      <div class="subject-card is-empty stagger" style="--h:%d;--i:%d" data-subject="%s" aria-disabled="true">
+                """      <div class="subject-card is-empty stagger" style="--h:%d;--i:%d" data-subject="%s" data-semester="%s" aria-disabled="true">
         <span class="subject-card__icon">%s</span>
         <span class="subject-card__name">%s</span>
         <span class="subject-card__meta">%s</span>
       </div>
 """
-                % (hue, index, key, icon(icon_name), label, EMPTY_EXAM_TEXT)
+                % (hue, index, key, sem_key, icon(subject_icon_name), label, EMPTY_EXAM_TEXT)
             )
-    total = sum(len(exams_by_cell.get((grade, row[0]), [])) for row in subjects_for_grade(grade))
-    return """  <section class="view" id="view-grade-%d" data-label="%s" style="--h:%d" hidden>
+    return """  <section class="view" id="view-sem-%d-%s" data-label="%s · %s"
+           data-grade-label="%s" data-semester-label="%s" data-semester="%s"
+           style="--h:%d" hidden>
     <div class="view-head">
-      <button type="button" class="back" data-go="">%s كل الصفوف</button>
+      <button type="button" class="back" data-go="#g%d">%s كل الفصول</button>
       <span class="view-head__icon" aria-hidden="true">%s</span>
       <div class="view-head__text">
-        <h2>%s</h2>
+        <h2>%s — %s</h2>
         <p>اختر المادة — %s</p>
       </div>
     </div>
@@ -319,23 +503,32 @@ def build_grade_view(grade, exams_by_cell):
   </section>
 """ % (
         grade,
+        sem_key,
         e(grade_name(grade)),
-        GRADE_HUES[grade],
+        e(sem_label),
+        e(grade_name(grade)),
+        e(sem_label),
+        sem_key,
+        sem_hue,
+        grade,
         icon("#s-chev", "ic-back"),
-        icon("#s-grades"),
+        icon(sem_icon),
+        sem_label,
         grade_name(grade),
         count_exams(total),
         "".join(cards),
     )
 
 
-def build_exams_view(grade, key, items):
+def build_exams_view(grade, sem_row, key, items):
+    sem_key, sem_number, sem_label, sem_icon, _ = sem_row
     hue = subject_hue(key)
     cards = []
     for index, exam in enumerate(items):
-        searchable = "%s %s %s %s الصف %d %s" % (
+        searchable = "%s %s %s %s %s %d %s" % (
             exam["title"],
             subject_label(key),
+            sem_label,
             grade_name(grade),
             GRADES[grade - 1],
             grade,
@@ -343,11 +536,11 @@ def build_exams_view(grade, key, items):
         )
         cards.append(
             """      <a class="exam-card stagger" style="--i:%d" href="%s"
-         data-grade="%d" data-subject="%s" data-hue="%d" data-search="%s">
+         data-grade="%d" data-semester="%s" data-subject="%s" data-hue="%d" data-search="%s">
         <span class="exam-card__idx" aria-hidden="true">%s</span>
         <span>
           <span class="exam-card__title">%s</span>
-          <span class="exam-card__path">%s · %s</span>
+          <span class="exam-card__path">%s · %s · %s</span>
         </span>
         <span class="exam-card__cta">ابدأ %s</span>
       </a>
@@ -356,24 +549,27 @@ def build_exams_view(grade, key, items):
                 index,
                 e(exam["url"]),
                 grade,
+                sem_key,
                 key,
                 hue,
                 e(normalize(searchable)),
                 num(index + 1),
                 e(num(exam["title"])),
                 grade_name(grade),
+                sem_label,
                 subject_label(key),
                 icon("#s-arrow", "ic-fwd"),
             )
         )
-    return """  <section class="view" id="view-exams-%d-%s" data-label="%s · %s"
-           data-grade-label="%s" data-subject-label="%s" style="--h:%d" hidden>
+    return """  <section class="view" id="view-exams-%d-%s-%s" data-label="%s · %s · %s"
+           data-grade-label="%s" data-semester-label="%s" data-subject-label="%s"
+           data-semester="%s" style="--h:%d" hidden>
     <div class="view-head">
-      <button type="button" class="back" data-go="#g%d">%s كل المواد</button>
+      <button type="button" class="back" data-go="#g%d/%s">%s كل المواد</button>
       <span class="view-head__icon" aria-hidden="true">%s</span>
       <div class="view-head__text">
         <h2>%s — %s</h2>
-        <p>%s</p>
+        <p>%s · %s</p>
       </div>
     </div>
     <div class="grid grid--exams">
@@ -381,20 +577,34 @@ def build_exams_view(grade, key, items):
   </section>
 """ % (
         grade,
+        sem_key,
         key,
         e(grade_name(grade)),
+        e(sem_label),
         e(subject_label(key)),
         e(grade_name(grade)),
+        e(sem_label),
         e(subject_label(key)),
+        sem_key,
         hue,
         grade,
+        sem_key,
         icon("#s-chev", "ic-back"),
         icon(subject_icon(key)),
         subject_label(key),
         grade_name(grade),
+        sem_label,
         count_exams(len(items)),
         "".join(cards),
     )
+
+
+def count_semesters(n):
+    if n == 1:
+        return "فصل واحد"
+    if n == 2:
+        return "فصلان دراسيان"
+    return "%s فصول دراسية" % num(n)
 
 
 def build_stats(exams):
@@ -411,15 +621,19 @@ def build_stats(exams):
 def build_content(exams):
     exams_by_cell = {}
     for exam in exams:
-        exams_by_cell.setdefault((exam["grade"], exam["subject"]), []).append(exam)
+        exams_by_cell.setdefault(
+            (exam["grade"], exam["semester_key"], exam["subject"]), []
+        ).append(exam)
 
     parts = [build_home(exams_by_cell)]
     for grade in range(GRADE_MIN, GRADE_MAX + 1):
         parts.append(build_grade_view(grade, exams_by_cell))
-        for key, _, _, _, _ in subjects_for_grade(grade):
-            items = exams_by_cell.get((grade, key), [])
-            if items:
-                parts.append(build_exams_view(grade, key, items))
+        for sem_row in SEMESTERS:
+            parts.append(build_semester_view(grade, sem_row, exams_by_cell))
+            for key, _, _, _, _ in subjects_for_grade(grade):
+                items = exams_by_cell.get((grade, sem_row[0], key), [])
+                if items:
+                    parts.append(build_exams_view(grade, sem_row, key, items))
     return "".join(parts)
 
 
@@ -474,6 +688,19 @@ def main(argv):
             ", ".join(exam["folder"] for exam in exams),
         )
     )
+    # شفافية الفصل الدراسي: كم اختبارًا في كل فصل، وكم أُسند افتراضيًا للفصل الأول.
+    if exams:
+        by_semester = []
+        for sem_row in SEMESTERS:
+            count = len([exam for exam in exams if exam["semester"] == sem_row[1]])
+            by_semester.append("%s: %d" % (sem_row[2], count))
+        print("Semesters — %s" % ", ".join(by_semester))
+        defaulted = len([exam for exam in exams if exam["semester_source"] == "default"])
+        if defaulted:
+            print(
+                "Semester default — %d exam(s) had no explicit semester, "
+                "assigned to %s (SEMESTER_DEFAULT)." % (defaulted, semester_name(SEMESTER_DEFAULT))
+            )
     return 0
 
 

@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>منصة الاختبارات</title>
-<meta name="description" content="اختبارات تفاعلية للصفوف من الأول إلى التاسع: اختر الصف، ثم المادة، ثم الاختبار وابدأ فورًا." />
+<meta name="description" content="اختبارات تفاعلية للصفوف من الأول إلى التاسع: اختر الصف، ثم الفصل الدراسي، ثم المادة، ثم الاختبار وابدأ فورًا." />
 <meta name="theme-color" content="#12284a" />
 <meta name="color-scheme" content="light" />
 <style>
@@ -349,10 +349,12 @@ button { font: inherit; color: inherit; }
 /* ---------- الشبكات ---------- */
 .grid { display: grid; gap: .75rem; }
 .grid--grades { grid-template-columns: 1fr; }
+.grid--semesters { grid-template-columns: 1fr; }
 .grid--subjects { grid-template-columns: 1fr; }
 .grid--exams { grid-template-columns: 1fr; }
 @media (min-width: 27rem) {
   .grid--grades { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid--semesters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid--exams { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (min-width: 40rem) {
@@ -458,6 +460,56 @@ button { font: inherit; color: inherit; }
 .subject-card.is-empty { background: #fbfcfe; border-style: dashed; box-shadow: none; }
 .subject-card.is-empty .subject-card__icon { background: #f1f4f9; color: #9aa7b8; box-shadow: inset 0 0 0 1px #e5eaf2; }
 .subject-card.is-empty .subject-card__name { color: var(--ink-3); }
+
+/* ---------- بطاقة الفصل الدراسي (بين الصف والمادة) ---------- */
+.sem-card {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: grid; grid-template-columns: auto 1fr; align-items: center;
+  gap: .15rem .9rem;
+  padding: 1.1rem 1.15rem 1.1rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgba(16, 26, 44, .04), 0 14px 30px -26px rgba(16, 26, 44, .6);
+  transition: transform .24s var(--ease), box-shadow .24s var(--ease), border-color .24s;
+  padding-inline-end: 3.2rem;
+}
+.sem-card::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(110% 90% at 100% 0%, hsl(var(--h) 92% 95%), transparent 62%),
+    radial-gradient(100% 120% at 0% 100%, hsl(var(--h) 88% 93% / .8), transparent 58%);
+}
+.sem-card:hover, .sem-card:focus-visible {
+  transform: translateY(-4px);
+  border-color: hsl(var(--h) 72% 72%);
+  box-shadow: 0 18px 38px -26px hsl(var(--h) 65% 45% / .5);
+}
+.sem-card .go { inset-block-start: 50%; transform: translateY(-50%); color: hsl(var(--h) 68% 34%); background: hsl(var(--h) 90% 95%); }
+.sem-card:hover .go, .sem-card:focus-visible .go {
+  transform: translateY(-50%) translateX(calc(var(--fwd, -1) * 4px));
+  background: hsl(var(--h) 90% 89%);
+}
+.sem-card__icon {
+  position: relative; grid-row: span 2;
+  width: 3.4rem; height: 3.4rem; border-radius: 18px; display: grid; place-items: center;
+  background: linear-gradient(140deg, hsl(var(--h) 92% 93%), hsl(var(--h) 90% 85%));
+  color: hsl(var(--h) 68% 32%);
+  box-shadow: inset 0 0 0 1px hsl(var(--h) 78% 80%);
+}
+.sem-card__icon svg { width: 1.8rem; height: 1.8rem; }
+.sem-card__badge {
+  position: absolute; inset-block-end: -.3rem; inset-inline-end: -.3rem;
+  width: 1.4rem; height: 1.4rem; border-radius: 50%; display: grid; place-items: center;
+  background: hsl(var(--h) 78% 42%); color: #fff;
+  font-size: .74rem; font-weight: 800; font-style: normal; line-height: 1;
+  box-shadow: 0 0 0 2px #fff;
+}
+.sem-card__name { font-weight: 800; font-size: 1.05rem; }
+.sem-card__meta { grid-column: 2; color: var(--ink-3); font-size: .8rem; }
+.sem-card.is-empty { border-style: dashed; background: #fbfcfe; box-shadow: none; }
+.sem-card.is-empty .sem-card__icon { background: #f1f4f9; color: #9aa7b8; box-shadow: inset 0 0 0 1px #e5eaf2; }
+.sem-card.is-empty .sem-card__badge { background: #aab6c6; }
+.sem-card.is-empty .sem-card__name { color: var(--ink-2); }
+.sem-card.is-empty .go { color: #8b97a8; background: #f1f4f9; }
 
 /* ---------- بطاقة الاختبار ---------- */
 .exam-card {
@@ -587,11 +639,70 @@ button { font: inherit; color: inherit; }
   .puff { display: none; }
   .wa:hover, .wa:focus-visible { transform: none; }
 }
+
+/* ---------- بوابة الدخول (حاجز تجميلي بسيط، لا حماية أمنية) ----------
+   تظهر وحدها قبل اجتياز كلمة المرور، ويُخفى #app كاملًا حتى تُفتح البوابة.
+   كلمة المرور تُقارن داخل المتصفح، والحالة تُحفظ في sessionStorage. */
+#app[hidden], .gate[hidden] { display: none; }
+
+.gate {
+  position: relative; z-index: 1;
+  min-height: 100vh; min-height: 100svh;
+  display: grid; place-items: center;
+  padding: 2rem 1.15rem 2.5rem;
+  background:
+    radial-gradient(80% 55% at 50% 0%, #1e3a8a 0%, #12284a 58%, #0b1830 100%);
+}
+.gate__card {
+  width: min(100%, 27rem);
+  display: grid; gap: .5rem; justify-items: center; text-align: center;
+  padding: 2.1rem 1.45rem 1.7rem; border-radius: 26px; background: #fff;
+  box-shadow: 0 30px 70px -30px rgba(3, 10, 25, .9);
+}
+.gate__mark {
+  width: 3.6rem; height: 3.6rem; border-radius: 18px; display: grid; place-items: center;
+  background: linear-gradient(140deg, hsl(var(--brand) 92% 92%), hsl(var(--brand) 90% 82%));
+  color: hsl(var(--brand) 68% 32%);
+  box-shadow: inset 0 0 0 1px hsl(var(--brand) 78% 80%);
+}
+.gate__mark svg { width: 1.8rem; height: 1.8rem; }
+.gate h1 { margin: .45rem 0 0; font-size: clamp(1.25rem, 4.4vw, 1.55rem); font-weight: 800; }
+.gate__sub { margin: 0; color: var(--ink-3); font-size: .9rem; }
+.gate__form { display: block; width: 100%; margin-block-start: .75rem; }
+.gate__row { display: flex; gap: .5rem; }
+.gate__label {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.gate__form input {
+  flex: 1 1 auto; min-width: 0; padding: .75rem 1rem;
+  border: 1px solid #d7dfea; border-radius: 14px; background: #f7f9fd;
+  font: inherit; font-size: .95rem; color: var(--ink);
+}
+.gate__form input:focus {
+  outline: none; background: #fff;
+  border-color: hsl(var(--brand) 70% 60%);
+  box-shadow: 0 0 0 4px hsl(var(--brand) 90% 92%);
+}
+.gate__btn {
+  flex: none; padding: .75rem 1.35rem; border: 0; border-radius: 14px; cursor: pointer;
+  font-weight: 800; font-size: .95rem; color: #fff; background: hsl(var(--brand) 75% 40%);
+  box-shadow: 0 10px 22px -14px hsl(var(--brand) 70% 35%);
+  transition: transform .18s var(--ease), filter .18s;
+}
+.gate__btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.gate__error { margin: .1rem 0 0; color: #b42318; font-size: .85rem; font-weight: 700; }
+.gate__error[hidden] { display: none; }
+.gate__note { margin: .6rem 0 0; color: var(--ink-3); font-size: .76rem; line-height: 1.65; }
+.gate.is-wrong .gate__card { animation: shake .3s var(--ease); }
+@keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+@media (prefers-reduced-motion: reduce) {
+  .gate.is-wrong .gate__card { animation: none; }
+}
 </style>
 </head>
 <body>
 
-<a class="skip" href="#stage">تخطَّ إلى الاختبارات</a>
 <div class="glow" aria-hidden="true"><span></span><span></span><span></span></div>
 
 <!-- مكتبة الأيقونات: رموز مضمَّنة، بلا أي مورد خارجي -->
@@ -647,6 +758,23 @@ button { font: inherit; color: inherit; }
       <path d="M12 4.2 21 8.6l-9 4.4-9-4.4z" />
       <path d="M6.5 11v5.2C6.5 18 9 19.4 12 19.4s5.5-1.4 5.5-3.2V11" />
     </g>
+    <!-- الفصل الأول: شمس -->
+    <g id="s-sun" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4.2" />
+      <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6" />
+    </g>
+    <!-- الفصل الثاني: ورقة -->
+    <g id="s-leaf" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 4.4c-8.4-.9-14 3.4-13.6 9.1.2 2.9 2.2 5.1 5.1 5.3 5.7.4 9.9-5.2 8.5-14.4z" />
+      <path d="M4.2 20.4c1.5-5 4.6-8 9.2-9.6" />
+    </g>
+    <!-- قفل بوابة الدخول -->
+    <g id="s-lock" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4.6" y="10.4" width="14.8" height="9.6" rx="3" />
+      <path d="M8.2 10.4V8a3.8 3.8 0 0 1 7.6 0v2.4" />
+      <circle cx="12" cy="15.2" r="1.15" fill="currentColor" stroke="none" />
+      <path d="M12 16.6v1.6" />
+    </g>
     <g id="s-eng" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="m8.2 7.6-4.4 4.4 4.4 4.4M15.8 7.6l4.4 4.4-4.4 4.4M13.6 5.2l-3.2 13.6" />
     </g>
@@ -668,6 +796,40 @@ button { font: inherit; color: inherit; }
     <path id="s-star" d="M12 1.5c.9 6 4.5 9.6 10.5 10.5-6 .9-9.6 4.5-10.5 10.5-.9-6-4.5-9.6-10.5-10.5 6-.9 9.6-4.5 10.5-10.5z" />
   </defs>
 </svg>
+
+<!-- ============================================================
+     بوابة الدخول: حاجز تجميلي بسيط أمام فهرس المنصة فقط.
+     ليست نظام حماية أمنيًا: كلمة المرور مضمَّنة في هذه الصفحة المنشورة
+     ويمكن استخراجها تقنيًا، وصفحات الاختبارات نفسها لا تمر بها إطلاقًا.
+     ============================================================ -->
+<section class="gate" id="gate" aria-labelledby="gate-title">
+  <div class="gate__card">
+    <span class="gate__mark" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#s-lock" /></svg></span>
+    <h1 id="gate-title">منصة الاختبارات</h1>
+    <p class="gate__sub">أدخل كلمة المرور لعرض فهرس الصفوف والفصول والاختبارات.</p>
+    <form class="gate__form" id="gate-form" novalidate>
+      <label class="gate__label" for="gate-password">كلمة المرور</label>
+      <div class="gate__row">
+        <input id="gate-password" name="password" type="password" inputmode="text"
+               autocomplete="current-password" spellcheck="false"
+               placeholder="كلمة المرور" aria-describedby="gate-note" required />
+        <button type="submit" class="gate__btn">دخول</button>
+      </div>
+    </form>
+    <p class="gate__error" id="gate-error" role="alert" hidden>كلمة المرور غير صحيحة. حاول مرة أخرى.</p>
+    <p class="gate__note" id="gate-note">
+      بوابة عرض فقط: تمنع الوصول العشوائي إلى قائمة الاختبارات، ولا تمنع الوصول التقني
+      إلى الملفات المنشورة. الاختبارات التي تُرسل روابطها للطلاب تُفتح مباشرة بلا كلمة مرور.
+    </p>
+    <noscript>
+      <p class="gate__error">تحتاج هذه الصفحة إلى JavaScript لعرض كلمة المرور ثم فتح الفهرس.</p>
+    </noscript>
+  </div>
+</section>
+
+<!-- المنصة كاملة: مخفية (hidden) حتى تُفتح البوابة بنجاح -->
+<div id="app" hidden>
+<a class="skip" href="#stage">تخطَّ إلى الاختبارات</a>
 
 <header class="hero">
   <!-- عنصر بصري فقط: طائرة ورقية تعبر سماء الواجهة خلف المحتوى، ولا تستقبل أي نقر -->
@@ -711,20 +873,21 @@ button { font: inherit; color: inherit; }
       </span>
     </div>
 
-    <h1>ابدأ اختبارك في <span class="hl">ثلاث خطوات</span></h1>
-    <p class="hero__sub">اختر الصف، ثم المادة، ثم الاختبار — ويُفتح الاختبار فورًا داخل المتصفح، بلا تسجيل دخول.</p>
+    <h1>ابدأ اختبارك في <span class="hl">أربع خطوات</span></h1>
+    <p class="hero__sub">اختر الصف، ثم الفصل الدراسي، ثم المادة، ثم الاختبار — ويُفتح الاختبار فورًا داخل المتصفح.</p>
 
     <ol class="steps">
       <li><b>1</b> اختر الصف</li>
-      <li><b>2</b> اختر المادة</li>
-      <li><b>3</b> ابدأ الاختبار</li>
+      <li><b>2</b> اختر الفصل</li>
+      <li><b>3</b> اختر المادة</li>
+      <li><b>4</b> ابدأ الاختبار</li>
     </ol>
 
     <form class="search" role="search" onsubmit="return false">
       <svg class="search__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#s-search" /></svg>
       <label class="sr-only" for="q">ابحث في الاختبارات</label>
       <input id="q" type="search" autocomplete="off" spellcheck="false"
-             placeholder="ابحث باسم الاختبار أو المادة أو الصف…" aria-label="ابحث في الاختبارات" />
+             placeholder="ابحث باسم الاختبار أو المادة أو الفصل أو الصف…" aria-label="ابحث في الاختبارات" />
       <span class="search__hint" id="q-hint" aria-hidden="true">/</span>
       <button type="button" class="search__clear" id="q-clear" aria-label="مسح البحث" hidden>&times;</button>
     </form>
@@ -738,6 +901,8 @@ button { font: inherit; color: inherit; }
   <span class="crumb__sep" id="crumb-sep-1" hidden aria-hidden="true">‹</span>
   <button type="button" class="crumb" id="crumb-grade" hidden></button>
   <span class="crumb__sep" id="crumb-sep-2" hidden aria-hidden="true">‹</span>
+  <button type="button" class="crumb" id="crumb-semester" hidden></button>
+  <span class="crumb__sep" id="crumb-sep-3" hidden aria-hidden="true">‹</span>
   <button type="button" class="crumb" id="crumb-subject" hidden></button>
 </nav>
 
@@ -783,17 +948,117 @@ __CONTENT__
   </div>
   <p class="foot__note">جميع الاختبارات تعمل داخل المتصفح وتُحفظ نتيجتها تلقائيًا — لا حاجة إلى تنزيل أي برنامج.</p>
 </footer>
+</div>
 
-<noscript>
-  <style>
-    .view[hidden] { display: block !important; }
-    .crumbs, .search, .glow, .sky { display: none !important; }
-    .view { margin-block-end: 2rem; }
-    .view-head { display: none; }
-  </style>
-</noscript>
+<script id="gate-script">
+/* ============================================================
+   بوابة الدخول — حاجز تجميلي بسيط أمام فهرس المنصة فقط.
+   · كلمة المرور تُقارن داخل المتصفح (بصمة FNV-1a، لا تشفير).
+   · حالة الدخول تُحفظ في sessionStorage بمفتاح tests-platform-gate-v1،
+     فتبقى ما دام تبويب المتصفح مفتوحًا وتُنسى عند إغلاقه.
+   · ليست حماية أمنية: الصفحة المنشورة تحتوي كل ما يلزم لتجاوزها،
+     وصفحات الاختبارات نفسها لا تستدعي هذا السكربت إطلاقًا.
+   ============================================================ */
+(function () {
+  "use strict";
+  var doc = document;
+  var STORAGE_KEY = "tests-platform-gate-v1";
+  var SESSION_VALUE = "open";
+  var PASSWORD_HASH = 0x95ae3ebf;   /* FNV-1a لكلمة المرور الافتراضية */
 
-<script>
+  function hash(text) {
+    var h = 0x811c9dc5, i;
+    for (i = 0; i < text.length; i++) {
+      h ^= text.charCodeAt(i);
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return h >>> 0;
+  }
+
+  function check(password) {
+    return hash(String(password == null ? "" : password).trim()) === PASSWORD_HASH;
+  }
+
+  var gate = doc.getElementById("gate");
+  var app = doc.getElementById("app");
+  var form = doc.getElementById("gate-form");
+  var input = doc.getElementById("gate-password");
+  var error = doc.getElementById("gate-error");
+  var stage = doc.getElementById("stage");
+
+  function savedOpen() {
+    try {
+      return window.sessionStorage.getItem(STORAGE_KEY) === SESSION_VALUE;
+    } catch (e) {
+      return false;                      /* التخزين محجوب → البوابة تظهر دائمًا */
+    }
+  }
+
+  function remember() {
+    try { window.sessionStorage.setItem(STORAGE_KEY, SESSION_VALUE); } catch (e) {}
+  }
+
+  function openPlatform() {
+    if (app) app.hidden = false;
+    if (gate) gate.hidden = true;
+    if (error) error.hidden = true;
+    if (stage) { try { stage.focus({ preventScroll: true }); } catch (e) {} }
+  }
+
+  function lockPlatform() {
+    if (app) app.hidden = true;
+    if (gate) gate.hidden = false;
+    if (error) error.hidden = true;
+  }
+
+  function unlock(password) {
+    if (!check(password)) return false;
+    remember();
+    openPlatform();
+    return true;
+  }
+
+  function submit(password) {
+    if (unlock(password)) return true;
+    if (error) error.hidden = false;
+    if (gate) {
+      gate.classList.remove("is-wrong");
+      void gate.offsetWidth;
+      gate.classList.add("is-wrong");
+    }
+    if (input) {
+      input.value = "";
+      try { input.focus({ preventScroll: true }); } catch (e) {}
+    }
+    return false;
+  }
+
+  if (form) {
+    form.addEventListener("submit", function (event) {
+      if (event && event.preventDefault) event.preventDefault();
+      submit(input ? input.value : "");
+    });
+  }
+
+  if (savedOpen()) openPlatform();
+  else lockPlatform();
+
+  /* واجهة صغيرة للاختبارات الآلية وللتشخيص اليدوي — لا تغيّر السلوك. */
+  window.TestsGate = {
+    storageKey: STORAGE_KEY,
+    sessionValue: SESSION_VALUE,
+    passwordHash: PASSWORD_HASH,
+    hash: hash,
+    check: check,
+    submit: submit,
+    isOpen: savedOpen,
+    open: openPlatform,
+    lock: lockPlatform
+  };
+})();
+</script>
+
+<script id="router-script">
 (function () {
   "use strict";
   var doc = document;
@@ -802,9 +1067,12 @@ __CONTENT__
   var crumbs = doc.getElementById("crumbs");
   var cHome = doc.getElementById("crumb-home");
   var cGrade = doc.getElementById("crumb-grade");
+  var cSemester = doc.getElementById("crumb-semester");
   var cSubject = doc.getElementById("crumb-subject");
   var cSep1 = doc.getElementById("crumb-sep-1");
   var cSep2 = doc.getElementById("crumb-sep-2");
+  var cSep3 = doc.getElementById("crumb-sep-3");
+  var SEMESTER_KEYS = ["s1", "s2"];
   var input = doc.getElementById("q");
   var hint = doc.getElementById("q-hint");
   var clear = doc.getElementById("q-clear");
@@ -812,7 +1080,14 @@ __CONTENT__
   var searchList = doc.getElementById("search-results");
   var searchEmpty = doc.getElementById("search-empty");
   var searchCount = doc.getElementById("search-count");
+  var appRoot = doc.getElementById("app");
   var cards = [].slice.call(doc.querySelectorAll(".exam-card"));
+
+  /* البوابة مغلقة: لا تُلتقط اختصارات لوحة المفاتيح الخاصة بالمنصة،
+     حتى يُكتب «/» أو «Escape» داخل حقل كلمة المرور بشكل طبيعي. */
+  function locked() {
+    return !!(appRoot && appRoot.hidden);
+  }
   var titles = {};
   [].slice.call(doc.querySelectorAll(".view")).forEach(function (v) {
     titles[v.id] = v.getAttribute("data-label") || "منصة الاختبارات";
@@ -850,8 +1125,8 @@ __CONTENT__
     else el.removeAttribute("aria-current");
   }
 
-  function setCrumbs(gradeLabel, gradeHash, subjectLabel) {
-    var has = !!(gradeLabel || subjectLabel);
+  function setCrumbs(gradeLabel, gradeHash, semesterLabel, semesterHash, subjectLabel) {
+    var has = !!(gradeLabel || semesterLabel || subjectLabel);
     crumbs.hidden = !has;
     mark(cHome, !has);
     cGrade.hidden = !gradeLabel;
@@ -859,9 +1134,16 @@ __CONTENT__
     if (gradeLabel) {
       cGrade.textContent = gradeLabel;
       cGrade.setAttribute("data-go", gradeHash);
-      mark(cGrade, !subjectLabel);
+      mark(cGrade, !semesterLabel && !subjectLabel);
     }
-    cSep2.hidden = !subjectLabel;
+    cSemester.hidden = !semesterLabel;
+    cSep2.hidden = !semesterLabel;
+    if (semesterLabel) {
+      cSemester.textContent = semesterLabel;
+      cSemester.setAttribute("data-go", semesterHash);
+      mark(cSemester, !subjectLabel);
+    }
+    cSep3.hidden = !subjectLabel;
     cSubject.hidden = !subjectLabel;
     if (subjectLabel) {
       cSubject.textContent = subjectLabel;
@@ -887,32 +1169,67 @@ __CONTENT__
     render();
   }
 
+  /* تفكيك المسار: #g7 ← صف، #g7/s1 ← فصل، #g7/s1/arabic ← اختبارات مادة.
+     توافق خلفي: الروابط القديمة #g7/arabic (بلا فصل) تُفسَّر على الفصل الأول. */
+  function parseRoute(h) {
+    var parts = h.split("/").filter(function (part) { return part !== ""; });
+    var route = { grade: "", semester: "", subject: "" };
+    if (!parts[0]) return route;
+    route.grade = parts[0];
+    if (parts[1]) {
+      if (SEMESTER_KEYS.indexOf(parts[1]) >= 0) {
+        route.semester = parts[1];
+        route.subject = parts[2] || "";
+      } else {
+        route.semester = SEMESTER_KEYS[0];
+        route.subject = parts[1];
+      }
+    }
+    return route;
+  }
+
   function render() {
     var h = (location.hash || "").replace(/^#/, "");
     if (h === "search") { renderSearch(); return; }
-    var parts = h.split("/");
-    var grade = parts[0] || "";
-    var subject = parts[1] || "";
+    var route = parseRoute(h);
+    var gnum = route.grade.replace("g", "");
+    var gradeHash = "#" + route.grade;
+    var semesterHash = gradeHash + "/" + route.semester;
 
-    if (subject) {
-      var v = findView("view-exams-" + grade.replace("g", "") + "-" + subject);
+    if (route.subject) {
+      var v = findView("view-exams-" + gnum + "-" + route.semester + "-" + route.subject);
       if (v) {
         activate(v, v.getAttribute("data-label"));
-        setCrumbs(v.getAttribute("data-grade-label"), "#" + grade, v.getAttribute("data-subject-label"));
+        setCrumbs(
+          v.getAttribute("data-grade-label"), gradeHash,
+          v.getAttribute("data-semester-label"), semesterHash,
+          v.getAttribute("data-subject-label")
+        );
         return;
       }
     }
-    if (grade) {
-      var g = findView("view-grade-" + grade.replace("g", ""));
+    if (route.semester) {
+      var sView = findView("view-sem-" + gnum + "-" + route.semester);
+      if (sView) {
+        activate(sView, sView.getAttribute("data-label"));
+        setCrumbs(
+          sView.getAttribute("data-grade-label"), gradeHash,
+          sView.getAttribute("data-semester-label"), semesterHash, ""
+        );
+        return;
+      }
+    }
+    if (route.grade) {
+      var g = findView("view-grade-" + gnum);
       if (g) {
         activate(g, g.getAttribute("data-label"));
-        setCrumbs(g.getAttribute("data-label"), "#" + grade, "");
+        setCrumbs(g.getAttribute("data-label"), gradeHash, "", "", "");
         return;
       }
     }
     var home = findView("view-home");
     activate(home, "");
-    setCrumbs("", "", "");
+    setCrumbs("", "", "", "", "");
   }
 
   function renderSearch() {
@@ -974,6 +1291,7 @@ __CONTENT__
 
   /* اختصارات لوحة المفاتيح */
   doc.addEventListener("keydown", function (e) {
+    if (locked()) return;
     if (e.key === "/" && doc.activeElement !== input) {
       e.preventDefault();
       input.focus();
