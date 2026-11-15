@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-arabic: "Noto Naskh Arabic", "Amiri", "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+html { font-family: var(--font-arabic); }
+body { font-family: var(--font-arabic); background: #fff9f5; color: #4a3040; }
+
+.floral-bg {
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 10%, rgba(249,168,212,.35), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 85% 15%, rgba(196,181,253,.35), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 50% 95%, rgba(254,215,170,.4), transparent 60%),
+    linear-gradient(180deg, #fff9f5 0%, #fdf2f8 45%, #f5f3ff 100%);
+}
+.card-soft { background: rgba(255,255,255,.92); border: 1px solid #f9a8d4; box-shadow: 0 10px 30px rgba(219,39,119,.10); border-radius: 1.5rem; }
+.btn-primary { background: linear-gradient(135deg,#ec4899,#a78bfa); color:#fff; border-radius:9999px; font-weight:700; box-shadow:0 8px 20px rgba(236,72,153,.35); transition:.2s; }
+.btn-primary:hover:not(:disabled){ transform:translateY(-1px); box-shadow:0 12px 24px rgba(236,72,153,.45); }
+.btn-primary:disabled{ opacity:.45; cursor:not-allowed; }
+.btn-soft { background:#fff; border:1.5px solid #f9a8d4; color:#9d174d; border-radius:9999px; font-weight:700; transition:.2s; }
+.btn-soft:hover:not(:disabled){ background:#fdf2f8; }
+.opt-btn { border:1.5px solid #fbcfe8; background:#fff; border-radius:1rem; transition:.15s; text-align:right; }
+.opt-btn:hover{ border-color:#f472b6; background:#fdf2f8; }
+.opt-btn.selected{ border-color:#db2777; background:#fce7f3; box-shadow:0 0 0 3px rgba(249,168,212,.35); }
+.input-ar { border:1.5px solid #f9a8d4; border-radius:1rem; background:#fff; padding:.7rem 1rem; width:100%; outline:none; }
+.input-ar:focus{ border-color:#ec4899; box-shadow:0 0 0 3px rgba(249,168,212,.3); }
+.fade-in{ animation:fadeIn .45s ease both; }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
+@media print { .no-print{ display:none !important; } }
