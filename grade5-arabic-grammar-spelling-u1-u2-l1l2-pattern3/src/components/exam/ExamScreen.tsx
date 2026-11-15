@@ -1,6 +1,7 @@
 import { ChevronRight, ChevronLeft, Volume2, VolumeX, Clock } from "lucide-react";
 import type { Question } from "../../data/questions/types";
 import { LESSONS } from "../../data/curriculum/lessons";
+import { EXAM_MODEL_LABEL } from "../../config";
 import SubpartInput from "../questions/SubpartInput";
 import { formatDuration } from "../../utils/scoring";
 
@@ -34,7 +35,10 @@ export default function ExamScreen({ questions, currentIndex, answers, onAnswer,
       <div className="card-soft mb-4 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-bold text-pink-700">{studentName}</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-sm font-bold text-pink-700">{studentName}</p>
+              <span className="rounded-full bg-violet-100 px-2.5 py-0.5 text-xs font-bold text-violet-800">{EXAM_MODEL_LABEL}</span>
+            </div>
             <p className="text-xs text-violet-700">{lesson?.unit} – {lesson?.title}</p>
           </div>
           <div className="flex items-center gap-3">

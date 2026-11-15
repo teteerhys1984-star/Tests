@@ -1,11 +1,14 @@
-import { Download, RotateCcw, KeyRound, CheckCircle2, XCircle, MinusCircle } from "lucide-react";
+import { Download, RotateCcw, KeyRound, CheckCircle2, XCircle, MinusCircle, Send } from "lucide-react";
 import type { Question } from "../../data/questions/types";
-import { LESSONS, EXAM_TITLE } from "../../data/curriculum/lessons";
+import { LESSONS } from "../../data/curriculum/lessons";
+import { EXAM_MODEL_LABEL, EXAM_TITLE } from "../../config";
 import type { SubpartResult } from "../../utils/scoring";
 import { formatDuration, performanceLevel } from "../../utils/scoring";
+import type { SendStatus } from "../../utils/submit";
 
 interface Props {
   studentName: string;
+  attemptId?: string;
   questions: Question[];
   results: Map<string, SubpartResult>;
   totalEarned: number;
@@ -16,6 +19,8 @@ interface Props {
   spellingMax: number;
   durationMs: number;
   lessonStats: { lessonId: string; earned: number; max: number; grammarEarned: number; grammarMax: number; spellingEarned: number; spellingMax: number }[];
+  sendStatus: SendStatus;
+  onResend: () => void;
   onDownloadTxt: () => void;
   onRetake: () => void;
   onOpenTeacher: () => void;
@@ -23,15 +28,23 @@ interface Props {
 
 export default function ResultsScreen(p: Props) {
   const pct = p.totalMax ? Math.round((p.totalEarned / p.totalMax) * 100) : 0;
-  const correctCount = [...p.results.values()].filter((r) => r.correct).length;
-  const partialCount = [...p.results.values()].filter((r) => r.partial).length;
-  const wrongCount = [...p.results.values()].filter((r) => !r.correct && !r.partial).length;
+  const values = [...p.results.values()];
+  const correctCount = values.filter((r) => r.correct).length;
+  const partialCount = values.filter((r) => r.partial).length;
+  const unansweredCount = values.filter((r) => !r.studentAnswer).length;
+  const wrongCount = values.filter((r) => Boolean(r.studentAnswer) && !r.correct && !r.partial).length;
 
-  const weakest = [...p.lessonStats].sort((a, b) => (a.max ? a.earned / a.max : 1) - (b.max ? b.earned / b.max : 1))[0];
+  const weakestLessons = [...p.lessonStats]
+    .filter((ls) => (ls.max ? ls.earned / ls.max : 1) < 0.8)
+    .sort((a, b) => (a.max ? a.earned / a.max : 1) - (b.max ? b.earned / b.max : 1));
+  const weakest = weakestLessons[0];
 
   return (
     <div className="fade-in mx-auto max-w-4xl px-4 py-6">
       <div className="card-soft p-6 text-center sm:p-8">
+        <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-violet-100 px-3 py-0.5 text-xs font-bold text-violet-800">
+          {EXAM_MODEL_LABEL}
+        </div>
         <h1 className="text-2xl font-bold text-pink-900">نتيجة الاختبار</h1>
         <p className="mt-1 text-violet-800">{EXAM_TITLE}</p>
         <p className="mt-2 text-lg font-bold text-pink-800">الطالبة: {p.studentName}</p>
@@ -41,32 +54,61 @@ export default function ResultsScreen(p: Props) {
           <span className="text-lg font-bold">{pct}%</span>
         </div>
         <p className="mt-3 font-bold text-pink-800">{performanceLevel(pct)}</p>
-        <div className="mt-4 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
+        <div className={`mt-4 grid grid-cols-2 gap-3 text-sm ${unansweredCount > 0 ? "sm:grid-cols-5" : "sm:grid-cols-4"}`}>
           <div className="rounded-xl bg-green-50 p-3"><p className="font-bold text-green-700">صحيحة</p><p className="text-xl font-bold">{correctCount}</p></div>
           <div className="rounded-xl bg-amber-50 p-3"><p className="font-bold text-amber-700">جزئية</p><p className="text-xl font-bold">{partialCount}</p></div>
           <div className="rounded-xl bg-red-50 p-3"><p className="font-bold text-red-700">خاطئة</p><p className="text-xl font-bold">{wrongCount}</p></div>
+          {unansweredCount > 0 && (
+            <div className="rounded-xl bg-gray-100 p-3"><p className="font-bold text-gray-700">غير مجابة</p><p className="text-xl font-bold">{unansweredCount}</p></div>
+          )}
           <div className="rounded-xl bg-violet-50 p-3"><p className="font-bold text-violet-700">المدة</p><p className="text-xl font-bold" dir="ltr">{formatDuration(p.durationMs)}</p></div>
         </div>
         <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
           <div className="rounded-xl bg-pink-50 p-3">قواعد اللغة: <b>{p.grammarEarned} / {p.grammarMax}</b></div>
           <div className="rounded-xl bg-violet-50 p-3">الإملاء: <b>{p.spellingEarned} / {p.spellingMax}</b></div>
         </div>
-        {weakest && (
+        {weakest ? (
           <p className="mt-3 text-sm text-pink-700">
             الدرس الذي يحتاج إلى تعزيز: <b>{LESSONS.find((l) => l.id === weakest.lessonId)?.title}</b>
           </p>
+        ) : (
+          <p className="mt-3 text-sm text-green-700 font-bold">
+            ممتاز! أتقنتِ جميع الدروس الخمسة بنسبة 80% فأكثر.
+          </p>
         )}
         <div className="no-print mt-6 flex flex-wrap justify-center gap-3">
-          <button onClick={p.onDownloadTxt} className="btn-primary flex items-center gap-2 px-6 py-3">
+          <button type="button" onClick={p.onDownloadTxt} className="btn-primary flex items-center gap-2 px-6 py-3">
             <Download className="h-5 w-5" /> تحميل التقرير TXT
           </button>
-          <button onClick={p.onRetake} className="btn-soft flex items-center gap-2 px-6 py-3">
+          <button
+            type="button"
+            onClick={p.onResend}
+            disabled={p.sendStatus === "sending"}
+            className="btn-soft flex items-center gap-2 px-6 py-3 disabled:opacity-50"
+          >
+            <Send className="h-4 w-4" /> إعادة إرسال النتيجة
+          </button>
+          <button type="button" onClick={p.onRetake} className="btn-soft flex items-center gap-2 px-6 py-3">
             <RotateCcw className="h-5 w-5" /> إعادة الاختبار
           </button>
-          <button onClick={p.onOpenTeacher} className="btn-soft flex items-center gap-2 px-6 py-3">
+          <button type="button" onClick={p.onOpenTeacher} className="btn-soft flex items-center gap-2 px-6 py-3">
             <KeyRound className="h-5 w-5" /> مفتاح المعلم
           </button>
         </div>
+        <p role="status" className="mt-3 text-xs font-semibold text-violet-800">
+          {p.sendStatus === "sending"
+            ? "جارٍ إرسال النتيجة إلى المعلّمة…"
+            : p.sendStatus === "success"
+              ? "تم إرسال النتيجة إلى المعلّمة بنجاح."
+              : p.sendStatus === "failed"
+                ? "تعذّر إرسال النتيجة حاليًا؛ حُفظت المحاولة معلّقة محليًا لإعادة إرسالها تلقائيًا، ويمكنكِ إعادة المحاولة بالزر أعلاه. نتيجتكِ وتقريركِ متاحان بالكامل."
+                : ""}
+        </p>
+        {p.attemptId && (
+          <p className="mt-1 text-[11px] text-pink-500">
+            معرّف المحاولة: <span dir="ltr">{p.attemptId}</span>
+          </p>
+        )}
       </div>
 
       {/* جدول الدروس */}

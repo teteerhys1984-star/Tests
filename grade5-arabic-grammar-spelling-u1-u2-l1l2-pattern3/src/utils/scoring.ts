@@ -23,7 +23,8 @@ export function scoreSubpart(sp: Subpart, answer: string): SubpartResult {
   if (!ans) return { subpart: sp, studentAnswer: ans, earned: 0, correct: false, partial: false };
 
   if (sp.type === "mcq" || sp.type === "select") {
-    const ok = normalizeArabic(ans) === normalizeArabic(sp.correctAnswer);
+    const strict = !!sp.strictHamza;
+    const ok = strict ? ans === sp.correctAnswer : normalizeArabic(ans) === normalizeArabic(sp.correctAnswer);
     return { subpart: sp, studentAnswer: ans, earned: ok ? sp.maxMarks : 0, correct: ok, partial: false };
   }
 

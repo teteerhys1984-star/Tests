@@ -1,9 +1,11 @@
 import type { Question } from "../data/questions/types";
-import { LESSONS, EXAM_TITLE } from "../data/curriculum/lessons";
+import { LESSONS } from "../data/curriculum/lessons";
+import { EXAM_TITLE } from "../config";
 import type { SubpartResult } from "./scoring";
 
 export function buildTxtReport(opts: {
   studentName: string;
+  attemptId?: string;
   questions: Question[];
   results: Map<string, SubpartResult>;
   totalEarned: number;
@@ -16,7 +18,7 @@ export function buildTxtReport(opts: {
   submittedAt: Date;
   lessonStats: { lessonId: string; earned: number; max: number; grammarEarned: number; grammarMax: number; spellingEarned: number; spellingMax: number }[];
 }): string {
-  const { studentName, questions, results, totalEarned, totalMax, grammarEarned, grammarMax, spellingEarned, spellingMax, durationMs, submittedAt, lessonStats } = opts;
+  const { studentName, attemptId, questions, results, totalEarned, totalMax, grammarEarned, grammarMax, spellingEarned, spellingMax, durationMs, submittedAt, lessonStats } = opts;
   const pct = totalMax ? Math.round((totalEarned / totalMax) * 100) : 0;
   const sec = Math.floor(durationMs / 1000);
   const hh = String(Math.floor(sec / 3600)).padStart(2, "0");
@@ -25,9 +27,10 @@ export function buildTxtReport(opts: {
   const lines: string[] = [];
   lines.push("=".repeat(60));
   lines.push(EXAM_TITLE);
-  lines.push("الوحدة الأولى كاملة + الدرس الأول والثاني من الوحدة الثانية | قواعد اللغة والإملاء فقط");
+  lines.push("الصف الخامس الأساسي • الوحدة الأولى كاملة + الدرس الأول والثاني من الوحدة الثانية | قواعد اللغة والإملاء فقط");
   lines.push("=".repeat(60));
   lines.push(`اسم الطالبة: ${studentName}`);
+  if (attemptId) lines.push(`معرّف المحاولة: ${attemptId}`);
   lines.push(`تاريخ ووقت التسليم: ${submittedAt.toLocaleString("ar-EG")}`);
   lines.push(`المدة: ${hh}:${mm}:${ss}`);
   lines.push(`الدرجة: ${totalEarned} / ${totalMax}  (${pct}%)`);
@@ -59,6 +62,7 @@ export function buildTxtReport(opts: {
     }
   }
   lines.push("");
+  lines.push("أُنشئ هذا التقرير في المتصفح، وتُرسل نسخة من الاسم والنتيجة والإجابات إلى المعلّمة عبر Google Sheets عند توفر الاتصال.");
   lines.push("انتهى التقرير.");
   return lines.join("\n");
 }

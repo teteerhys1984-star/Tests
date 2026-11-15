@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { EXAM_DATA } from "./data/questions/examQuestions";
 import { LESSONS } from "./data/curriculum/lessons";
+import { ATTEMPT_STORAGE_KEY, EXAM_MODEL_LABEL, SOUND_STORAGE_KEY } from "./config";
 import WelcomeScreen from "./components/exam/WelcomeScreen";
 import ExamScreen from "./components/exam/ExamScreen";
 import ResultsScreen from "./components/results/ResultsScreen";
@@ -9,11 +10,17 @@ import { FloralHeader } from "./components/common/Decor";
 import { scoreSubpart, type SubpartResult } from "./utils/scoring";
 import { buildTxtReport, downloadTxt } from "./utils/report";
 import { playStartSound, playSubmitSound } from "./utils/sound";
+import {
+  buildPayload,
+  hasPending,
+  isSent,
+  newAttemptId,
+  retryPending,
+  sendWithRetry,
+  type SendStatus,
+} from "./utils/submit";
 
-const STORAGE_KEY = "arabic-grade5-exam-session-v1";
-const SOUND_KEY = "arabic-grade5-exam-sound";
-
-interface Session {
+export interface Session {
   studentName: string;
   attemptId: string;
   startTimestamp: number;
@@ -25,22 +32,38 @@ interface Session {
   soundOn: boolean;
 }
 
-function loadSession(): Session | null {
+function isValidSession(value: unknown): value is Session {
+  if (!value || typeof value !== "object") return false;
+  const s = value as Partial<Session>;
+  if (typeof s.studentName !== "string" || !s.studentName.trim()) return false;
+  if (typeof s.attemptId !== "string" || !s.attemptId) return false;
+  if (typeof s.startTimestamp !== "number" || !Number.isFinite(s.startTimestamp)) return false;
+  if (typeof s.currentIndex !== "number" || !Number.isFinite(s.currentIndex)) return false;
+  if (typeof s.submitted !== "boolean") return false;
+  if (s.submittedAt !== null && typeof s.submittedAt !== "number") return false;
+  if (s.durationMs !== null && typeof s.durationMs !== "number") return false;
+  if (!s.answers || typeof s.answers !== "object" || Array.isArray(s.answers)) return false;
+  return true;
+}
+
+export function loadSession(): Session | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(ATTEMPT_STORAGE_KEY);
     if (!raw) return null;
-    return JSON.parse(raw) as Session;
+    const parsed: unknown = JSON.parse(raw);
+    if (!isValidSession(parsed)) return null;
+    return parsed;
   } catch {
     return null;
   }
 }
 
-function saveSession(s: Session | null) {
+export function saveSession(s: Session | null) {
   try {
-    if (s) localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
-    else localStorage.removeItem(STORAGE_KEY);
+    if (s) localStorage.setItem(ATTEMPT_STORAGE_KEY, JSON.stringify(s));
+    else localStorage.removeItem(ATTEMPT_STORAGE_KEY);
   } catch {
-    /* ignore */
+    /* التخزين غير متاح – يعمل الاختبار في الذاكرة */
   }
 }
 
@@ -55,11 +78,35 @@ export default function App() {
   });
   const [now, setNow] = useState(Date.now());
   const [teacherReturn, setTeacherReturn] = useState<View>("welcome");
+  const [sendStatus, setSendStatus] = useState<SendStatus>(() => {
+    const s = loadSession();
+    if (!s?.submitted) return "idle";
+    if (isSent(s.attemptId)) return "success";
+    if (hasPending(s.attemptId)) return "sending";
+    return "idle";
+  });
 
   const [soundPref, setSoundPref] = useState<boolean>(() => {
-    try { return localStorage.getItem(SOUND_KEY) !== "off"; } catch { return true; }
+    try {
+      return localStorage.getItem(SOUND_STORAGE_KEY) !== "off";
+    } catch {
+      return true;
+    }
   });
   const soundOn = session?.soundOn ?? soundPref;
+
+  // إعادة إرسال المحاولات المعلّقة لهذا النموذج فقط عند فتح التطبيق
+  useEffect(() => {
+    void retryPending().then(() => {
+      setSession((cur) => {
+        if (cur?.submitted) {
+          if (isSent(cur.attemptId)) setSendStatus("success");
+          else if (hasPending(cur.attemptId)) setSendStatus("failed");
+        }
+        return cur;
+      });
+    });
+  }, []);
 
   // مؤقت حي
   useEffect(() => {
@@ -83,8 +130,24 @@ export default function App() {
     });
   };
 
+  const triggerSend = useCallback((s: Session) => {
+    if (!s.submitted || s.submittedAt == null) return;
+    setSendStatus("sending");
+    const payload = buildPayload({
+      attemptId: s.attemptId,
+      studentName: s.studentName,
+      startTimestamp: s.startTimestamp,
+      submittedAt: s.submittedAt,
+      durationMs: s.durationMs ?? Math.max(0, s.submittedAt - s.startTimestamp),
+      answers: s.answers,
+    });
+    void sendWithRetry(payload).then((ok) => {
+      setSendStatus(ok ? "success" : "failed");
+    });
+  }, []);
+
   const handleStart = (name: string) => {
-    const attemptId = `attempt-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const attemptId = newAttemptId();
     const s: Session = {
       studentName: name,
       attemptId,
@@ -98,40 +161,51 @@ export default function App() {
     };
     saveSession(s);
     setSession(s);
+    setSendStatus("idle");
     setView("exam");
     if (s.soundOn) playStartSound();
   };
 
   const handleAnswer = (id: string, v: string) => {
-    if (!session) return;
+    if (!session || session.submitted) return;
     updateSession({ answers: { ...session.answers, [id]: v } });
   };
 
   const handleNavigate = (idx: number) => {
     const clamped = Math.max(0, Math.min(EXAM_DATA.questions.length - 1, idx));
     updateSession({ currentIndex: clamped });
+    window.scrollTo({ top: 0, behavior: "auto" });
   };
 
   const handleSubmit = () => {
-    if (!session) return;
-    const durationMs = Date.now() - session.startTimestamp;
-    const next: Session = { ...session, submitted: true, submittedAt: Date.now(), durationMs };
+    if (!session || session.submitted) return;
+    const submittedAt = Date.now();
+    const durationMs = Math.max(0, submittedAt - session.startTimestamp);
+    const next: Session = { ...session, submitted: true, submittedAt, durationMs };
     saveSession(next);
     setSession(next);
     setView("results");
     if (next.soundOn) playSubmitSound();
+    triggerSend(next);
+    window.scrollTo({ top: 0, behavior: "auto" });
   };
 
   const handleRetake = () => {
     saveSession(null);
     setSession(null);
+    setSendStatus("idle");
     setView("welcome");
+    window.scrollTo({ top: 0, behavior: "auto" });
   };
 
   const toggleSound = () => {
     const next = !soundOn;
     setSoundPref(next);
-    try { localStorage.setItem(SOUND_KEY, next ? "on" : "off"); } catch { /* ignore */ }
+    try {
+      localStorage.setItem(SOUND_STORAGE_KEY, next ? "on" : "off");
+    } catch {
+      /* ignore */
+    }
     if (session) updateSession({ soundOn: next });
   };
 
@@ -173,6 +247,7 @@ export default function App() {
     if (!session) return;
     const content = buildTxtReport({
       studentName: session.studentName,
+      attemptId: session.attemptId,
       questions: EXAM_DATA.questions,
       results: computed.results,
       totalEarned: computed.totalEarned,
@@ -186,7 +261,7 @@ export default function App() {
       lessonStats: computed.lessonStats,
     });
     const safeName = session.studentName.replace(/[\\/:*?"<>|]/g, "_").trim() || "Student";
-    downloadTxt(`Arabic_Grade5_Grammar_Spelling_${safeName}.txt`, content);
+    downloadTxt(`Arabic_Grade5_Grammar_Spelling_Pattern3_${safeName}.txt`, content);
   };
 
   return (
@@ -213,6 +288,7 @@ export default function App() {
         {view === "results" && session && (
           <ResultsScreen
             studentName={session.studentName}
+            attemptId={session.attemptId}
             questions={EXAM_DATA.questions}
             results={computed.results}
             totalEarned={computed.totalEarned}
@@ -223,6 +299,8 @@ export default function App() {
             spellingMax={computed.spellingMax}
             durationMs={session.durationMs ?? elapsedMs}
             lessonStats={computed.lessonStats}
+            sendStatus={sendStatus}
+            onResend={() => triggerSend(session)}
             onDownloadTxt={handleDownloadTxt}
             onRetake={handleRetake}
             onOpenTeacher={openTeacher}
@@ -231,7 +309,7 @@ export default function App() {
         {view === "teacher" && <TeacherKey questions={EXAM_DATA.questions} onClose={closeTeacher} />}
       </div>
       <footer className="pb-6 text-center text-xs text-pink-500">
-        حديقة المعرفة – اختبار اللغة العربية للصف الخامس الأساسي • قواعد اللغة والإملاء فقط
+        حديقة المعرفة – اختبار اللغة العربية للصف الخامس الأساسي ({EXAM_MODEL_LABEL}) • قواعد اللغة والإملاء فقط
       </footer>
     </div>
   );
