@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-page: #f3fcf6;
+    --bg-mint: #e8f9ee;
+    --bg-lime-tint: #f4fce3;
+    --surface-card: #ffffff;
+    --border-mint: #c6ebd3;
+    --border-strong: #6fd492;
+    --green-primary: #22c55e;
+    --green-primary-hover: #16a34a;
+    --green-deep: #0f3d24;
+    --green-body: #173c28;
+    --green-muted: #39634b;
+    --lime-accent: #84cc16;
+  }
+
+  html {
+    font-family: "Nunito", "Plus Jakarta Sans", ui-rounded, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    scroll-behavior: smooth;
+    background-color: var(--bg-page);
+    color: var(--green-body);
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--bg-page);
+    background-image:
+      radial-gradient(circle at 12% 8%, rgba(163, 230, 53, 0.14), transparent 34%),
+      radial-gradient(circle at 88% 6%, rgba(74, 222, 128, 0.16), transparent 36%),
+      linear-gradient(180deg, #f4fdf7 0%, #effbf3 52%, #f6fdf8 100%);
+    background-attachment: fixed;
+  }
+
+  button:not(:disabled),
+  select:not(:disabled),
+  label[for] {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 3px solid #22c55e;
+    outline-offset: 2px;
+  }
+}
+
+.font-arabic-contact {
+  font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+}
+
+.exam-card-shadow {
+  box-shadow:
+    0 10px 30px -12px rgba(22, 101, 52, 0.1),
+    0 2px 8px -2px rgba(34, 197, 94, 0.07);
+}
+
+.soft-pill-shadow {
+  box-shadow: 0 2px 6px rgba(22, 101, 52, 0.06);
+}
