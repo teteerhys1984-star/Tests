@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, "Noto Sans", "Noto Sans Arabic", sans-serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: #12341f;
+  background:
+    radial-gradient(1100px 520px at 0% -10%, rgba(187, 247, 208, 0.6), transparent 60%),
+    radial-gradient(900px 480px at 100% 0%, rgba(217, 249, 157, 0.5), transparent 55%),
+    #f6fdf3;
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 3px solid #65a30d;
+  outline-offset: 2px;
+}
+
+select {
+  appearance: auto;
+}
+
+details > summary::-webkit-details-marker {
+  color: #15803d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+  details > :not(summary) {
+    display: block;
+  }
+}
