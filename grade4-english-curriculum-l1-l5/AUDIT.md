@@ -5,6 +5,8 @@
 `Mahmoud's L1-L5 Test`).
 **التصنيف:** الصف الرابع ← **الفصل الأول** ← اللغة الإنجليزية، بعنوان
 `Curriculum Test Lessons 1 to 5`.
+**Pull Request:** [#26](https://github.com/teteerhys1984-star/Tests/pull/26) — مفتوح، لم يُدمج
+(لا يُفتح PR آخر، وأي تحديث يُدفع إلى الفرع نفسه فيحدّث هذا الـPR).
 
 ---
 
