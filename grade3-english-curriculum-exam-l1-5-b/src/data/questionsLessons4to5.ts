@@ -1,0 +1,1123 @@
+import { CURRICULUM_IMAGES } from "../assets/curriculum";
+import { ExamQuestion } from "../types/exam";
+
+/**
+ * Lesson 4 — My Five Senses (10 questions × 2 marks = 20 marks)
+ * Verified against original Pupil's Book pp. 12–14 and Workbook pp. 12–14 scans.
+ */
+export const LESSON_4_QUESTIONS: ExamQuestion[] = [
+  {
+    id: "l4-q1",
+    lesson: 4,
+    marks: 2,
+    type: "choice-parts",
+    variant: "mcq",
+    formatLabel: "Read and Answer",
+    instruction: "Read the dialogue and choose the correct answer for each question.",
+    stimuli: [
+      {
+        kind: "reading",
+        heading: "Listen and read",
+        lines: [
+          { label: "Panel 1", text: '"Let\'s buy some cakes. They smell nice."' },
+          {
+            label: "Panel 2",
+            text: '"The cakes taste delicious. I like chocolate cakes."',
+          },
+          {
+            label: "Panel 3",
+            text: '"I can see a colourful butterfly. Wow! It looks beautiful."',
+          },
+          {
+            label: "Panel 4",
+            text: '"Can you hear the birds?" — "Yes, I can. But I can\'t see them."',
+          },
+          {
+            label: "Panel 5",
+            text: '"It\'s a lovely cat. Can I touch it?" — "Yes, you can."',
+          },
+          { label: "Panel 6", text: '"It\'s small and soft. I like cats."' },
+        ],
+      },
+    ],
+    parts: [
+      {
+        id: "a",
+        prompt: "a) In Panel 2, how do the cakes taste?",
+        options: [
+          "They taste delicious.",
+          "They taste small and soft.",
+          "They taste colourful.",
+        ],
+        correctAnswer: "They taste delicious.",
+        marks: 1,
+      },
+      {
+        id: "b",
+        prompt: "b) In Panel 4, can the girl see the birds?",
+        options: [
+          "Yes, she can see them.",
+          "No, she can't see them, but she can hear them.",
+          "No, she can't hear them.",
+        ],
+        correctAnswer: "No, she can't see them, but she can hear them.",
+        marks: 1,
+      },
+    ],
+    explanation:
+      'Panel 2 says "The cakes taste delicious." Panel 4 answers "Can you hear the birds?" with "Yes, I can. But I can\'t see them."',
+    gradingRule: "1 mark for each correct choice (2 × 1 = 2 marks).",
+    source: {
+      lesson: 4,
+      lessonTitle: "My Five Senses",
+      book: "Pupil's Book",
+      page: "Page 12",
+      exercise: "Activity 1 — Listen and read",
+    },
+  },
+  {
+    id: "l4-q2",
+    lesson: 4,
+    marks: 2,
+    type: "choice-parts",
+    variant: "inline-choice",
+    formatLabel: "Choose the Correct Word",
+    instruction: "Read the dialogue lines and choose the correct words to complete them.",
+    parts: [
+      {
+        id: "a",
+        prompt: 'a) "It\'s a lovely cat. _____ touch it?" — "Yes, you can."',
+        options: ["Can I", "I can't", "Have I"],
+        correctAnswer: "Can I",
+        marks: 0.5,
+      },
+      {
+        id: "b",
+        prompt: 'b) "It\'s small and _____. I like cats."',
+        options: ["soft", "delicious", "upstairs"],
+        correctAnswer: "soft",
+        marks: 0.5,
+      },
+      {
+        id: "c",
+        prompt: 'c) "I can see a colourful butterfly. Wow! It looks _____."',
+        options: ["beautiful", "twenty", "downstairs"],
+        correctAnswer: "beautiful",
+        marks: 0.5,
+      },
+      {
+        id: "d",
+        prompt: 'd) "Let\'s buy some cakes. They smell _____."',
+        options: ["nice", "soft", "small"],
+        correctAnswer: "nice",
+        marks: 0.5,
+      },
+    ],
+    explanation:
+      'The printed sentences are: "Can I touch it?", "It\'s small and soft.", "It looks beautiful.", and "They smell nice."',
+    gradingRule: "0.5 mark per correct choice (4 × 0.5 = 2 marks).",
+    source: {
+      lesson: 4,
+      lessonTitle: "My Five Senses",
+      book: "Pupil's Book",
+      page: "Page 12",
+      exercise: "Activity 1 — Listen and read",
+    },
+  },
+  {
+    id: "l4-q3",
+    lesson: 4,
+    marks: 2,
+    type: "reorder",
+    formatLabel: "Reorder Words",
+    instruction: "Put the words in the correct order to make a sentence.",
+    words: ["butterfly", "see", "I", "colourful", "can", "a"],
+    endPunctuation: ".",
+    correctSentence: "I can see a colourful butterfly.",
+    acceptedSentences: ["I can see a colourful butterfly."],
+    explanation: 'The correct printed sentence is: "I can see a colourful butterfly."',
+    gradingRule:
+      '2 marks for exact word order "I can see a colourful butterfly."; 0 marks otherwise.',
+    source: {
+      lesson: 4,
+      lessonTitle: "My Five Senses",
+      book: "Pupil's Book",
+      page: "Page 12",
+      exercise: "Activity 1 — Listen and read (Panel 3)",
+    },
+  },
+  {
+    id: "l4-q4",
+    lesson: 4,
+    marks: 2,
+    type: "text-parts",
+    variant: "fill",
+    formatLabel: "Complete the Sentence",
+    instruction: "Look at the pictures and write each complete body-part word.",
+    stimuli: [
+      {
+        kind: "images",
+        layout: "single",
+        items: [
+          {
+            src: CURRICULUM_IMAGES.l4Wb12Bodyparts,
+            alt: "Five body part pictures beside dotted letters: 1 nose, 2 eye, 3 ear, 4 mouth, 5 hand",
+          },
+        ],
+      },
+    ],
+    parts: [
+      {
+        id: "a",
+        label: "1-",
+        beforeText: "n . . . . s . . . . →",
+        afterText: "",
+        placeholder: "Write the word",
+        correctDisplay: "nose",
+        acceptedAnswers: ["nose"],
+        marks: 0.5,
+      },
+      {
+        id: "b",
+        label: "2-",
+        beforeText: ". . . . y . . . . →",
+        afterText: "",
+        placeholder: "Write the word",
+        correctDisplay: "eye",
+        acceptedAnswers: ["eye"],
+        marks: 0.5,
+      },
+      {
+        id: "c",
+        label: "4-",
+        beforeText: "m . . . .  . . . . th →",
+        afterText: "",
+        placeholder: "Write the word",
+        correctDisplay: "mouth",
+        acceptedAnswers: ["mouth"],
+        marks: 0.5,
+      },
+      {
+        id: "d",
+        label: "5-",
+        beforeText: "h . . . . n . . . . →",
+        afterText: "",
+        placeholder: "Write the word",
+        correctDisplay: "hand",
+        acceptedAnswers: ["hand"],
+        marks: 0.5,
+      },
+    ],
+    explanation: "The completed body-part words are: 1- nose, 2- eye, 4- mouth, 5- hand.",
+    gradingRule:
+      "0.5 mark for each correctly spelled word (4 × 0.5 = 2 marks), case-insensitive.",
+    source: {
+      lesson: 4,
+      lessonTitle: "My Five Senses",
+      book: "Workbook",
+      page: "Page 12",
+      exercise: "Exercise 1 — Look and complete",
+    },
+  },
+  {
+    id: "l4-q5",
+    lesson: 4,
+    marks: 2,
+    type: "text-parts",
+    variant: "fill",
+    formatLabel: "Complete the Sentence",
+    instruction: "Fill in the spaces using the five sense words from the box.",
+    stimuli: [
+      {
+        kind: "word-bank",
+        label: "Word box",
+        words: ["see", "smell", "hear", "taste", "touch"],
+      },
+    ],
+    parts: [
+      {
+        id: "a",
+        label: "1-",
+        beforeText: "I can",
+        afterText: "with my ears.",
+        placeholder: "Sense word",
+        correctDisplay: "hear",
+        acceptedAnswers: ["hear"],
+        marks: 0.5,
+      },
+      {
+        id: "b",
+        label: "2-",
+        beforeText: "I can",
+        afterText: "with my eyes.",
+        placeholder: "Sense word",
+        correctDisplay: "see",
+        acceptedAnswers: ["see"],
+        marks: 0.5,
+      },
+      {
+        id: "c",
+        label: "3-",
+        beforeText: "I can",
+        afterText: "with my hands.",
+        placeholder: "Sense word",
+        correctDisplay: "touch",
+        acceptedAnswers: ["touch"],
+        marks: 0.5,
+      },
+      {
+        id: "d",
+        label: "4-",
+        beforeText: "I can",
+        afterText: "with my mouth.",
+        placeholder: "Sense word",
+        correctDisplay: "taste",
+        acceptedAnswers: ["taste"],
+        marks: 0.5,
+      },
+    ],
+    explanation:
+      "We hear with our ears, see with our eyes, touch with our hands, and taste with our mouth.",
+    gradingRule:
+      "0.5 mark for each correct sense verb (4 × 0.5 = 2 marks), case-insensitive.",
+    source: {
+      lesson: 4,
+      lessonTitle: "My Five Senses",
+      book: "Workbook",
+      page: "Page 12",
+      exercise: "Exercise 2 — Fill in the spaces",
+    },
+  },
+  {
+    id: "l4-q6",
+    lesson: 4,
+    marks: 2,
+    type: "choice-parts",
+    variant: "inline-choice",
+    formatLabel: "Choose the Correct Word",
+    instruction: "Read and choose the correct word in brackets for each sentence.",
+    parts: [
+      {
+        id: "a",
+        prompt: "1- The cakes (touch , taste) delicious.",
+        options: ["touch", "taste"],
+        correctAnswer: "taste",
+        marks: 0.5,
+      },
+      {
+        id: "b",
+        prompt: "2- The flowers (smell , see) nice.",
+        options: ["smell", "see"],
+        correctAnswer: "smell",
+        marks: 0.5,
+      },
+      {
+        id: "c",
+        prompt: "3- I can't (hear , touch) the sky.",
+        options: ["hear", "touch"],
+        correctAnswer: "touch",
+        marks: 0.5,
+      },
+      {
+        id: "d",
+        prompt: "4- I can (see , smell) the moon.",
+        options: ["see", "smell"],
+        correctAnswer: "see",
+        marks: 0.5,
+      },
+    ],
+    explanation:
+      "1- The cakes taste delicious. 2- The flowers smell nice. 3- I can't touch the sky. 4- I can see the moon.",
+    gradingRule: "0.5 mark for each correct word (4 × 0.5 = 2 marks).",
+    source: {
+      lesson: 4,
+      lessonTitle: "My Five Senses",
+      book: "Workbook",
+      page: "Page 13",
+      exercise: "Exercise 3 — Read and circle",
+    },
+  },
+  {
+    id: "l4-q7",
+    lesson: 4,
+    marks: 2,
+    type: "match",
+    formatLabel: "Match Items",
+    instruction: "Match each number with its correct English word.",
+    optionPlaceholder: "Choose a word...",
+    options: ["ten", "twenty", "thirty", "forty", "fifty"],
+    parts: [
+      { id: "a", prompt: "1. 10", correctAnswer: "ten", marks: 0.5 },
+      { id: "b", prompt: "2. 20", correctAnswer: "twenty", marks: 0.5 },
+      { id: "c", prompt: "3. 40", correctAnswer: "forty", marks: 0.5 },
+      { id: "d", prompt: "4. 50", correctAnswer: "fifty", marks: 0.5 },
+    ],
+    explanation: "10 = ten, 20 = twenty, 40 = forty, and 50 = fifty.",
+    gradingRule: "0.5 mark for each correctly matched number (4 × 0.5 = 2 marks).",
+    source: {
+      lesson: 4,
+      lessonTitle: "My Five Senses",
+      book: "Pupil's Book",
+      page: "Page 13",
+      exercise: "Activity 3 — Listen and repeat (10–50)",
+    },
+  },
+  {
+    id: "l4-q8",
+    lesson: 4,
+    marks: 2,
+    type: "choice-parts",
+    variant: "true-false",
+    formatLabel: "True / False",
+    instruction: "Read the five senses song and choose True or False for each statement.",
+    stimuli: [
+      {
+        kind: "reading",
+        heading: "Listen and sing",
+        isSong: true,
+        lines: [
+          { text: "I have two eyes," },
+          { text: "so I can see." },
+          { text: "And a nose to smell." },
+          { text: "I have ten fingers," },
+          { text: "that can touch." },
+          { text: "They do it very well!" },
+          { text: "I have two ears," },
+          { text: "so I can hear." },
+          { text: "The birds up in the trees." },
+        ],
+      },
+    ],
+    parts: [
+      {
+        id: "a",
+        prompt: "a) The speaker has two eyes to see.",
+        options: ["True", "False"],
+        correctAnswer: "True",
+        marks: 0.5,
+      },
+      {
+        id: "b",
+        prompt: "b) The speaker has a nose to smell.",
+        options: ["True", "False"],
+        correctAnswer: "True",
+        marks: 0.5,
+      },
+      {
+        id: "c",
+        prompt: "c) In the song, the speaker has five fingers that can touch.",
+        options: ["True", "False"],
+        correctAnswer: "False",
+        marks: 0.5,
+      },
+      {
+        id: "d",
+        prompt: "d) The speaker can hear the birds up in the trees.",
+        options: ["True", "False"],
+        correctAnswer: "True",
+        marks: 0.5,
+      },
+    ],
+    explanation:
+      'The song says "I have ten fingers, that can touch" (so "five fingers" is False). The other three statements directly match the song.',
+    gradingRule: "0.5 mark for each correct True/False response (4 × 0.5 = 2 marks).",
+    source: {
+      lesson: 4,
+      lessonTitle: "My Five Senses",
+      book: "Pupil's Book",
+      page: "Page 14",
+      exercise: "Activity 5 — Listen and sing",
+    },
+  },
+  {
+    id: "l4-q9",
+    lesson: 4,
+    marks: 2,
+    type: "text-parts",
+    variant: "numbers",
+    formatLabel: "Complete the Numbers",
+    instruction:
+      "Look at the pumpkin number chart (thirty-one to fifty) and write each missing number.",
+    stimuli: [
+      {
+        kind: "images",
+        layout: "single",
+        items: [
+          {
+            src: CURRICULUM_IMAGES.l4Wb14Pumpkins,
+            alt: "Rows of pumpkins counting from thirty-one to fifty with blank pumpkins to fill in",
+          },
+        ],
+      },
+    ],
+    parts: [
+      {
+        id: "a",
+        label: "(a)",
+        beforeText: "thirty-one, thirty-two,",
+        afterText: "",
+        placeholder: "e.g. thirty-three",
+        correctDisplay: "thirty-three",
+        acceptedAnswers: ["thirty-three", "thirty three", "33"],
+        marks: 0.5,
+      },
+      {
+        id: "b",
+        label: "(b)",
+        beforeText: "thirty-five,",
+        afterText: ", thirty-seven",
+        placeholder: "Write number",
+        correctDisplay: "thirty-six",
+        acceptedAnswers: ["thirty-six", "thirty six", "36"],
+        marks: 0.5,
+      },
+      {
+        id: "c",
+        label: "(c)",
+        beforeText: "forty,",
+        afterText: ", forty-two",
+        placeholder: "Write number",
+        correctDisplay: "forty-one",
+        acceptedAnswers: ["forty-one", "forty one", "41"],
+        marks: 0.5,
+      },
+      {
+        id: "d",
+        label: "(d)",
+        beforeText: "forty-six,",
+        afterText: ", forty-eight",
+        placeholder: "Write number",
+        correctDisplay: "forty-seven",
+        acceptedAnswers: ["forty-seven", "forty seven", "47"],
+        marks: 0.5,
+      },
+    ],
+    explanation:
+      "The missing numbers are thirty-three (33), thirty-six (36), forty-one (41), and forty-seven (47).",
+    gradingRule:
+      "0.5 mark per blank (4 × 0.5 = 2 marks). Accepts hyphenated words, spaced words, or numerals.",
+    source: {
+      lesson: 4,
+      lessonTitle: "My Five Senses",
+      book: "Workbook",
+      page: "Page 14",
+      exercise: "Exercise 5 — Write the missing numbers",
+    },
+  },
+  {
+    id: "l4-q10",
+    lesson: 4,
+    marks: 2,
+    type: "text-parts",
+    variant: "write",
+    formatLabel: "Look and Write",
+    instruction:
+      'Complete part (a) with the "oa" word, then look at the picture cues in part (b) and write a full sentence like the example.',
+    stimuli: [
+      {
+        kind: "images",
+        heading: 'Part (a): The "oa" sound (coat · g _ _ t)',
+        layout: "row",
+        items: [
+          {
+            label: "coat",
+            src: CURRICULUM_IMAGES.l4Pb14Coat,
+            alt: "A brown winter coat",
+          },
+          {
+            label: "g _ _ t",
+            src: CURRICULUM_IMAGES.l4Pb14Goat,
+            alt: "A brown and white goat with horns",
+          },
+        ],
+      },
+      {
+        kind: "example",
+        label: "Example for Part (b)",
+        text: "1- I can see a car.",
+        iconPair: {
+          leftSrc: CURRICULUM_IMAGES.l4Wb14Cue1Organ,
+          leftAlt: "Two eyes",
+          rightSrc: CURRICULUM_IMAGES.l4Wb14Cue1Object,
+          rightAlt: "A car",
+        },
+      },
+    ],
+    parts: [
+      {
+        id: "a",
+        label: "(a)",
+        beforeText: 'Complete the "oa" word: g _ _ t →',
+        afterText: "",
+        placeholder: "Write the word",
+        correctDisplay: "goat",
+        acceptedAnswers: ["goat"],
+        marks: 1,
+      },
+      {
+        id: "b",
+        label: "(b)",
+        beforeText: "Look at the nose and the rose. Write the sentence:",
+        afterText: "",
+        placeholder: "I can ...",
+        correctDisplay: "I can smell a rose.",
+        acceptedAnswers: [
+          "i can smell a rose",
+          "i can smell the rose",
+          "i can smell a flower",
+          "i can smell the flower",
+        ],
+        marks: 1,
+        cueImages: [
+          { src: CURRICULUM_IMAGES.l4Wb14Cue2Organ, alt: "A nose" },
+          { src: CURRICULUM_IMAGES.l4Wb14Cue2Object, alt: "A rose flower" },
+        ],
+      },
+    ],
+    explanation:
+      'Part (a): "goat" shares the "oa" sound with "coat". Part (b): following "I can see a car.", the nose and rose picture forms "I can smell a rose."',
+    gradingRule:
+      '1 mark for "goat"; 1 mark for "I can smell a rose." (also accepts "the rose" or "a flower"), ignoring case and final period.',
+    source: {
+      lesson: 4,
+      lessonTitle: "My Five Senses",
+      book: "Pupil's Book & Workbook",
+      page: "Pupil's Book p. 14 & Workbook p. 14",
+      exercise: "Activity 6 (Sounds and words — oa) & Exercise 6 (Look and write)",
+    },
+  },
+];
+
+/**
+ * Lesson 5 — Revision 1 (10 questions × 2 marks = 20 marks)
+ * Verified against original Pupil's Book pp. 15–17 and Workbook pp. 15–17 scans.
+ */
+export const LESSON_5_QUESTIONS: ExamQuestion[] = [
+  {
+    id: "l5-q1",
+    lesson: 5,
+    marks: 2,
+    type: "choice-parts",
+    variant: "true-false",
+    formatLabel: "True / False",
+    instruction:
+      "Look at the school picture, read the statements, and choose True (✓) or False (✗).",
+    stimuli: [
+      {
+        kind: "images",
+        heading:
+          "School building (Upstairs: Classroom, Classroom · Downstairs: Laboratory on the left, Library on the right)",
+        layout: "single",
+        items: [
+          {
+            src: CURRICULUM_IMAGES.l5Pb15School,
+            alt: "School building with two Classroom rooms upstairs, Laboratory downstairs on the left, Library downstairs on the right, pupils playing basketball on the court, and a teacher standing beside the court",
+          },
+        ],
+      },
+    ],
+    parts: [
+      {
+        id: "a",
+        prompt: "1- The classrooms are downstairs.",
+        options: ["True (✓)", "False (✗)"],
+        correctAnswer: "False (✗)",
+        marks: 1,
+      },
+      {
+        id: "b",
+        prompt: "2- The pupils are playing basketball.",
+        options: ["True (✓)", "False (✗)"],
+        correctAnswer: "True (✓)",
+        marks: 1,
+      },
+    ],
+    explanation:
+      "Both classrooms are upstairs (so statement 1 is False ✗), and the pupils on the court are playing basketball (so statement 2 is True ✓).",
+    gradingRule: "1 mark per statement (2 × 1 = 2 marks).",
+    source: {
+      lesson: 5,
+      lessonTitle: "Revision 1",
+      book: "Pupil's Book",
+      page: "Page 15",
+      exercise: "Activity 1 — Look, read then Tick ✓ or cross ✗ (Items 1–2)",
+    },
+  },
+  {
+    id: "l5-q2",
+    lesson: 5,
+    marks: 2,
+    type: "choice-parts",
+    variant: "true-false",
+    formatLabel: "True / False",
+    instruction:
+      "Look closely at the school picture again and choose True (✓) or False (✗) for each statement.",
+    stimuli: [
+      {
+        kind: "images",
+        layout: "single",
+        items: [
+          {
+            src: CURRICULUM_IMAGES.l5Pb15School,
+            alt: "School building with two Classroom rooms upstairs, Laboratory downstairs on the left, Library downstairs on the right, pupils playing basketball on the court, and a teacher standing outside on the court",
+          },
+        ],
+      },
+    ],
+    parts: [
+      {
+        id: "a",
+        prompt: "3- The teacher is in the classroom.",
+        options: ["True (✓)", "False (✗)"],
+        correctAnswer: "False (✗)",
+        marks: 0.5,
+      },
+      {
+        id: "b",
+        prompt: "4- The library is on the right of the laboratory.",
+        options: ["True (✓)", "False (✗)"],
+        correctAnswer: "True (✓)",
+        marks: 1,
+      },
+      {
+        id: "c",
+        prompt: "5- The laboratory is upstairs.",
+        options: ["True (✓)", "False (✗)"],
+        correctAnswer: "False (✗)",
+        marks: 0.5,
+      },
+    ],
+    explanation:
+      "3 is False ✗ (the teacher is standing outside on the court), 4 is True ✓ (Library is on the right of Laboratory downstairs), and 5 is False ✗ (Laboratory is downstairs).",
+    gradingRule:
+      "0.5 mark for item 3, 1 mark for item 4, and 0.5 mark for item 5 (total 2 marks).",
+    source: {
+      lesson: 5,
+      lessonTitle: "Revision 1",
+      book: "Pupil's Book",
+      page: "Page 15",
+      exercise: "Activity 1 — Look, read then Tick ✓ or cross ✗ (Items 3–5)",
+    },
+  },
+  {
+    id: "l5-q3",
+    lesson: 5,
+    marks: 2,
+    type: "single-choice",
+    formatLabel: "Read and Choose",
+    instruction: "Look at the printed information about Sally and choose the correct sentence.",
+    stimuli: [
+      {
+        kind: "table",
+        heading: "Family Information Table",
+        headers: ["Information", "Sally"],
+        rows: [[{ text: "brothers" }, { text: "2", isExample: true }]],
+      },
+    ],
+    prompt: "Which sentence about Sally is correct?",
+    options: [
+      "Sally has got two brothers.",
+      "Sally have got two brothers.",
+      "Sally has got twenty brothers.",
+    ],
+    correctAnswer: "Sally has got two brothers.",
+    explanation:
+      'The table shows "2" in the "brothers" row for Sally, and "Sally" takes "has got": "Sally has got two brothers."',
+    gradingRule: '2 marks for selecting "Sally has got two brothers."; 0 marks otherwise.',
+    source: {
+      lesson: 5,
+      lessonTitle: "Revision 1",
+      book: "Pupil's Book",
+      page: "Page 16",
+      exercise: "Activity 2 — Table (Sally's printed row)",
+    },
+  },
+  {
+    id: "l5-q4",
+    lesson: 5,
+    marks: 2,
+    type: "choice-parts",
+    variant: "inline-choice",
+    formatLabel: "Choose the Correct Word",
+    instruction: "Read about each school place and choose the correct word in brackets.",
+    parts: [
+      {
+        id: "a",
+        prompt: "1- That is the playground. — I (play , swim) with my friends here.",
+        options: ["play", "swim"],
+        correctAnswer: "play",
+        marks: 1,
+      },
+      {
+        id: "b",
+        prompt: "2- This is the laboratory. — We have (Sports , Science) here.",
+        options: ["Sports", "Science"],
+        correctAnswer: "Science",
+        marks: 0.5,
+      },
+      {
+        id: "c",
+        prompt: "3- This is the library. — We (read , sing) here.",
+        options: ["read", "sing"],
+        correctAnswer: "read",
+        marks: 0.5,
+      },
+    ],
+    explanation:
+      "We play with friends in the playground, have Science in the laboratory, and read in the library.",
+    gradingRule:
+      "1 mark for item 1, 0.5 mark for item 2, and 0.5 mark for item 3 (total 2 marks).",
+    source: {
+      lesson: 5,
+      lessonTitle: "Revision 1",
+      book: "Pupil's Book",
+      page: "Page 17",
+      exercise: "Activity 4 — Read, match then circle",
+    },
+  },
+  {
+    id: "l5-q5",
+    lesson: 5,
+    marks: 2,
+    type: "match",
+    formatLabel: "Match Items",
+    instruction:
+      "Look at the five pictures (A to E from top to bottom), then read and match each sentence.",
+    stimuli: [
+      {
+        kind: "images",
+        heading: "Pictures A (top) to E (bottom)",
+        layout: "single",
+        items: [
+          {
+            src: CURRICULUM_IMAGES.l5Wb15Pictures,
+            alt: "Five pictures from top to bottom: A a girl with two boys, B an open science book with flasks, C a bunch of twenty flowers, D two pupils with a basketball in the gym, E parents and children on a sofa in a flat",
+            caption:
+              "A: girl with two boys · B: open science book · C: bunch of flowers · D: basketball in the gym · E: family on a sofa at home",
+          },
+        ],
+      },
+    ],
+    optionPlaceholder: "Choose a picture...",
+    options: [
+      "Picture A — a girl standing with two boys",
+      "Picture B — an open science book with flasks",
+      "Picture C — a bunch of twenty flowers",
+      "Picture D — two pupils with a basketball in the gym",
+      "Picture E — parents and children sitting at home",
+    ],
+    parts: [
+      {
+        id: "a",
+        prompt: "1- I can see twenty flowers.",
+        correctAnswer: "Picture C — a bunch of twenty flowers",
+        marks: 0.5,
+      },
+      {
+        id: "b",
+        prompt: "2- We've got Sports today.",
+        correctAnswer: "Picture D — two pupils with a basketball in the gym",
+        marks: 0.5,
+      },
+      {
+        id: "c",
+        prompt: "3- She's got two brothers.",
+        correctAnswer: "Picture A — a girl standing with two boys",
+        marks: 0.5,
+      },
+      {
+        id: "d",
+        prompt: "5- I live with my parents in a flat.",
+        correctAnswer: "Picture E — parents and children sitting at home",
+        marks: 0.5,
+      },
+    ],
+    explanation:
+      "1 → Picture C (flowers), 2 → Picture D (Sports/basketball), 3 → Picture A (girl with two brothers), 5 → Picture E (family in a flat).",
+    gradingRule: "0.5 mark per correctly matched sentence (4 × 0.5 = 2 marks).",
+    source: {
+      lesson: 5,
+      lessonTitle: "Revision 1",
+      book: "Workbook",
+      page: "Page 15",
+      exercise: "Exercise 1 — Read and match",
+    },
+  },
+  {
+    id: "l5-q6",
+    lesson: 5,
+    marks: 2,
+    type: "reorder",
+    formatLabel: "Reorder Words",
+    instruction: "Put the words in the correct order to make a sentence.",
+    words: ["favourite", "Science", "subject", "my", "is"],
+    endPunctuation: ".",
+    correctSentence: "Science is my favourite subject.",
+    acceptedSentences: [
+      "Science is my favourite subject.",
+      "My favourite subject is Science.",
+    ],
+    explanation:
+      'The printed sentence is: "Science is my favourite subject." ("My favourite subject is Science." is also grammatically valid and taught in the same exercise set.)',
+    gradingRule:
+      '2 marks for "Science is my favourite subject." (also accepts "My favourite subject is Science."); 0 marks otherwise.',
+    source: {
+      lesson: 5,
+      lessonTitle: "Revision 1",
+      book: "Workbook",
+      page: "Page 15",
+      exercise: "Exercise 1 — Read and match (Item 4)",
+    },
+  },
+  {
+    id: "l5-q7",
+    lesson: 5,
+    marks: 2,
+    type: "choice-parts",
+    variant: "inline-choice",
+    formatLabel: "Odd One Out",
+    instruction: "Odd one out. Choose the word that does NOT belong in each group.",
+    parts: [
+      {
+        id: "a",
+        prompt: "1- Science · Maths · gym · English",
+        options: ["Science", "Maths", "gym", "English"],
+        correctAnswer: "gym",
+        marks: 0.5,
+      },
+      {
+        id: "b",
+        prompt: "2- twenty-three · Arabic · thirty · twenty-nine",
+        options: ["twenty-three", "Arabic", "thirty", "twenty-nine"],
+        correctAnswer: "Arabic",
+        marks: 0.5,
+      },
+      {
+        id: "c",
+        prompt: "3- eye · nose · ear · cake",
+        options: ["eye", "nose", "ear", "cake"],
+        correctAnswer: "cake",
+        marks: 0.5,
+      },
+      {
+        id: "d",
+        prompt: "4- computer · classroom · library · laboratory",
+        options: ["computer", "classroom", "library", "laboratory"],
+        correctAnswer: "computer",
+        marks: 0.5,
+      },
+    ],
+    explanation:
+      "1- gym (not a school subject); 2- Arabic (not a number); 3- cake (not a body part); 4- computer (not a school room).",
+    gradingRule: "0.5 mark for each odd word found (4 × 0.5 = 2 marks).",
+    source: {
+      lesson: 5,
+      lessonTitle: "Revision 1",
+      book: "Workbook",
+      page: "Page 15",
+      exercise: "Exercise 2 — Odd one out",
+    },
+  },
+  {
+    id: "l5-q8",
+    lesson: 5,
+    marks: 2,
+    type: "text-parts",
+    variant: "numbers",
+    formatLabel: "Complete the Numbers",
+    instruction:
+      "Complete each number pattern within 1 to 50 by writing the missing number.",
+    parts: [
+      {
+        id: "a",
+        label: "(a)",
+        beforeText: "19, 20,",
+        afterText: ", 22",
+        placeholder: "Number",
+        correctDisplay: "21",
+        acceptedAnswers: ["21", "twenty-one", "twenty one"],
+        marks: 0.5,
+      },
+      {
+        id: "b",
+        label: "(b)",
+        beforeText: "28, 29,",
+        afterText: ", 31",
+        placeholder: "Number",
+        correctDisplay: "30",
+        acceptedAnswers: ["30", "thirty"],
+        marks: 0.5,
+      },
+      {
+        id: "c",
+        label: "(c)",
+        beforeText: "38, 39,",
+        afterText: ", 41",
+        placeholder: "Number",
+        correctDisplay: "40",
+        acceptedAnswers: ["40", "forty"],
+        marks: 0.5,
+      },
+      {
+        id: "d",
+        label: "(d)",
+        beforeText: "47, 48, 49,",
+        afterText: "",
+        placeholder: "Number",
+        correctDisplay: "50",
+        acceptedAnswers: ["50", "fifty"],
+        marks: 0.5,
+      },
+    ],
+    explanation:
+      "Counting in order up to 50 gives 21, 30, 40, and 50.",
+    gradingRule:
+      "0.5 mark per blank (4 × 0.5 = 2 marks). Accepts digits (21, 30, 40, 50) or their English number words.",
+    source: {
+      lesson: 5,
+      lessonTitle: "Revision 1",
+      book: "Workbook",
+      page: "Page 16",
+      exercise: "Exercise 4 — Complete and say (Numbers 1–50)",
+    },
+  },
+  {
+    id: "l5-q9",
+    lesson: 5,
+    marks: 2,
+    type: "text-parts",
+    variant: "write",
+    formatLabel: "Complete the Sentence",
+    instruction:
+      "Look at the subject pictures in sentences 1, 2, and 3, then write each missing school subject.",
+    stimuli: [
+      {
+        kind: "images",
+        layout: "single",
+        items: [
+          {
+            src: CURRICULUM_IMAGES.l5Wb17Write,
+            alt: "Sentences with subject icons: 1 flask and music clef on Sunday, 2 EN badge and maths signs on Monday, 3 paint palette with brushes",
+          },
+        ],
+      },
+      {
+        kind: "word-bank",
+        label: "Subject box",
+        words: ["Science", "Music", "English", "Maths", "Art", "Sports"],
+      },
+    ],
+    parts: [
+      {
+        id: "a",
+        label: "1a.",
+        beforeText: "1- I've got (flask icon)",
+        afterText: "and Music on Sunday.",
+        placeholder: "Write subject",
+        correctDisplay: "Science",
+        acceptedAnswers: ["science"],
+        marks: 0.5,
+      },
+      {
+        id: "b",
+        label: "2a.",
+        beforeText: "2- We've got (EN icon)",
+        afterText: "and ... on Monday.",
+        placeholder: "Write subject",
+        correctDisplay: "English",
+        acceptedAnswers: ["english"],
+        marks: 0.5,
+      },
+      {
+        id: "c",
+        label: "2b.",
+        beforeText: "2- We've got English and (maths signs)",
+        afterText: "on Monday.",
+        placeholder: "Write subject",
+        correctDisplay: "Maths",
+        acceptedAnswers: ["maths"],
+        marks: 0.5,
+      },
+      {
+        id: "d",
+        label: "3.",
+        beforeText: "3- My favourite subject is (paint palette)",
+        afterText: ".",
+        placeholder: "Write subject",
+        correctDisplay: "Art",
+        acceptedAnswers: ["art"],
+        marks: 0.5,
+      },
+    ],
+    explanation:
+      "The flask is Science, the EN badge is English, the arithmetic signs are Maths, and the paint palette is Art.",
+    gradingRule:
+      "0.5 mark per subject (4 × 0.5 = 2 marks), case-insensitive: Science, English, Maths, Art.",
+    source: {
+      lesson: 5,
+      lessonTitle: "Revision 1",
+      book: "Workbook",
+      page: "Page 17",
+      exercise: "Exercise 5 — Write",
+    },
+  },
+  {
+    id: "l5-q10",
+    lesson: 5,
+    marks: 2,
+    type: "match",
+    formatLabel: "Match Items",
+    instruction:
+      "Look at the pictures and dotted words, then choose the correct sound letters (oo, ou, oa, or ea) for each word.",
+    stimuli: [
+      {
+        kind: "images",
+        layout: "single",
+        items: [
+          {
+            src: CURRICULUM_IMAGES.l5Wb17Phonics,
+            alt: "Four pictures (broom, house, goat, boy eating), four sound groups (oo, ou, oa, ea), and four words to complete",
+          },
+        ],
+      },
+    ],
+    optionPlaceholder: "Choose oo, ou, oa, or ea...",
+    options: ["oo", "ou", "oa", "ea"],
+    parts: [
+      {
+        id: "a",
+        prompt: "1. br _ _ m  (broom picture)",
+        correctAnswer: "oo",
+        marks: 0.5,
+      },
+      {
+        id: "b",
+        prompt: "2. h _ _ se  (house picture)",
+        correctAnswer: "ou",
+        marks: 0.5,
+      },
+      {
+        id: "c",
+        prompt: "3. g _ _ t  (goat picture)",
+        correctAnswer: "oa",
+        marks: 0.5,
+      },
+      {
+        id: "d",
+        prompt: "4. _ _ t  (boy eating picture)",
+        correctAnswer: "ea",
+        marks: 0.5,
+      },
+    ],
+    explanation:
+      "broom uses oo (br-oo-m), house uses ou (h-ou-se), goat uses oa (g-oa-t), and eat uses ea (ea-t).",
+    gradingRule: "0.5 mark for each correctly matched sound group (4 × 0.5 = 2 marks).",
+    source: {
+      lesson: 5,
+      lessonTitle: "Revision 1",
+      book: "Workbook",
+      page: "Page 17",
+      exercise: "Exercise 6 — Look, match then write",
+    },
+  },
+];
