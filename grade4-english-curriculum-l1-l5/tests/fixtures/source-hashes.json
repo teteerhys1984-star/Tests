@@ -1,0 +1,24 @@
+{
+  "provenance": "main@c90be436 \"Mahmoud's L1-L5 Test\" (captured before any edit)",
+  "files": {
+    "qa/browser.mjs": "bfe6096b1efac0f4f82f6d0e61054a6dc64a7c27b7ea024f20f53cb1c74df870",
+    "scripts/generate-sounds.mjs": "48a029afdf0999c78286be7ff1b8b2979a1c08f42a06f4e9a3b80a9c2a56349d",
+    "src/App.smoke.test.tsx": "c151639bdb6e23235abb1952098f9611c3730f1c8f619e85314cd7445137f046",
+    "src/components/ExamScreen.tsx": "3c9d8b889ad9e4d4cf5231a3d82631aefb5a6dfc0869942b1d1a890992c25724",
+    "src/components/Footer.tsx": "62b613ceee92178659ec16b6745b96f2e4dd098ec9410e7cffaceb3c4adef6a4",
+    "src/components/Parts.tsx": "104ed78d4e3351602c204cd24ac7a622505d2d8af64e5b634e3c8f61b4a2223d",
+    "src/components/TeacherKey.tsx": "6a5d0b86ebaf68f80da6a7c8174aa98c62bf6b84e168548b078abe34cce70b11",
+    "src/components/ui.tsx": "dcda6c11c568dd0cab9906b3db505f6fbe2ebe017f57b68e5795395090a5b676",
+    "src/data/questions.test.ts": "ad2ec2ab9ca164bacd65f2241dcdbee4e639256d35273c83849033ffb5c3063e",
+    "src/data/questions.ts": "44a81b39205fb4e29aa8cf88202b49c6c702f287725cf4ea3b13ca8c6f1405ab",
+    "src/index.css": "eb96e0722005744f94b7471c7eb410bb44a4f21ce9680396b8c593e9dde2724e",
+    "src/logic/grading.test.ts": "b3737fa0c6c75e6c1bd490305078a6d20507a9e96c62c893c2bedfa75b47c05a",
+    "src/logic/grading.ts": "9b59b68728de3c990ccb42ce93be937657fb3e560d8d6f0750f24bdeedc4878f",
+    "src/logic/report.ts": "4037a436da51e839693db0372084be83b49df10b8e711b911c81134fa4a7369a",
+    "src/logic/sounds.ts": "815a1b1e48ae79ad40972e10b85d9802fbcdf2cd11dec1bdb4863ed839c172a9",
+    "src/main.tsx": "f268dc44f71240012de0cfb1569d8ac906265cccd45eb3a99059c1a663d2f830",
+    "src/utils/cn.ts": "d1f1e0d62cb8d8d1e04c26e14de842d8a151f75812d81b046c65b5d1fe8e4b27",
+    "src/utils/format.ts": "d40543ae8c35acb4fbf41ac0450ae218ce645e58571df51a189410288fb641ed",
+    "src/vite-env.d.ts": "80c1d7a36a0b549fd9468d6e2685e722bfecfd186b4e429d215f1196cfa6549f"
+  }
+}

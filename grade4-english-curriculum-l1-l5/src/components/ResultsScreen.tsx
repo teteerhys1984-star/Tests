@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { EXAM_SCOPE, EXAM_TITLE, LESSON_TITLES } from "../data/questions";
 import { downloadReport } from "../logic/report";
+import type { SendStatus } from "../logic/submit";
 import type { ExamResult, QuestionResult } from "../types";
 import { formatDateTime, formatHMS } from "../utils/format";
 import { cn } from "../utils/cn";
@@ -181,11 +182,75 @@ function QuestionReport({ q }: { q: QuestionResult }) {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Delivery status — teacher-only data is never shown here: no token,   */
+/* no attemptId, no gradeLabel. The student sees only the send state.   */
+/* ------------------------------------------------------------------ */
+const SEND_META: Record<Exclude<SendStatus, "idle">, { text: string; border: string; bg: string; color: string }> = {
+  sending: {
+    text: "Sending your result to your teacher…",
+    border: "#4a3a10",
+    bg: "#1a1304",
+    color: "#ffd75e",
+  },
+  success: {
+    text: "Your result was sent to your teacher ✓",
+    border: "#2a4a1a",
+    bg: "#101a0a",
+    color: "#8fdf7a",
+  },
+  failed: {
+    text: "Your result could not be sent automatically. You can download your report below and give it to your teacher, or try sending it again.",
+    border: "#4a1d16",
+    bg: "#1d0e0a",
+    color: "#ff9d8f",
+  },
+};
+
+function SendBanner({ status, onResend }: { status: SendStatus; onResend: () => void }) {
+  if (status === "idle") return null;
+  const m = SEND_META[status];
+  return (
+    <div
+      className="mt-4 rounded-lg border p-3 text-[13.5px] leading-relaxed font-medium"
+      style={{ borderColor: m.border, background: m.bg }}
+      role="status"
+      aria-live="polite"
+      data-send-status={status}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="min-w-[12rem] flex-1 font-bold" style={{ color: m.color }}>
+          {m.text}
+        </p>
+        {status === "failed" && (
+          <button
+            type="button"
+            onClick={onResend}
+            className="btn-ghost shrink-0 rounded-md px-3 py-1.5 text-[11px] font-black"
+            data-testid="resend-result"
+          >
+            Resend Result
+          </button>
+        )}
+      </div>
+      {status === "failed" && (
+        <p className="mt-1.5 text-[12.5px] font-medium text-[#9aa886]">
+          Your score is already shown above — a sending problem never hides or changes it.
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function ResultsScreen({
   result,
+  sendStatus,
+  onResend,
   onRetake,
 }: {
   result: ExamResult;
+  sendStatus: SendStatus;
+  onResend: () => void;
   onRetake: () => void;
 }) {
   const rank = rankFor(result.percentage);
@@ -278,11 +343,15 @@ export default function ResultsScreen({
             </p>
           )}
 
+          {/* result delivery — always visible, never gates the score */}
+          <SendBanner status={sendStatus} onResend={onResend} />
+
           {/* actions */}
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <button
               type="button"
               onClick={() => downloadReport(result)}
+              data-testid="download-report"
               className="btn-primary flex flex-1 items-center justify-center gap-2 rounded-md px-5 py-3 text-[12px] font-black"
             >
               <Download className="h-4 w-4" />
