@@ -30,6 +30,14 @@ export function loadSession(): ExamSession {
       answers: parsed.answers && typeof parsed.answers === "object" ? parsed.answers : {},
       current: typeof parsed.current === "number" ? parsed.current : 0,
       result: parsed.result ?? null,
+      attemptId: typeof parsed.attemptId === "string" ? parsed.attemptId : undefined,
+      sendStatus:
+        parsed.sendStatus === "idle" ||
+        parsed.sendStatus === "sending" ||
+        parsed.sendStatus === "success" ||
+        parsed.sendStatus === "failed"
+          ? parsed.sendStatus
+          : undefined,
     };
   } catch {
     return { ...BLANK_SESSION };

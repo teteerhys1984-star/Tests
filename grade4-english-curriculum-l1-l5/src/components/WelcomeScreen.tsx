@@ -163,6 +163,10 @@ export default function WelcomeScreen({
             <p className="mt-2 text-center text-[12.5px] font-medium text-[#5c6a45]">
               The mission stopwatch starts the moment you press Start Exam.
             </p>
+            <p className="mt-2 text-center text-[12.5px] leading-snug font-medium text-[#8fa06d]">
+              Privacy: your name, answers and result are sent to your teacher when you submit. Your
+              answers are also saved in this browser. No other personal information is collected.
+            </p>
           </div>
         </div>
       </div>

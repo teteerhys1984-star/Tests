@@ -199,4 +199,8 @@ export interface ExamSession {
   answers: AnswerMap;
   current: number; // index 0..34
   result: ExamResult | null;
+  /** Stable id of the submitted attempt (kept on refresh so a resend never duplicates a row). */
+  attemptId?: string;
+  /** Last known delivery status of that attempt (kept on refresh so the banner survives). */
+  sendStatus?: "idle" | "sending" | "success" | "failed";
 }

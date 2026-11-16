@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "test:reference": "node tests/check-reference.mjs",
+    "verify:build": "node tests/verify-build.mjs"
   },
   "dependencies": {
     "@fontsource/noto-naskh-arabic": "^5.3.0",
@@ -24,6 +28,7 @@
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.1.1",
+    "jsdom": "^29.1.1",
     "playwright": "^1.65.1",
     "tailwindcss": "4.1.17",
     "tsx": "^4.23.15",
