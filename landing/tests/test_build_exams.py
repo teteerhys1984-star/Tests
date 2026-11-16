@@ -28,6 +28,9 @@ EXCLUDED_SOURCE_DIRS = (
     # Source upload of the Grade 3 English exam; published as
     # grade3-english-curriculum-exam-l1-5-a instead (never built on its own).
     "grade-3-english-curriculum-exam-L1-5-A",
+    # Source upload of Grade 3 English exam Version B; published as
+    # grade3-english-curriculum-exam-l1-5-b instead (never built on its own).
+    "grade-3-english-curriculum-exam-L1-5-B",
 )
 
 
@@ -216,7 +219,9 @@ class BuildExclusionLogic(unittest.TestCase):
         )
         self.assertIn("grade8-english-curriculum-l3-l4", actual_exams)
         self.assertIn("grade8-english-curriculum-l1-l2", actual_exams)
-        self.assertGreaterEqual(len(actual_exams), 24)
+        self.assertIn("grade3-english-curriculum-exam-l1-5-a", actual_exams)
+        self.assertIn("grade3-english-curriculum-exam-l1-5-b", actual_exams)
+        self.assertGreaterEqual(len(actual_exams), 26)
 
         ws = os.path.join(self.tmp, "ws-real-mirror")
         os.makedirs(ws, exist_ok=True)
@@ -259,6 +264,9 @@ class BuildExclusionLogic(unittest.TestCase):
         )
         self.assertTrue(os.path.isdir(l1l2_src))
         self.assertTrue(os.path.isfile(os.path.join(l1l2_src, "package.json")))
+        g3b_src = os.path.join(ROOT, "grade-3-english-curriculum-exam-L1-5-B")
+        self.assertTrue(os.path.isdir(g3b_src))
+        self.assertTrue(os.path.isfile(os.path.join(g3b_src, "package.json")))
 
 
 class RealBuiltSiteExclusion(unittest.TestCase):
@@ -276,7 +284,12 @@ class RealBuiltSiteExclusion(unittest.TestCase):
                 f"Source folder must not be built into _site: {src_dir}",
             )
 
-        for real_exam in ("grade8-english-curriculum-l3-l4", "grade8-english-curriculum-l1-l2"):
+        for real_exam in (
+            "grade8-english-curriculum-l3-l4",
+            "grade8-english-curriculum-l1-l2",
+            "grade3-english-curriculum-exam-l1-5-a",
+            "grade3-english-curriculum-exam-l1-5-b",
+        ):
             self.assertTrue(
                 os.path.isfile(os.path.join(site_dir, real_exam, "index.html")),
                 f"Actual exam missing from _site: {real_exam}",
@@ -288,12 +301,18 @@ class RealBuiltSiteExclusion(unittest.TestCase):
         hrefs = set(re.findall(r'href="\./([^"/]+)/"', page))
         self.assertIn("grade8-english-curriculum-l3-l4", hrefs)
         self.assertIn("grade8-english-curriculum-l1-l2", hrefs)
+        self.assertIn("grade3-english-curriculum-exam-l1-5-a", hrefs)
+        self.assertIn("grade3-english-curriculum-exam-l1-5-b", hrefs)
+        self.assertIn("Grade 3 English Curriculum Exam L1-5 A", page)
+        self.assertIn("Grade 3 English Curriculum Exam L1-5 B", page)
         for forbidden_href in (
             "English Curriculum Lessons 3&4",
             "English%20Curriculum%20Lessons%203%264",
             "English%20Curriculum%20Lessons%203&amp;4",
             "English_L1L2 Test",
             "English_L1L2%20Test",
+            "grade-3-english-curriculum-exam-L1-5-A",
+            "grade-3-english-curriculum-exam-L1-5-B",
         ):
             self.assertNotIn(forbidden_href, hrefs)
 

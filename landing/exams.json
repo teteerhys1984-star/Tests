@@ -34,6 +34,12 @@
       "subject": "english",
       "semester": 1,
       "title": "Grade 3 English Curriculum Exam L1-5 A"
+    },
+    "grade3-english-curriculum-exam-l1-5-b": {
+      "grade": 3,
+      "subject": "english",
+      "semester": 1,
+      "title": "Grade 3 English Curriculum Exam L1-5 B"
     }
   }
 }
