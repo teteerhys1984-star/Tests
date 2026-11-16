@@ -25,6 +25,9 @@ BUILD_EXAMS_SH = os.path.join(ROOT, "landing", "scripts", "build-exams.sh")
 EXCLUDED_SOURCE_DIRS = (
     "English Curriculum Lessons 3&4",
     "English_L1L2 Test",
+    # Source upload of the Grade 3 English exam; published as
+    # grade3-english-curriculum-exam-l1-5-a instead (never built on its own).
+    "grade-3-english-curriculum-exam-L1-5-A",
 )
 
 
