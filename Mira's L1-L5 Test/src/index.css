@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Baloo 2", ui-rounded, system-ui, sans-serif;
+  --font-body: "Nunito", ui-rounded, system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+
+  /* The Garden of Knowledge palette */
+  --color-cream: #fff8f1;
+  --color-cream-deep: #fdf1e7;
+  --color-petal: #ffd9e8;
+  --color-petal-deep: #ffb7d5;
+  --color-rose: #ec6ba8;
+  --color-rose-deep: #c94a87;
+  --color-lilac: #d9c9fb;
+  --color-lilac-deep: #b79af0;
+  --color-violet: #7c5cb0;
+  --color-violet-deep: #5d4390;
+  --color-peach: #ffd9c4;
+  --color-peach-deep: #ffab8a;
+  --color-leaf: #8fd0a8;
+  --color-leaf-deep: #4f9d6f;
+  --color-sky: #bcd9f7;
+  --color-gold: #f5c56b;
+  --color-ink: #4a3563;
+  --color-ink-soft: #7a6391;
+
+  --shadow-card: 0 10px 30px -8px rgb(197 106 168 / 0.18), 0 4px 12px -4px rgb(124 92 176 / 0.12);
+  --shadow-lift: 0 18px 44px -12px rgb(197 106 168 / 0.32), 0 8px 18px -6px rgb(124 92 176 / 0.18);
+  --shadow-soft: 0 4px 16px -4px rgb(124 92 176 / 0.14);
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 11s ease-in-out infinite;
+  --animate-sway: sway 5.5s ease-in-out infinite;
+  --animate-bloom: bloom 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-rise: rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-flutter: flutter 9s ease-in-out infinite;
+  --animate-twinkle: twinkle 3.4s ease-in-out infinite;
+  --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(var(--fl-rot, 0deg)); }
+    50% { transform: translateY(-14px) rotate(var(--fl-rot, 0deg)); }
+  }
+  @keyframes sway {
+    0%, 100% { transform: rotate(-4deg); }
+    50% { transform: rotate(5deg); }
+  }
+  @keyframes bloom {
+    from { opacity: 0; transform: scale(0.86) translateY(14px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes flutter {
+    0%, 100% { transform: translate(0, 0) rotate(-6deg); }
+    25% { transform: translate(10px, -18px) rotate(4deg); }
+    50% { transform: translate(-6px, -30px) rotate(-8deg); }
+    75% { transform: translate(-14px, -14px) rotate(6deg); }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.35; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.12); }
+  }
+  @keyframes pulse-soft {
+    0%, 100% { box-shadow: 0 0 0 0 rgb(236 107 168 / 0.35); }
+    50% { box-shadow: 0 0 0 9px rgb(236 107 168 / 0); }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-petal-deep);
+  color: var(--color-violet-deep);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--color-petal-deep), var(--color-lilac-deep));
+  border-radius: 999px;
+  border: 2px solid var(--color-cream-deep);
+}
+
+/* Garden background wash */
+.garden-bg {
+  background:
+    radial-gradient(1100px 540px at 8% -6%, rgb(255 183 213 / 0.35), transparent 62%),
+    radial-gradient(900px 500px at 96% 4%, rgb(183 154 240 / 0.30), transparent 60%),
+    radial-gradient(760px 560px at 50% 108%, rgb(143 208 168 / 0.22), transparent 65%),
+    linear-gradient(180deg, #fff8f1 0%, #fdf1ea 48%, #fbf0f6 100%);
+}
+
+.paper-card {
+  background: rgb(255 255 255 / 0.86);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid rgb(255 255 255 / 0.9);
+  box-shadow: var(--shadow-card);
+}
+
+.text-gradient-rose {
+  background: linear-gradient(92deg, var(--color-rose-deep), var(--color-violet) 60%, var(--color-violet-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* dotted underline used for fill-in gaps */
+.gap-line {
+  border-bottom: 2.5px dashed var(--color-lilac-deep);
+}
+
+/* Arabic vocabulary stimulus words */
+.arabic-word {
+  font-family: "Noto Kufi Arabic", "Segoe UI", sans-serif;
+}
+
+input[type="text"],
+textarea {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .no-print { display: none !important; }
+}
