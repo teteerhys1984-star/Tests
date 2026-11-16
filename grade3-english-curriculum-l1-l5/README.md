@@ -9,9 +9,10 @@ A complete, interactive, child-friendly English exam web app for **Grade 3 · Un
 - Feminine pastel garden theme ("The Garden of Knowledge") — flowers, butterflies, soft cards
 - Count-up stopwatch (HH:MM:SS) driven by timestamps, survives page refresh
 - Full answer persistence in `localStorage` (name, answers, current question, submission state)
-- Two original, locally generated sound effects (`public/sounds/`) + visible mute control
+- Two original, locally generated sound effects are bundled inline (`src/assets/sounds/*.wav`) + visible mute control
 - Strict **Submit Exam** flow — disabled until every required answer is complete, submits instantly, no confirmation dialogs
 - Detailed results page + **Download Exam Report (TXT)** generated in the browser (UTF-8)
+- Non-blocking background result delivery to Google Sheets (`grade5-math-unit1` contract, 3 attempts, local retry queue, independent **Resend Result** button)
 - Password-gated **Teacher Answer Key** (password: `somer173`) — a basic client-side barrier only, not real authentication
 - Footer contact strip: **Eng. Somer Shaheen · 0930215022** with clickable WhatsApp link
 - All content in English; every question carries an internal curriculum reference (lesson · book · page · skill)
@@ -25,22 +26,21 @@ React 19 · TypeScript · Vite 7 · Tailwind CSS 4 · lucide-react · Vitest
 ```bash
 npm install        # install dependencies
 npm run dev        # development server (http://localhost:5173)
-npm run build      # production build → dist/
+npm run build      # production build → dist/index.html
 npm run preview    # serve the production build
 ```
 
 ## Quality checks
 
 ```bash
-npx tsc --noEmit   # TypeScript type checking
-npx vitest run     # 63 automated tests: grading keys, normalisation,
-                   # partial credit, mark totals (exactly 100), session
-                   # persistence, submit gating, teacher gate, reports
+npm run typecheck     # TypeScript type checking
+npm test              # 103 automated tests (66 original + 37 contract, mock delivery, workflow & baseline preservation)
+npm run verify:build  # verify single-file dist/index.html (inline WAVs, EXAM_ID, title)
 ```
 
 ## Regenerating the sound effects (optional)
 
-The two WAV files are committed in `public/sounds/`. To regenerate them:
+The two WAV files are committed in `src/assets/sounds/`. To regenerate them:
 
 ```bash
 node scripts/generate-sounds.mjs

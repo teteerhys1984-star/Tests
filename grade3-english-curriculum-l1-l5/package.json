@@ -8,7 +8,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "sounds": "node scripts/generate-sounds.mjs"
+    "typecheck": "tsc --noEmit",
+    "sounds": "node scripts/generate-sounds.mjs",
+    "verify:build": "node tests/verify-build.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",

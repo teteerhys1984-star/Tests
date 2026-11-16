@@ -80,12 +80,17 @@ function seedActiveSession(answers: AnswersMap) {
 
 beforeEach((ctx) => {
   localStorage.clear();
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async () => ({ text: async () => '{"ok":true}' }))
+  );
   container?.remove();
   container = document.createElement("div");
   document.body.appendChild(container);
   root = createRoot(container);
   return () => {
     act(() => root.unmount());
+    vi.unstubAllGlobals();
     void ctx;
   };
 });
