@@ -9,7 +9,11 @@ found=0
 for dir in */; do
   name="${dir%/}"
   case "$name" in
-    .*|.github) continue ;;
+    .*|.github|landing|_site) continue ;;
+    "English Curriculum Lessons 3&4"|"English_L1L2 Test")
+      echo "Skipping source folder (not a standalone exam): $name"
+      continue
+      ;;
   esac
   if [ ! -f "$name/package.json" ]; then
     continue
