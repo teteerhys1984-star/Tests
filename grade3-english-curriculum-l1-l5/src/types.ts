@@ -119,6 +119,8 @@ export interface ExamResult {
   questionResults: QuestionResult[];
 }
 
+import type { SendStatus } from "./logic/submit";
+
 /* --------------------------- Persistence -------------------------- */
 
 export interface ExamSession {
@@ -131,4 +133,8 @@ export interface ExamSession {
   submittedAt: number | null;
   /** Frozen total duration (ms) captured at submission. */
   finalElapsedMs: number | null;
+  /** Unique submission attempt identifier, preserved across retries/resends. */
+  attemptId?: string;
+  /** Latest background delivery state for Google Sheets. */
+  sendStatus?: SendStatus;
 }

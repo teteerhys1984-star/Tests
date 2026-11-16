@@ -1,7 +1,7 @@
 /**
  * Generates the two original, locally-shipped exam sound effects:
- *   public/sounds/exam-start.wav  — a soft ascending "garden bell" welcome chime
- *   public/sounds/exam-submit.wav — a celebratory blossom flourish
+ *   src/assets/sounds/exam-start.wav  — a soft ascending "garden bell" welcome chime
+ *   src/assets/sounds/exam-submit.wav — a celebratory blossom flourish
  * Raw 16-bit PCM WAV synthesis, no external assets required.
  */
 import { writeFileSync, mkdirSync } from "node:fs";
@@ -9,7 +9,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const OUT = join(__dirname, "..", "public", "sounds");
+const OUT = join(__dirname, "..", "src", "assets", "sounds");
 mkdirSync(OUT, { recursive: true });
 
 const SR = 44100;

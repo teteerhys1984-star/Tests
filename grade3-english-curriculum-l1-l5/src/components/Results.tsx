@@ -13,6 +13,7 @@ import {
   UserRound,
 } from "lucide-react";
 import type { ExamResult, ExamSession } from "../types";
+import type { SendStatus } from "../logic/submit";
 import { EXAM_META, QUESTIONS, questionMarks } from "../data/examData";
 import { formatDuration } from "../logic/report";
 import { Flower, Sparkle } from "./Decor";
@@ -20,8 +21,57 @@ import { Flower, Sparkle } from "./Decor";
 interface ResultsProps {
   session: ExamSession;
   result: ExamResult;
+  sendStatus?: SendStatus;
+  onResend?: () => void;
   onDownload: () => void;
   onRetake: () => void;
+}
+
+const SEND_META: Record<Exclude<SendStatus, "idle">, { text: string; cls: string }> = {
+  sending: {
+    text: "Sending your result to your teacher…",
+    cls: "border-gold/60 bg-gold/20 text-[#92400e]",
+  },
+  success: {
+    text: "Your result was sent to your teacher ✓",
+    cls: "border-leaf/60 bg-leaf/25 text-leaf-deep",
+  },
+  failed: {
+    text: "Your result could not be sent automatically. You can download your report below and give it to your teacher, or try sending it again.",
+    cls: "border-petal-deep/70 bg-petal/45 text-rose-deep",
+  },
+};
+
+function SendBanner({ status, onResend }: { status: SendStatus; onResend?: () => void }) {
+  if (status === "idle") return null;
+  const meta = SEND_META[status];
+  return (
+    <div
+      className={`mx-auto mt-6 max-w-2xl rounded-2xl border px-4 py-3 text-left text-[13px] font-semibold no-print ${meta.cls}`}
+      role="status"
+      aria-live="polite"
+      data-send-status={status}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="min-w-[12rem] flex-1 font-bold">{meta.text}</p>
+        {status === "failed" && onResend && (
+          <button
+            type="button"
+            onClick={onResend}
+            data-testid="resend-result"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border-2 border-rose/50 bg-white/90 px-4 py-1.5 font-display text-xs font-bold text-rose-deep shadow-soft transition-all hover:border-rose hover:bg-white"
+          >
+            Resend Result
+          </button>
+        )}
+      </div>
+      {status === "failed" && (
+        <p className="mt-1 text-[12px] font-medium text-ink-soft">
+          Your score is already shown above — a sending problem never hides your result or blocks downloading the TXT report.
+        </p>
+      )}
+    </div>
+  );
 }
 
 const STATUS_META = {
@@ -31,7 +81,14 @@ const STATUS_META = {
   review: { label: "Teacher review", cls: "bg-sky/50 text-[#1d4ed8] border-sky/70", Icon: Eye },
 } as const;
 
-export default function Results({ session, result, onDownload, onRetake }: ResultsProps) {
+export default function Results({
+  session,
+  result,
+  sendStatus = "idle",
+  onResend,
+  onDownload,
+  onRetake,
+}: ResultsProps) {
   const submitted = useMemo(() => (session.submittedAt ? new Date(session.submittedAt) : new Date()), [session.submittedAt]);
 
   const gradeMessage =
@@ -124,11 +181,15 @@ export default function Results({ session, result, onDownload, onRetake }: Resul
           </p>
         )}
 
+        {/* delivery status — always non-blocking */}
+        <SendBanner status={sendStatus} onResend={onResend} />
+
         {/* actions */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3 no-print">
           <button
             type="button"
             onClick={onDownload}
+            data-testid="download-report"
             className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose to-violet px-7 py-3.5 font-display text-base font-bold text-white shadow-lift transition-all hover:scale-[1.03]"
           >
             <Download className="h-5 w-5" strokeWidth={2.5} />

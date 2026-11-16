@@ -1,6 +1,9 @@
 /* ------------------------------------------------------------------ */
-/*  Sound effects — local WAV files only. Mute state persisted.        */
+/*  Sound effects — locally bundled WAV files. Mute state persisted.   */
 /* ------------------------------------------------------------------ */
+
+import examStartUrl from "../assets/sounds/exam-start.wav";
+import examSubmitUrl from "../assets/sounds/exam-submit.wav";
 
 let muted = false;
 try {
@@ -35,5 +38,5 @@ function play(src: string): void {
   }
 }
 
-export const playStartSound = (): void => play("sounds/exam-start.wav");
-export const playSubmitSound = (): void => play("sounds/exam-submit.wav");
+export const playStartSound = (): void => play(examStartUrl);
+export const playSubmitSound = (): void => play(examSubmitUrl);

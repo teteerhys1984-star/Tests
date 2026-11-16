@@ -102,6 +102,9 @@ export default function Welcome({ onStart }: WelcomeProps) {
           <p className="mt-3 text-xs text-ink-soft/80">
             The stopwatch starts only when you press Start Exam.
           </p>
+          <p className="mt-1 text-[11px] text-ink-soft/70">
+            Your name, answers and score are sent to your teacher when you submit.
+          </p>
         </div>
       </div>
 
