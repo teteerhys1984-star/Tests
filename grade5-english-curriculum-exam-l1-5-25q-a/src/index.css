@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/* Cairo — the platform's own font, embedded locally (no CDN, no        */
+/* Google Fonts, no network request). The three WOFF2 files are the   */
+/* same ones the landing page publishes in `landing/fonts` (SIL OFL,   */
+/* see assets/fonts/OFL.txt).                                          */
+/* ------------------------------------------------------------------ */
+@font-face {
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url("./assets/fonts/cairo-arabic-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF,
+    U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FDFD;
+}
+@font-face {
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url("./assets/fonts/cairo-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url("./assets/fonts/cairo-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
+
+@theme {
+  --font-display: "Cairo", ui-serif, Georgia, serif;
+  --font-sans: "Cairo", ui-sans-serif, system-ui, sans-serif;
+
+  --color-paper: #fdf6fb;
+  --color-paper-deep: #fbf2f8;
+  --color-ink: #3e2a4f;
+  --color-ink-soft: #7a6686;
+  --color-lilac: #9b6bc7;
+  --color-lilac-deep: #6e3f97;
+  --color-lilac-pale: #e9dcf7;
+  --color-blush: #fde7f1;
+  --color-lavender: #efe7fd;
+  --color-peach: #ff9e7a;
+  --color-peach-pale: #ffede3;
+  --color-mint: #e2f6f4;
+  --color-turquoise: #57c7c0;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    overflow-x: clip;
+  }
+  body {
+    margin: 0;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* dotted exercise-book grid, drawn not downloaded */
+  .paper-grid {
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(155, 107, 199, 0.16) 1px, transparent 0),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.34));
+    background-size: 22px 22px, 100% 100%;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+  input,
+  select,
+  textarea,
+  button {
+    font-family: inherit;
+    font-size: 16px;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-lilac);
+    outline-offset: 2px;
+  }
+}
+
+@utility num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+@utility eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 800;
+  font-size: 0.68rem;
+}
+
+/* ── motion: paper settling onto a desk ─────────────────────── */
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.14);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes seal {
+  from {
+    opacity: 0;
+    transform: rotate(-14deg) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-6deg) scale(1);
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(4deg);
+  }
+}
+
+.settle {
+  animation: settle 0.42s cubic-bezier(0.22, 0.68, 0.36, 1) both;
+}
+.pop {
+  animation: pop 0.34s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+.seal-in {
+  animation: seal 0.7s cubic-bezier(0.22, 0.9, 0.3, 1) both;
+}
+.drift {
+  animation: drift 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
