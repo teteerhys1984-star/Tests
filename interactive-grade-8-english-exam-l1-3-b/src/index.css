@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Cairo";
+  src: url("./assets/fonts/cairo-latin-wght-normal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cairo";
+  src: url("./assets/fonts/cairo-arabic-wght-normal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: "Cairo";
+  src: url("./assets/fonts/cairo-latin-ext-wght-normal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  unicode-range: U+0100-024F, U+1E00-1EFF;
+}
+
+@theme {
+  --font-display: "Cairo", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-body: "Cairo", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  --color-brand-blue: #1257ff;
+  --color-brand-blue-deep: #0b3fa8;
+  --color-brand-turq: #06b6b0;
+  --color-brand-orange: #ff7a18;
+  --color-brand-lime: #86d40b;
+  --color-brand-yellow: #ffc91a;
+  --color-ink: #0b2a5b;
+  --color-paper: #f2f7ff;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: #f2f7ff;
+    color: #0b2a5b;
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    overflow-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #root {
+    min-height: 100dvh;
+  }
+
+  :focus-visible {
+    outline: 3px solid #ff7a18;
+    outline-offset: 2px;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font-family: inherit;
+  }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Sticker / sports-day card with hard offset outline */
+  .sticker {
+    box-shadow: 4px 4px 0 0 rgb(11 42 91 / 0.16);
+  }
+  .sticker-strong {
+    box-shadow: 5px 5px 0 0 #0b2a5b;
+  }
+
+  .stripe-band {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      #1257ff 0 14px,
+      #1257ff 14px,
+      #06b6b0 14px,
+      #06b6b0 28px,
+      #ff7a18 28px,
+      #ff7a18 42px,
+      #ffc91a 42px,
+      #ffc91a 56px
+    );
+  }
+
+  .dot-paper {
+    background-color: #f2f7ff;
+    background-image: radial-gradient(rgb(18 87 255 / 0.14) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
