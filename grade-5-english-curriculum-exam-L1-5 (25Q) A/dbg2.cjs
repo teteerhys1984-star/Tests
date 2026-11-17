@@ -1,0 +1,20 @@
+const { chromium } = require('playwright');
+const path=require('path');
+(async()=>{
+ const b=await chromium.launch({args:['--no-sandbox']});
+ const ctx=await b.newContext({viewport:{width:390,height:844}});
+ const p=await ctx.newPage();
+ p.on('pageerror',e=>console.log('PAGEERR:',e.message.split('\n')[0]));
+ p.on('console',m=>console.log('CONSOLE['+m.type()+']:',m.text().slice(0,200)));
+ await p.goto('file://'+path.resolve('dist/index.html'));
+ await p.waitForTimeout(900);
+ await p.fill('#student-name','Layan Al-Ahmad');
+ const btn = p.getByRole('button',{name:'Start Exam'});
+ console.log('count', await btn.count(), 'enabled', await btn.isEnabled());
+ await btn.click();
+ await p.waitForTimeout(1000);
+ console.log('localStorage:', await p.evaluate(()=>localStorage.getItem('g5-unit1-model-a-attempt-v1')));
+ console.log('nav?', await p.evaluate(()=>!!document.querySelector('nav[aria-label="Question list"]')));
+ console.log('audioctx:', await p.evaluate(()=>typeof window.AudioContext));
+ await b.close();
+})();

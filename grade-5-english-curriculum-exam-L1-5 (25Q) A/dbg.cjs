@@ -1,0 +1,21 @@
+const { chromium } = require('playwright');
+const path=require('path');
+(async()=>{
+ const b=await chromium.launch({args:['--no-sandbox']});
+ const ctx=await b.newContext({viewport:{width:390,height:844}});
+ const p=await ctx.newPage();
+ p.on('pageerror',e=>console.log('PAGEERR',e.message));
+ await p.goto('file://'+path.resolve('dist/index.html'));
+ await p.waitForTimeout(900);
+ await p.fill('#student-name','Layan Al-Ahmad');
+ await p.click('text=Start Exam');
+ await p.waitForTimeout(700);
+ const labels = await p.$$eval('[aria-label]', els=>els.map(e=>e.getAttribute('aria-label')));
+ console.log('aria labels:', JSON.stringify(labels.slice(0,20)));
+ const nav = await p.$('nav[aria-label="Question list"]');
+ console.log('nav exists:', !!nav);
+ if(nav) console.log('nav visible:', await nav.isVisible());
+ console.log('body text head:', (await p.innerText('body')).slice(0,300).replace(/\n/g,' | '));
+ await p.screenshot({path:'/tmp/dbg.png'});
+ await b.close();
+})();
