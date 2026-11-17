@@ -1,0 +1,145 @@
+@import "tailwindcss";
+@font-face { font-family: Cairo; src: url("./assets/fonts/cairo-latin-wght-normal.woff2") format("woff2"); font-style: normal; font-weight: 200 1000; font-display: swap; }
+@font-face { font-family: Cairo; src: url("./assets/fonts/cairo-arabic-wght-normal.woff2") format("woff2"); font-style: normal; font-weight: 200 1000; font-display: swap; unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF; }
+@font-face { font-family: Cairo; src: url("./assets/fonts/cairo-latin-ext-wght-normal.woff2") format("woff2"); font-style: normal; font-weight: 200 1000; font-display: swap; unicode-range: U+0100-024F, U+1E00-1EFF; }
+
+@theme {
+  --color-paper: #f4f8ff;
+  --color-ink: #0e1b33;
+  --color-hair: #dee8f7;
+  --color-electric: #0b5cff;
+  --color-turquoise: #0fc7c7;
+  --color-flame: #ff7a18;
+  --color-grass: #1fc77a;
+  --color-sun: #ffd400;
+
+  --font-sans: "Cairo", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-display: "Cairo", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-reading: "Cairo", "Iowan Old Style", Georgia, serif;
+
+  --shadow-card: 0 1px 2px rgba(14, 27, 51, 0.05), 0 6px 18px rgba(14, 27, 51, 0.06);
+  --shadow-lift: 0 2px 4px rgba(14, 27, 51, 0.06), 0 18px 40px rgba(14, 27, 51, 0.1);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-paper);
+  background-image: radial-gradient(circle at 1px 1px, rgba(11, 92, 255, 0.08) 1px, transparent 0);
+  background-size: 24px 24px;
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-sun);
+  color: var(--color-ink);
+}
+
+/* ---------------------------------------------------------------- inputs */
+.field {
+  width: 100%;
+  min-height: 3.5rem;
+  border-radius: 1rem;
+  border: 2px solid var(--color-hair);
+  background: #fff;
+  padding: 0.75rem 1rem;
+  font-size: 16px; /* keeps iOS from zooming on focus */
+  font-weight: 600;
+  color: var(--color-ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.field::placeholder {
+  color: rgba(14, 27, 51, 0.35);
+  font-weight: 500;
+}
+.field:focus {
+  outline: none;
+  border-color: var(--color-electric);
+  box-shadow: 0 0 0 4px rgba(11, 92, 255, 0.15);
+}
+.field[aria-invalid="true"] {
+  border-color: #d93025;
+}
+
+/* -------------------------------------------------------------- chips etc */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.bib {
+  display: grid;
+  place-items: center;
+  min-width: 3rem;
+  height: 3rem;
+  padding: 0 0.5rem;
+  border-radius: 0.9rem;
+  background: linear-gradient(135deg, #0b5cff 0%, #0fc7c7 100%);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.3rem;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 4px 0 0 #0a3fb8;
+}
+
+.reading {
+  font-family: var(--font-reading);
+  font-size: 16.5px;
+  line-height: 1.85;
+  color: rgba(14, 27, 51, 0.88);
+  overflow-wrap: anywhere;
+}
+.reading p {
+  margin: 0;
+}
+@media (min-width: 640px) {
+  .reading {
+    font-size: 17.5px;
+  }
+}
+
+.lane-stripes {
+  background-image: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.9) 0 10px,
+    rgba(255, 255, 255, 0) 10px 34px
+  );
+}
+
+/* --------------------------------------------------------------- motion */
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.enter {
+  animation: enter-up 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
