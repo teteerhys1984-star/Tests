@@ -46,6 +46,12 @@
       "subject": "english",
       "semester": 1,
       "title": "Grade 4 English Curriculum Exam L1-5 A"
+    },
+    "grade4-english-curriculum-exam-l1-5-b": {
+      "grade": 4,
+      "subject": "english",
+      "semester": 1,
+      "title": "Grade 4 English Curriculum Exam L1-5 B"
     }
   }
 }

@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+/*
+ * Locally embedded fonts (SIL OFL, from the Fontsource variable packages
+ * @fontsource-variable/fredoka 5.3.0 and @fontsource-variable/nunito 5.3.0).
+ * Bundled by Vite so the single published HTML file needs no network request
+ * and no Google Fonts dependency. License texts live in public/fonts/.
+ */
+@font-face {
+  font-family: 'Fredoka';
+  src: url('../public/fonts/fredoka-latin-wght-normal.woff2') format('woff2-variations');
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('../public/fonts/nunito-latin-wght-normal.woff2') format('woff2-variations');
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --font-display: 'Fredoka', 'Nunito', system-ui, -apple-system, sans-serif;
+    --font-body: 'Nunito', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: #1e293b;
+    background-color: #f4fbff;
+    background-image:
+      radial-gradient(circle at 8% 12%, rgba(6, 182, 212, 0.11) 0%, transparent 34%),
+      radial-gradient(circle at 92% 10%, rgba(250, 204, 21, 0.15) 0%, transparent 32%),
+      radial-gradient(circle at 88% 82%, rgba(139, 92, 246, 0.10) 0%, transparent 35%),
+      radial-gradient(circle at 12% 88%, rgba(16, 185, 129, 0.10) 0%, transparent 34%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+  }
+}
+
+.exam-card {
+  background: #ffffff;
+  border-radius: 1.5rem;
+  box-shadow:
+    0 10px 30px -10px rgba(14, 165, 233, 0.12),
+    0 4px 10px -4px rgba(15, 23, 42, 0.05);
+}
+
+.passage-paper {
+  background: linear-gradient(180deg, #fffef7 0%, #fffbeb 100%);
+  border: 2px solid #fde68a;
+  border-radius: 1.25rem;
+}
+
+.ar-contact {
+  font-family: 'Segoe UI', Tahoma, 'Noto Sans Arabic', system-ui, sans-serif;
+}
