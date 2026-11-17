@@ -1,0 +1,193 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f3f7fd;
+  --color-ink: #0b1b3a;
+  --color-ink-soft: #364968;
+  --color-blue: #1d4ed8;
+  --color-blue-deep: #102a7a;
+  --color-cyan: #06b6d4;
+  --color-orange: #ff6b1a;
+  --color-yellow: #ffc53d;
+  --color-green: #16a34a;
+  --color-purple: #7c3aed;
+  --color-line: #d2ddec;
+
+  --font-sans: "Tajawal", "Cairo", system-ui, sans-serif;
+  --font-display: "Cairo", "Tajawal", system-ui, sans-serif;
+  --font-mono: "KaTeX_Main", "KaTeX_Math", serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* ---- blueprint graph-paper surface ---------------------------------- */
+.paper-grid {
+  background-color: var(--color-paper);
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(6, 182, 212, 0.1), transparent 32%),
+    radial-gradient(circle at 85% 18%, rgba(255, 107, 26, 0.08), transparent 30%),
+    linear-gradient(to right, rgba(29, 78, 216, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(29, 78, 216, 0.055) 1px, transparent 1px),
+    linear-gradient(to right, rgba(29, 78, 216, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(29, 78, 216, 0.12) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    20px 20px,
+    20px 20px,
+    100px 100px,
+    100px 100px;
+}
+
+.dark-grid {
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(6, 182, 212, 0.22), transparent 40%),
+    radial-gradient(circle at 80% 75%, rgba(255, 107, 26, 0.18), transparent 40%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    24px 24px,
+    24px 24px;
+}
+
+/* ---- KaTeX & LTR scientific islands --------------------------------- */
+.ltr,
+.katex-inline {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+  font-family: "KaTeX_Main", "KaTeX_Math", serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.ltr-block,
+.katex-block {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: block;
+  font-family: "KaTeX_Main", "KaTeX_Math", serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.katex {
+  font-size: 1.07em !important;
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+}
+
+/* ---- oversized outlined question numeral ---------------------------- */
+.numeral {
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 0.82;
+  color: transparent;
+  -webkit-text-stroke: 2.2px rgba(11, 27, 58, 0.22);
+  letter-spacing: -0.04em;
+  user-select: none;
+}
+.numeral-blue {
+  -webkit-text-stroke-color: rgba(29, 78, 216, 0.45);
+  text-shadow: 0 6px 18px rgba(29, 78, 216, 0.12);
+}
+.numeral-orange {
+  -webkit-text-stroke-color: rgba(255, 107, 26, 0.5);
+  text-shadow: 0 6px 18px rgba(255, 107, 26, 0.12);
+}
+
+/* ---- ruled "calculation slip" --------------------------------------- */
+.slip {
+  background-color: #fbfdff;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 31px,
+    rgba(29, 78, 216, 0.09) 31px,
+    rgba(29, 78, 216, 0.09) 32px
+  );
+}
+
+/* ---- focus ring, always visible -------------------------------------- */
+:where(button, a, input, textarea, select, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-cyan);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+input,
+textarea,
+button {
+  font-family: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* ---- motion ---------------------------------------------------------- */
+@keyframes settle-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.settle {
+  animation: settle-in 0.32s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.pulse-glow {
+  animation: pulse-glow 2.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #b8c6dc;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
