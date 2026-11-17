@@ -44,6 +44,7 @@ EXCLUDED_SOURCE_DIRS = (
     # Source upload of the Grade 5 English exam L1-5 (25Q) A; published as
     # grade5-english-curriculum-exam-l1-5-25q-a instead (never built on its own).
     "grade-5-english-curriculum-exam-L1-5 (25Q) A",
+    "interactive-grade-8-english-exam-L1-3 A",
 )
 
 
@@ -363,6 +364,7 @@ class RealBuiltSiteExclusion(unittest.TestCase):
             "grade-5-english-curriculum-exam-L1-5-A",
             "grade-5-english-curriculum-exam-L1-5-B",
             "grade-5-english-curriculum-exam-L1-5 (25Q) A",
+            "interactive-grade-8-english-exam-L1-3 A",
             "grade-5-english-curriculum-exam-L1-5%20(25Q)%20A",
         ):
             self.assertNotIn(forbidden_href, hrefs)
