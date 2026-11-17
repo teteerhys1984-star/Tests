@@ -38,6 +38,12 @@ EXCLUDED_SOURCE_DIRS = (
     # Source upload of the Grade 5 English exam Version A; published as
     # grade5-english-curriculum-exam-l1-5-a instead (never built on its own).
     "grade-5-english-curriculum-exam-L1-5-A",
+    # Source upload of the Grade 5 English exam Version B; published as
+    # grade5-english-curriculum-exam-l1-5-b instead (never built on its own).
+    "grade-5-english-curriculum-exam-L1-5-B",
+    # Source upload of the Grade 5 English exam L1-5 (25Q) A; published as
+    # grade5-english-curriculum-exam-l1-5-25q-a instead (never built on its own).
+    "grade-5-english-curriculum-exam-L1-5 (25Q) A",
 )
 
 
@@ -231,7 +237,9 @@ class BuildExclusionLogic(unittest.TestCase):
         self.assertIn("grade4-english-curriculum-exam-l1-5-a", actual_exams)
         self.assertIn("grade4-english-curriculum-exam-l1-5-b", actual_exams)
         self.assertIn("grade5-english-curriculum-exam-l1-5-a", actual_exams)
-        self.assertGreaterEqual(len(actual_exams), 27)
+        self.assertIn("grade5-english-curriculum-exam-l1-5-b", actual_exams)
+        self.assertIn("grade5-english-curriculum-exam-l1-5-25q-a", actual_exams)
+        self.assertGreaterEqual(len(actual_exams), 29)
 
         ws = os.path.join(self.tmp, "ws-real-mirror")
         os.makedirs(ws, exist_ok=True)
@@ -285,6 +293,10 @@ class BuildExclusionLogic(unittest.TestCase):
         self.assertTrue(os.path.isdir(g5a_src))
         self.assertTrue(os.path.isfile(os.path.join(g5a_src, "package.json")))
         self.assertTrue(os.path.isfile(os.path.join(g5a_src, "src", "data", "exam.ts")))
+        g5_25q_src = os.path.join(ROOT, "grade-5-english-curriculum-exam-L1-5 (25Q) A")
+        self.assertTrue(os.path.isdir(g5_25q_src))
+        self.assertTrue(os.path.isfile(os.path.join(g5_25q_src, "package.json")))
+        self.assertTrue(os.path.isfile(os.path.join(g5_25q_src, "src", "data", "exam.ts")))
 
 
 class RealBuiltSiteExclusion(unittest.TestCase):
@@ -310,6 +322,8 @@ class RealBuiltSiteExclusion(unittest.TestCase):
             "grade4-english-curriculum-exam-l1-5-a",
             "grade4-english-curriculum-exam-l1-5-b",
             "grade5-english-curriculum-exam-l1-5-a",
+            "grade5-english-curriculum-exam-l1-5-b",
+            "grade5-english-curriculum-exam-l1-5-25q-a",
         ):
             self.assertTrue(
                 os.path.isfile(os.path.join(site_dir, real_exam, "index.html")),
@@ -327,11 +341,15 @@ class RealBuiltSiteExclusion(unittest.TestCase):
         self.assertIn("grade4-english-curriculum-exam-l1-5-a", hrefs)
         self.assertIn("grade4-english-curriculum-exam-l1-5-b", hrefs)
         self.assertIn("grade5-english-curriculum-exam-l1-5-a", hrefs)
+        self.assertIn("grade5-english-curriculum-exam-l1-5-b", hrefs)
+        self.assertIn("grade5-english-curriculum-exam-l1-5-25q-a", hrefs)
         self.assertIn("Grade 3 English Curriculum Exam L1-5 A", page)
         self.assertIn("Grade 3 English Curriculum Exam L1-5 B", page)
         self.assertIn("Grade 4 English Curriculum Exam L1-5 A", page)
         self.assertIn("Grade 4 English Curriculum Exam L1-5 B", page)
         self.assertIn("Grade 5 English Curriculum Exam L1-5 A", page)
+        self.assertIn("Grade 5 English Curriculum Exam L1-5 B", page)
+        self.assertIn("Grade 5 English Curriculum Exam L1-5 (25Q) A", page)
         for forbidden_href in (
             "English Curriculum Lessons 3&4",
             "English%20Curriculum%20Lessons%203%264",
@@ -343,6 +361,9 @@ class RealBuiltSiteExclusion(unittest.TestCase):
             "grade-4-english-curriculum-exam-L1-5-A",
             "grade-4-english-curriculum-exam-L1-5-B",
             "grade-5-english-curriculum-exam-L1-5-A",
+            "grade-5-english-curriculum-exam-L1-5-B",
+            "grade-5-english-curriculum-exam-L1-5 (25Q) A",
+            "grade-5-english-curriculum-exam-L1-5%20(25Q)%20A",
         ):
             self.assertNotIn(forbidden_href, hrefs)
 
