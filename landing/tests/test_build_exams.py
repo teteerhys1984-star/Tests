@@ -23,6 +23,7 @@ DEPLOY_YML = os.path.join(ROOT, ".github", "workflows", "deploy.yml")
 BUILD_EXAMS_SH = os.path.join(ROOT, "landing", "scripts", "build-exams.sh")
 
 EXCLUDED_SOURCE_DIRS = (
+    "grade-4-english-curriculum-exam-L1-5-A",
     "English Curriculum Lessons 3&4",
     "English_L1L2 Test",
     # Source upload of the Grade 3 English exam; published as
