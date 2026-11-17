@@ -76,6 +76,12 @@
       "subject": "english",
       "semester": 1,
       "title": "Interactive Grade 8 English Exam L1-3 A"
+    },
+    "interactive-grade-8-english-exam-l1-3-b": {
+      "grade": 8,
+      "subject": "english",
+      "semester": 1,
+      "title": "Interactive Grade 8 English Exam L1-3 B"
     }
   }
 }
