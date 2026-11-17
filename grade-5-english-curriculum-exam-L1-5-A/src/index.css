@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@theme {
+  /* Surface: warm exercise-book paper */
+  --color-paper: #fbf7ec;
+  --color-paper-deep: #f3ecd9;
+  --color-paper-edge: #e6dcc4;
+
+  /* Ink-cyan: the spot colour of school exercise-book printing */
+  --color-ink: #2c2a26;
+  --color-ink-soft: #6b655b;
+  --color-turq: #0e9aa7;
+  --color-turq-deep: #0a6e78;
+  --color-turq-light: #7fd4dc;
+  --color-rule: #9fd8e8;
+
+  --color-bright: #1d6fe0;
+  --color-green: #2fa84f;
+  --color-coral: #ff6b5a;
+  --color-yellow: #ffc53d;
+  --color-purple: #7c4dbe;
+
+  --font-display: "Archivo Black", "Arial Black", system-ui, sans-serif;
+  --font-body: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-ui: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Courier New", monospace;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #fbf7ec;
+  color: #2c2a26;
+  font-family: var(--font-body);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Ruled paper surface --------------------------------------------- */
+.paper-rules {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 31px,
+    rgba(159, 216, 232, 0.55) 31px,
+    rgba(159, 216, 232, 0.55) 32px
+  );
+  background-position: 0 6px;
+}
+
+/* The whole page is a sheet of ruled exercise paper; cards sit on top of it. */
+#root {
+  min-height: 100vh;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 31px,
+    rgba(159, 216, 232, 0.4) 31px,
+    rgba(159, 216, 232, 0.4) 32px
+  );
+  background-position: 0 6px;
+}
+
+.paper-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* ---- Small-caps label sitting on a rule ------------------------------ */
+.label-caps {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.tabular {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ---- Focus visibility ------------------------------------------------- */
+:where(button, a, input, textarea, select, [tabindex]):focus-visible {
+  outline: 3px solid #1d6fe0;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---- Paper card, two-colour offset printing -------------------------- */
+.paper-card {
+  background: #fffdf6;
+  border: 1.5px solid #e6dcc4;
+  box-shadow:
+    0 1px 0 #fffdf6 inset,
+    3px 3px 0 rgba(14, 154, 167, 0.14),
+    0 10px 24px -18px rgba(44, 42, 38, 0.6);
+}
+
+/* ---- Motion ----------------------------------------------------------- */
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.anim-slide {
+  animation: slide-in 180ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes stamp-in {
+  0% {
+    opacity: 0;
+    transform: rotate(-18deg) scale(1.7);
+  }
+  70% {
+    opacity: 1;
+    transform: rotate(-8deg) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-8deg) scale(1);
+  }
+}
+.anim-stamp {
+  animation: stamp-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+@keyframes tick-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---- Scrollbar -------------------------------------------------------- */
+::selection {
+  background: #ffc53d;
+  color: #2c2a26;
+}
