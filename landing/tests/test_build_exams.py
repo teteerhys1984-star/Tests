@@ -46,6 +46,9 @@ EXCLUDED_SOURCE_DIRS = (
     "grade-5-english-curriculum-exam-L1-5 (25Q) A",
     "interactive-grade-8-english-exam-L1-3 A",
     "interactive-grade-8-english-exam-L1-3 B",
+    # Source upload of the Grade 8 Science exam; published as
+    # grade-8-science-test-model-a instead (never built on its own).
+    "grade-8-science-test-model-A",
 )
 
 

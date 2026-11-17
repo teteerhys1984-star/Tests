@@ -82,6 +82,12 @@
       "subject": "english",
       "semester": 1,
       "title": "Interactive Grade 8 English Exam L1-3 B"
+    },
+    "grade-8-science-test-model-a": {
+      "grade": 8,
+      "subject": "physics",
+      "semester": 1,
+      "title": "Grade 8 Science Test Model A"
     }
   }
 }
