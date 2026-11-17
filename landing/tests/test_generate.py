@@ -235,6 +235,46 @@ class Presentation(Landing):
         self.assertNotRegex(page, r"<script[^>]*\bsrc=")
 
 
+class Grade5EnglishExamIndex(Landing):
+    """اختبار اللغة الإنجليزية للصف الخامس — المسار: الصف الخامس ← الفصل الأول ← الإنجليزية."""
+
+    FOLDER = "grade5-english-curriculum-exam-l1-5-a"
+    TITLE = "Grade 5 English Curriculum Exam L1-5 A"
+
+    def test_card_appears_under_grade_five_first_semester_english(self):
+        page = self.build([(self.FOLDER, self.TITLE)])
+        self.assertIn('id="view-exams-5-s1-english"', page)
+        self.assertEqual(
+            self.exam_cards(page, 5, "s1", "english"),
+            [self.FOLDER],
+        )
+
+    def test_card_does_not_appear_in_another_grade_or_semester(self):
+        page = self.build([(self.FOLDER, self.TITLE)])
+        for grade in range(1, 10):
+            if grade == 5:
+                continue
+            self.assertNotIn(self.FOLDER, self.exam_cards(page, grade, "s1", "english"))
+        self.assertNotIn(self.FOLDER, self.exam_cards(page, 5, "s2", "english"))
+
+    def test_card_uses_the_published_title_and_folder_link(self):
+        page = self.build([(self.FOLDER, self.TITLE)])
+        self.assertIn('href="./%s/"' % self.FOLDER, page)
+        self.assertIn(self.TITLE, page)
+        self.assertEqual(page.count('href="./%s/"' % self.FOLDER), 1)
+
+    def test_card_is_placed_by_the_repository_override(self):
+        """التصنيف يأتي من landing/exams.json (الصف الخامس / إنجليزي / الفصل الأول)."""
+        with open(os.path.join(ROOT, "landing", "exams.json"), "r", encoding="utf-8") as fh:
+            overrides = json.load(fh)["overrides"]
+        self.assertIn(self.FOLDER, overrides)
+        entry = overrides[self.FOLDER]
+        self.assertEqual(entry["grade"], 5)
+        self.assertEqual(entry["subject"], "english")
+        self.assertEqual(entry["semester"], 1)
+        self.assertEqual(entry["title"], self.TITLE)
+
+
 class RealSite(unittest.TestCase):
     """يتحقق من الموقع الحقيقي بعد بناء الاختبارات (إن وُجد مجلد _site)."""
 
@@ -254,6 +294,21 @@ class RealSite(unittest.TestCase):
         self.assertTrue(folders, "_site has no exam folders")
         for folder in folders:
             self.assertIn('href="./%s/"' % folder, page, "%s is not linked" % folder)
+
+    def test_source_upload_folder_is_not_published_as_an_exam(self):
+        """مجلد المصدر لا يظهر كرابط اختبار — يُنشر المجلد النهائي فقط."""
+        site = os.path.join(ROOT, "_site")
+        index = os.path.join(site, "index.html")
+        if not os.path.isfile(index):
+            self.skipTest("no _site/index.html — run the build first")
+        self.assertFalse(
+            os.path.exists(os.path.join(site, "grade-5-english-curriculum-exam-L1-5-A")),
+            "the Grade 5 English source folder must never be built into _site",
+        )
+        with open(index, "r", encoding="utf-8") as fh:
+            page = fh.read()
+        self.assertNotIn('href="./grade-5-english-curriculum-exam-L1-5-A/"', page)
+        self.assertIn('href="./grade5-english-curriculum-exam-l1-5-a/"', page)
 
 
 class SemesterStructure(Landing):

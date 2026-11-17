@@ -1,0 +1,199 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/* Cairo — the platform's own font, embedded locally (no CDN, no        */
+/* Google Fonts, no network request). The three WOFF2 files are the   */
+/* same ones the landing page publishes in `landing/fonts` (SIL OFL,   */
+/* see assets/fonts/OFL.txt).                                          */
+/* ------------------------------------------------------------------ */
+@font-face {
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url("./assets/fonts/cairo-arabic-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF,
+    U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FDFD;
+}
+@font-face {
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url("./assets/fonts/cairo-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url("./assets/fonts/cairo-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
+
+@theme {
+  /* Surface: warm exercise-book paper */
+  --color-paper: #fbf7ec;
+  --color-paper-deep: #f3ecd9;
+  --color-paper-edge: #e6dcc4;
+
+  /* Ink-cyan: the spot colour of school exercise-book printing */
+  --color-ink: #2c2a26;
+  --color-ink-soft: #6b655b;
+  --color-turq: #0e9aa7;
+  --color-turq-deep: #0a6e78;
+  --color-turq-light: #7fd4dc;
+  --color-rule: #9fd8e8;
+
+  --color-bright: #1d6fe0;
+  --color-green: #2fa84f;
+  --color-coral: #ff6b5a;
+  --color-yellow: #ffc53d;
+  --color-purple: #7c4dbe;
+
+  /* Cairo is the platform's font — embedded locally, no external request. */
+  --font-display: "Cairo", "Arial Black", system-ui, sans-serif;
+  --font-body: "Cairo", Georgia, "Times New Roman", serif;
+  --font-ui: "Cairo", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Cairo", ui-monospace, "Courier New", monospace;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* The entrance animation slides a card 14px to the right; on a narrow
+     phone that transient transform would create a horizontal scrollbar.
+     `clip` hides the overflow without turning <html> into a scroll
+     container, so the sticky exam header keeps working. */
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  background-color: #fbf7ec;
+  color: #2c2a26;
+  font-family: var(--font-body);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+/* ---- Ruled paper surface --------------------------------------------- */
+.paper-rules {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 31px,
+    rgba(159, 216, 232, 0.55) 31px,
+    rgba(159, 216, 232, 0.55) 32px
+  );
+  background-position: 0 6px;
+}
+
+/* The whole page is a sheet of ruled exercise paper; cards sit on top of it. */
+#root {
+  min-height: 100vh;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 31px,
+    rgba(159, 216, 232, 0.4) 31px,
+    rgba(159, 216, 232, 0.4) 32px
+  );
+  background-position: 0 6px;
+}
+
+.paper-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* ---- Small-caps label sitting on a rule ------------------------------ */
+.label-caps {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.tabular {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ---- Focus visibility ------------------------------------------------- */
+:where(button, a, input, textarea, select, [tabindex]):focus-visible {
+  outline: 3px solid #1d6fe0;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---- Paper card, two-colour offset printing -------------------------- */
+.paper-card {
+  background: #fffdf6;
+  border: 1.5px solid #e6dcc4;
+  box-shadow:
+    0 1px 0 #fffdf6 inset,
+    3px 3px 0 rgba(14, 154, 167, 0.14),
+    0 10px 24px -18px rgba(44, 42, 38, 0.6);
+}
+
+/* ---- Motion ----------------------------------------------------------- */
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.anim-slide {
+  animation: slide-in 180ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes stamp-in {
+  0% {
+    opacity: 0;
+    transform: rotate(-18deg) scale(1.7);
+  }
+  70% {
+    opacity: 1;
+    transform: rotate(-8deg) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-8deg) scale(1);
+  }
+}
+.anim-stamp {
+  animation: stamp-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+@keyframes tick-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---- Scrollbar -------------------------------------------------------- */
+::selection {
+  background: #ffc53d;
+  color: #2c2a26;
+}
