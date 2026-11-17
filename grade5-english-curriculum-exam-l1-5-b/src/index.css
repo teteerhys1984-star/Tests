@@ -1,0 +1,260 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/* Cairo — the platform's own font, embedded locally (no CDN, no        */
+/* Google Fonts, no network request). The three WOFF2 files are the     */
+/* same ones the landing page publishes in `landing/fonts` (SIL OFL,    */
+/* see assets/fonts/OFL.txt).                                          */
+/* ------------------------------------------------------------------ */
+@font-face {
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url("./assets/fonts/cairo-arabic-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF,
+    U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FDFD;
+}
+@font-face {
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url("./assets/fonts/cairo-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url("./assets/fonts/cairo-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
+
+@theme {
+  /* Surface: warm sugar-paper from an exercise book */
+  --color-paper: #fff8ec;
+  --color-paper-deep: #f6ead6;
+  --color-ink: #2e2438;
+  --color-ink-soft: #6b5f77;
+
+  /* Anchor: felt-tip school orange */
+  --color-orange: #ff7a1a;
+  --color-orange-dark: #c24e00;
+  --color-orange-light: #ffb25c;
+
+  /* Support */
+  --color-sky: #1fa8e0;
+  --color-sky-dark: #0d6f9c;
+  --color-magenta: #e8288a;
+  --color-magenta-dark: #a80f5d;
+  --color-lime: #7bc400;
+  --color-lime-dark: #4d7f00;
+  --color-sun: #ffc400;
+  --color-sun-dark: #b88a00;
+  --color-violet: #7a3be0;
+  --color-violet-dark: #4f1fa3;
+
+  /* Cairo is the platform's font — embedded locally, no external request. */
+  --font-display: "Cairo", ui-rounded, "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Cairo", ui-rounded, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* The entrance animation slides a card 14px to the right; on a narrow
+       phone that transient transform would create a horizontal scrollbar.
+       `clip` hides the overflow without turning <html> into a scroll
+       container, so the sticky exam header keeps working. */
+    overflow-x: clip;
+  }
+
+  body {
+    margin: 0;
+    overflow-x: clip;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-weight: 600;
+    /* squared exercise-book dot grid */
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(46, 36, 56, 0.13) 1px, transparent 0),
+      linear-gradient(180deg, rgba(255, 196, 0, 0.1), rgba(255, 122, 26, 0.05));
+    background-size:
+      26px 26px,
+      100% 100%;
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.06;
+    margin: 0;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-violet);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  /* Cut-paper shape: hard ink outline + solid offset shadow, never blurred */
+  .cut {
+    border: 3px solid var(--color-ink);
+    box-shadow: 6px 6px 0 var(--color-ink);
+  }
+
+  .cut-sm {
+    border: 3px solid var(--color-ink);
+    box-shadow: 4px 4px 0 var(--color-ink);
+  }
+
+  .cut-flat {
+    border: 3px solid var(--color-ink);
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
+
+  .tab-label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.688rem;
+  }
+
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  .paper-torn {
+    clip-path: polygon(
+      0% 8px,
+      4% 0px,
+      9% 7px,
+      14% 1px,
+      20% 8px,
+      26% 2px,
+      32% 8px,
+      38% 1px,
+      45% 7px,
+      52% 1px,
+      58% 8px,
+      64% 2px,
+      71% 8px,
+      77% 1px,
+      84% 7px,
+      90% 1px,
+      96% 7px,
+      100% 2px,
+      100% 100%,
+      0% 100%
+    );
+  }
+
+  .scroll-x {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-orange) transparent;
+  }
+  .scroll-x::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+  .scroll-x::-webkit-scrollbar-thumb {
+    background: var(--color-orange);
+    border-radius: 99px;
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.55);
+  }
+  70% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes ringDraw {
+  from {
+    stroke-dashoffset: var(--ring-circ);
+  }
+  to {
+    stroke-dashoffset: var(--ring-offset);
+  }
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translate3d(0, -12vh, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--dx, 0px), 108vh, 0) rotate(var(--rot, 720deg));
+    opacity: 0.9;
+  }
+}
+
+.animate-card-in {
+  animation: cardIn 220ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+.animate-pop {
+  animation: popIn 340ms cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+}
+.animate-float {
+  animation: floatY 3.4s ease-in-out infinite;
+}
+.animate-confetti {
+  animation: confettiFall linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

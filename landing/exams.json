@@ -58,6 +58,12 @@
       "subject": "english",
       "semester": 1,
       "title": "Grade 5 English Curriculum Exam L1-5 A"
+    },
+    "grade5-english-curriculum-exam-l1-5-b": {
+      "grade": 5,
+      "subject": "english",
+      "semester": 1,
+      "title": "Grade 5 English Curriculum Exam L1-5 B"
     }
   }
 }

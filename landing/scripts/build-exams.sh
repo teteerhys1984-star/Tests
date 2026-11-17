@@ -10,7 +10,7 @@ for dir in */; do
   name="${dir%/}"
   case "$name" in
     .*|.github|landing|_site) continue ;;
-    "English Curriculum Lessons 3&4"|"English_L1L2 Test"|"grade-3-english-curriculum-exam-L1-5-A"|"grade-3-english-curriculum-exam-L1-5-B"|"grade-4-english-curriculum-exam-L1-5-A"|"grade-4-english-curriculum-exam-L1-5-B"|"grade-5-english-curriculum-exam-L1-5-A")
+    "English Curriculum Lessons 3&4"|"English_L1L2 Test"|"grade-3-english-curriculum-exam-L1-5-A"|"grade-3-english-curriculum-exam-L1-5-B"|"grade-4-english-curriculum-exam-L1-5-A"|"grade-4-english-curriculum-exam-L1-5-B"|"grade-5-english-curriculum-exam-L1-5-A"|"grade-5-english-curriculum-exam-L1-5-B")
       echo "Skipping source folder (not a standalone exam): $name"
       continue
       ;;
