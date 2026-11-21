@@ -52,6 +52,9 @@ EXCLUDED_SOURCE_DIRS = (
     # Source upload of the Grade 5 Math Unit 1 exam (21-11); published as
     # grade-5-math-test-unit1-21-11 instead (never built on its own).
     "grade-5-math-test-Unit1 21-11",
+    # Source upload of the Grade 5 Math Unit 1 exam (21-11) Model B; published as
+    # grade-5-math-test-unit1-21-11-model-b instead (never built on its own).
+    "grade-5-math-test-Unit1 21-11 Model B",
 )
 
 
