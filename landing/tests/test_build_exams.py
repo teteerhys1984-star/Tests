@@ -49,6 +49,9 @@ EXCLUDED_SOURCE_DIRS = (
     # Source upload of the Grade 8 Science exam; published as
     # grade-8-science-test-model-a instead (never built on its own).
     "grade-8-science-test-model-A",
+    # Source upload of the Grade 5 Math Unit 1 exam (21-11); published as
+    # grade-5-math-test-unit1-21-11 instead (never built on its own).
+    "grade-5-math-test-Unit1 21-11",
 )
 
 
