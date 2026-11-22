@@ -1,0 +1,6 @@
+# مخرجات البناء والاختبار — لا تُحفظ في Git
+node_modules
+dist
+.tmp-test
+.tmp-extract
+.tmp-parity
