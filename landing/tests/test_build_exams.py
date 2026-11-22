@@ -57,6 +57,9 @@ EXCLUDED_SOURCE_DIRS = (
     "grade-5-math-test-Unit1 21-11 Model B",
     # The pre-existing Grade 3 foundation source exclusion in the deploy scripts.
     "english-foundation-test-22-11-26MI",
+    # Source upload of the Grade 7 Physics Model A exam; published as
+    # grade-7-physics-test-l1-l2-model-a-24-11-26 instead (never built on its own).
+    "grade-7-physics-test-Model-A-24-11-26",
     # Source upload of the Grade 4 English foundation exam; published as
     # grade-4-english-foundation-test-22-11-26m instead (never built on its own).
     "English--foundation-test-22-11-26M",
