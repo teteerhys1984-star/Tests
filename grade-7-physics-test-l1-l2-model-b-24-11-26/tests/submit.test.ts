@@ -63,8 +63,8 @@ const payload: SubmissionPayload = buildPayload({
 })
 
 console.log('\n— الحمولة —')
-const expectedKeys = ['token', 'attemptId', 'examId', 'examTitle', 'studentName', 'startAt', 'submitAt', 'elapsedSec', 'summary', 'lessons', 'details', 'reportText']
-check('الحقول كلها وبالترتيب نفسه', Object.keys(payload).join(',') === expectedKeys.join(','), Object.keys(payload).join(','))
+const expectedKeys = ['token', 'attemptId', 'examId', 'examTitle', 'studentName', 'startAt', 'submitAt', 'elapsedSec', 'summary', 'lessons', 'lessonTotals', 'details', 'reportText']
+check('الحقول كلها وبالترتيب نفسه (مع إضافة lessonTotals)', Object.keys(payload).join(',') === expectedKeys.join(','), Object.keys(payload).join(','))
 check('token من الإعدادات', payload.token === SHEETS_TOKEN)
 check('examId من الإعدادات', payload.examId === EXAM_ID)
 check('examTitle من الإعدادات', payload.examTitle === EXAM_TITLE)
@@ -77,7 +77,27 @@ check('summary.total = 100', payload.summary.total === 100 && payload.summary.ma
 check('summary.percentage = 100', payload.summary.percentage === 100)
 check('summary.gradeLabel = ممتاز', payload.summary.gradeLabel === 'ممتاز')
 check('summary يحوي حقول الفروع الأربعة', ['correctSubparts', 'partialSubparts', 'wrongSubparts', 'unansweredSubparts'].every((k) => k in payload.summary))
-check('lessons: ثلاث مجموعات دراسية', payload.lessons.length === 3, payload.lessons.map((l) => `${l.title}:${l.max}`).join(' | '))
+check('lessons: درسان فقط (لا فئة ثالثة)', payload.lessons.length === 2, payload.lessons.map((l) => `${l.title}:${l.max}`).join(' | '))
+check('lessons: الأسماء هي الدروس الأصلية',
+  payload.lessons.map((l) => l.title).join('|') === 'الحركة والسكون|القوة والحركة',
+  payload.lessons.map((l) => l.title).join('|'))
+check('lessons: لا بند للسؤال التركيبي',
+  payload.lessons.every((l) => !l.title.includes('+') && !l.title.includes('تركيب')))
+check('lessons: 60 و 50 علامة', payload.lessons.map((l) => l.max).join(',') === '60,50', payload.lessons.map((l) => l.max).join(','))
+check('lessons: الحصة المشتركة 10 داخل كل درس',
+  payload.lessons.every((l) => l.sharedQuestions === 1 && l.sharedMax === 10 && l.sharedAwarded === 10))
+check('lessons: عدد الأسئلة 6 و 5',
+  payload.lessons.map((l) => l.questions).join(',') === '6,5', payload.lessons.map((l) => l.questions).join(','))
+check('lessonTotals في الحمولة: الدرسان فقط', payload.lessonTotals.lessons === 2, String(payload.lessonTotals.lessons))
+check('lessonTotals: مجموع التوزيع 110 والتداخل 10',
+  payload.lessonTotals.possible === 110 && payload.lessonTotals.sharedPossible === 10,
+  `${payload.lessonTotals.possible}/${payload.lessonTotals.sharedPossible}`)
+check('lessonTotals: بعد إزالة التكرار 100', payload.lessonTotals.uniquePossible === 100, String(payload.lessonTotals.uniquePossible))
+check('lessonTotals: مرجع العلامة هو مجموع الاختبار',
+  payload.lessonTotals.examTotal === 100 && payload.lessonTotals.examPossible === 100)
+check('lessonTotals: ملاحظة توضّح عدم الجمع', payload.lessonTotals.note.includes('مرتين'), payload.lessonTotals.note.slice(0, 40))
+check('الملخّص يستعمل مجموع الاختبار لا مجموع الدروس',
+  payload.summary.max === 100 && payload.summary.total === 100 && payload.summary.percentage === 100)
 check('details = 44 فرعاً', payload.details.length === 44, String(payload.details.length))
 check('كل تفصيل يحوي حقوله الثمانية',
   payload.details.every((d) => ['q', 'qTitle', 'lessons', 'label', 'status', 'awarded', 'marks', 'studentAnswer', 'correctAnswer'].every((k) => k in d)))

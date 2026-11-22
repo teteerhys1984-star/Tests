@@ -10,7 +10,7 @@ import { CONTACT, EXAM_TITLE, GRADE_LABEL, SEMESTER_LABEL, SUBJECT_LABEL, TEACHE
 import { questions, totalParts } from "../data/questions";
 import { answerKey, QUESTION_MARKS } from "../data/answerKey";
 import type { Rubric } from "../lib/grading";
-import { partLetter } from "../lib/grading";
+import { BASE_LESSONS, partLetter } from "../lib/grading";
 import { Rich } from "../lib/mathx";
 import { num } from "../lib/time";
 
@@ -107,6 +107,24 @@ export function Teacher({ onClose }: { onClose: () => void }) {
     [],
   );
 
+  /* مجموع توزيع الدرسين (يشمل علامة السؤال التركيبي مرتين، وليس مجموع الاختبار). */
+  const lessonSum = useMemo(
+    () =>
+      BASE_LESSONS.reduce(
+        (sum, lesson) =>
+          sum +
+          questions
+            .filter(
+              (question) =>
+                question.lesson === lesson ||
+                question.lesson.split("+").some((item) => item.trim() === lesson),
+            )
+            .reduce((inner, question) => inner + QUESTION_MARKS[question.id], 0),
+        0,
+      ),
+    [],
+  );
+
   if (!unlocked) return <Gate onUnlock={() => setUnlocked(true)} onClose={onClose} />;
 
   return (
@@ -194,6 +212,34 @@ export function Teacher({ onClose }: { onClose: () => void }) {
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <div className="mt-3 rounded-[var(--r-sm)] border p-3" data-teacher-lessons
+          style={{ borderColor: "var(--line-soft)", background: "var(--surface-2)" }}>
+          <p className="text-[0.82rem] font-bold" style={{ color: "var(--navy)" }}>
+            توزيع العلامات على الدرسين (درسان فقط — للسؤال التركيبي حصة مشتركة)
+          </p>
+          <ul className="mt-1.5 grid gap-1 text-[0.82rem]" style={{ color: "var(--ink-2)" }}>
+            {BASE_LESSONS.map((lesson) => {
+              const parts = questions.filter(
+                (question) => question.lesson === lesson || question.lesson.split("+").some((item) => item.trim() === lesson),
+              );
+              const marks = parts.reduce((sum, question) => sum + QUESTION_MARKS[question.id], 0);
+              const shared = parts.filter((question) => question.lesson.includes("+")).length;
+              return (
+                <li key={lesson} className="flex flex-wrap items-center justify-between gap-2">
+                  <span>
+                    {lesson} — {num(parts.length)} سؤالاً{shared ? ` (منها ${num(shared)} تركيبي)` : ""}
+                  </span>
+                  <span className="badge badge-teal tnum">{num(marks)} علامة</span>
+                </li>
+              );
+            })}
+          </ul>
+          <p className="mt-1.5 text-[0.74rem] leading-relaxed" style={{ color: "var(--warn)" }}>
+            مجموع الدرسين {num(lessonSum)} علامة، وليس {num(TOTAL_MARKS)}، لأن السؤال التركيبي يُحتسب فيهما معاً
+            فتظهر علامته مرتين. مجموع الاختبار يبقى {num(TOTAL_MARKS)} علامة، ولا تُجمع الدرجات لتكوين النسبة.
+          </p>
         </div>
       </section>
 

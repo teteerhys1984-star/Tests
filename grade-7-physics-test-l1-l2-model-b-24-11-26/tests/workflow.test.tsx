@@ -242,6 +242,35 @@ check('التقرير يحوي سطر «المطلوب» لكل فرع',
   (reportText.match(/المطلوب/g) || []).length === 44, String((reportText.match(/المطلوب/g) || []).length))
 check('التقرير يحوي اسم الطالب والمجموع', reportText.includes('نور هدى') && reportText.includes('100'))
 check('الحالة submitted محفوظة', JSON.parse(W.localStorage.getItem(ATTEMPT_KEY)!).status === 'submitted')
+check('التقرير: توزيع درسين فقط بعنوان صريح', reportText.includes('توزيع العلامات على الدرسين (درسان فقط)'))
+check('التقرير: سطران للدرسين فقط',
+  reportText.split('\r\n').filter((line) => /^ {2}الحركة والسكون|^ {2}القوة والحركة/.test(line)).length === 2,
+  String(reportText.split('\r\n').filter((line) => /^ {2}الحركة والسكون|^ {2}القوة والحركة/.test(line)).length))
+check('التقرير: لا بند بعنوان السؤال التركيبي في التوزيع',
+  !/^ {2}الحركة والسكون \+ القوة والحركة/m.test(reportText))
+check('التقرير: مجموع الدرسين 110 والاختبار 100',
+  reportText.includes('110') && reportText.includes('100 / 100'))
+check('التقرير: عبارة عدم الجمع صريحة', reportText.includes('لا تُجمع'))
+
+console.log('\n— توزيع الدرسين في صفحة النتيجة —')
+{
+  const rows = qa('[data-lesson-breakdown] [data-lesson]')
+  check('درسان فقط في التوزيع', rows.length === 2, String(rows.length))
+  check('لا بند للسؤال التركيبي في التوزيع',
+    !norm(q('[data-lesson-breakdown]')?.textContent || '').includes('تركيب:'))
+  check('أسماء الدرسين الأصلية',
+    rows.map((row) => row.getAttribute('data-lesson')).join('|') === 'الحركة والسكون|القوة والحركة',
+    rows.map((row) => row.getAttribute('data-lesson')).join('|'))
+  const text = norm(q('[data-lesson-breakdown]')?.textContent || '')
+  check('يعرض 60/60 و 50/50 لكل درس', text.includes('60/60') && text.includes('50/50'), text.slice(0, 120))
+  check('يعرض حصة السؤال التركيبي داخل كل درس', (text.match(/منها تركيبي: 10\/10/g) || []).length === 2,
+    String((text.match(/منها تركيبي/g) || []).length))
+  check('ينصّ على أن مجموع الدرسين 110 وليس 100', text.includes('110') && text.includes('لا تُجمع'))
+  check('العلامة النهائية المعروضة 100/100', text.includes('100 / 100'))
+  check('النسبة المعروضة 100%', /النسبة:\s*100(\.0)?%/.test(norm(bodyText())),
+    (norm(bodyText()).match(/النسبة:\s*[\d.]+%/) || [''])[0])
+  check('التوزيع لا يُغيّر عنوان النتيجة', qa('[data-result-question]').length === 10)
+}
 
 console.log('\n— الإرسال إلى Google Sheets (Mock Fetch) —')
 await settle(() => sendStatus() === 'success', 5000)
@@ -256,6 +285,14 @@ check('طلب واحد فقط', net.calls.length === 1, String(net.calls.length)
   check('الحمولة: التقرير مضمّن', sent.reportText.length > 1000)
   check('الحمولة: token صحيح', typeof sent.token === 'string' && sent.token.length === 32)
   check('الحمولة: attemptId موجود', typeof sent.attemptId === 'string' && sent.attemptId.length > 5)
+  check('الحمولة: lessons درسان فقط', Array.isArray(sent.lessons) && sent.lessons.length === 2,
+    String(sent.lessons?.length))
+  check('الحمولة: لا فئة تركيبية بين الدروس',
+    sent.lessons.every((l: { title: string }) => !l.title.includes('+')))
+  check('الحمولة: lessonTotals يوضّح التداخل',
+    sent.lessonTotals?.possible === 110 && sent.lessonTotals?.uniquePossible === 100)
+  check('الحمولة: مجموع الاختبار 100 لا 110',
+    sent.summary.total === 100 && sent.summary.max === 100)
 }
 check('لا حمولة معلّقة بعد النجاح',
   Array.from({ length: W.localStorage.length }, (_, i) => W.localStorage.key(i)!)
@@ -286,6 +323,15 @@ await act(async () => { click(byText('button', 'فتح الدليل')!); await s
 check('كلمة المرور الصحيحة تفتح الدليل', bodyText().includes('جدول توزيع العلامات'))
 check('يعرض 44 فرعاً و100 علامة', bodyText().includes('44') && bodyText().includes('100'))
 check('يعرض سياسة التصحيح', bodyText().includes('سياسة التصحيح'))
+{
+  const teacherLessons = q('[data-teacher-lessons]')
+  check('دليل المعلّم يعرض توزيع الدرسين', !!teacherLessons)
+  const tText = norm(teacherLessons?.textContent || '')
+  check('توزيع المعلّم: درسان فقط', (tText.match(/—\s*\d+\s*سؤالاً|—\s*\d+\s*أسئلة/g) || []).length === 2, tText.slice(0, 120))
+  check('توزيع المعلّم: 60 و 50', tText.includes('60') && tText.includes('50'), tText.slice(0, 140))
+  check('توزيع المعلّم يوضّح التداخل ولا يُجمَع', tText.includes('110') && tText.includes('لا تُجمع'))
+  check('توزيع المعلّم يشير للسؤال التركيبي كحصة مشتركة', tText.includes('تركيبي'))
+}
 check('لا يعرض كلمة المرور نصاً', !bodyText().includes(TEACHER_PASSWORD))
 await act(async () => { click(byText('button', 'رجوع إلى الاختبار')!); await sleep(20) })
 check('العودة من بوابة المعلّم', !!q('[data-result-question]'))

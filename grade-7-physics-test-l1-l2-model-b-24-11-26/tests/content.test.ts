@@ -57,6 +57,8 @@ console.log('\n— الدروس والمراجع —')
 const lessons = questions.map((q) => q.lesson)
 check('كل سؤال ينتمي إلى درس أو الدرسين معاً', lessons.every((l) => l === 'الحركة والسكون' || l === 'القوة والحركة' || l.includes('+')))
 check('السؤال التركيبي الوحيد هو الأخير', lessons.filter((l) => l.includes('+')).length === 1 && lessons[9].includes('+'), lessons[9])
+check('كل تصنيف درس يُحلَّل إلى درس أصلين فقط',
+  lessons.every((l) => l.split('+').map((part) => part.trim()).every((part) => part === 'الحركة والسكون' || part === 'القوة والحركة')))
 check('كل سؤال له صفحات مرجعية', questions.every((q) => q.pages.trim().length > 0))
 check('كل سؤال له مهارة موصوفة', questions.every((q) => q.skill.trim().length > 0))
 check('كل سؤال له نصّ تمهيدي (intro)', questions.every((q) => q.intro.length > 0))

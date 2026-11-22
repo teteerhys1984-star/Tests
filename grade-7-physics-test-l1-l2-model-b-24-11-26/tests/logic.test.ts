@@ -12,7 +12,8 @@
 import { questions } from '../src/data/questions'
 import { answerKey } from '../src/data/answerKey'
 import {
-  gradeExam, gradePart, partLetter, partStatus, lessonTotals, describeResponse, isExamComplete, isPartAnswered,
+  gradeExam, gradePart, partLetter, partStatus, lessonTotals, lessonOverlap, describeResponse,
+  isExamComplete, isPartAnswered, BASE_LESSONS,
   STATUS_AR, type Responses, type Rubric,
 } from '../src/lib/grading'
 import {
@@ -128,13 +129,33 @@ check('أول فرع غير مجاب للاختيار يعرض نص الخيار
   questions[1].parts[0], answerKey.q2.rubric.q2a.kind === 'choice' ? (answerKey.q2.rubric.q2a as any).correctOption : '0') ===
   questions[1].parts[0].options!.find((o) => o.id === (answerKey.q2.rubric.q2a as any).correctOption)!.label)
 
-console.log('\n— توزيع الدرسين —')
+console.log('\n— توزيع الدرسين (درسان فقط) —')
 const totals = lessonTotals(questions, full)
-check('توزيع لكل درس', totals.length === 3, String(totals.length))
-const baseTotal = totals.reduce((s, row) => s + row.possible, 0)
-check('السؤال التركيبي يُحتسب في الدرسين (100 + 10 + 10)', baseTotal === 120, String(baseTotal))
-check('توزيع كل درس: 60 + 50 + 10', totals.map((r) => r.possible).join(',') === '60,50,10', totals.map((r) => r.possible).join(','))
-check('لا يختلط سؤال درس بسؤال آخر', totals[0].earned === 60 && totals[1].earned === 50 && totals[2].earned === 10)
+check('درسان فقط — لا فئة ثالثة', totals.length === 2, String(totals.length))
+check('الدرسان هما الأصلان بالترتيب',
+  totals.map((r) => r.lesson).join('|') === BASE_LESSONS.join('|'), totals.map((r) => r.lesson).join('|'))
+check('لا يظهر السؤال التركيبي كبند مستقل',
+  totals.every((r) => !r.lesson.includes('+') && !r.lesson.includes('تركيب')), totals.map((r) => r.lesson).join(','))
+check('توزيع الدرسين: 60 + 50', totals.map((r) => r.possible).join(',') === '60,50', totals.map((r) => r.possible).join(','))
+check('الحصيلة المحقَّقة: 60 + 50', totals.map((r) => r.earned).join(',') === '60,50', totals.map((r) => r.earned).join(','))
+check('السؤال التركيبي يُحتسب في الدرس الأول',
+  totals[0].sharedQuestions === 1 && totals[0].sharedPossible === 10 && totals[0].sharedEarned === 10)
+check('السؤال التركيبي يُحتسب في الدرس الثاني',
+  totals[1].sharedQuestions === 1 && totals[1].sharedPossible === 10 && totals[1].sharedEarned === 10)
+check('الدرس الأول 6 أسئلة (5 + التركيبي)', totals[0].questions === 6, String(totals[0].questions))
+check('الدرس الثاني 5 أسئلة (4 + التركيبي)', totals[1].questions === 5, String(totals[1].questions))
+check('لا سؤال غير التركيبي يُحتسب في الدرسين',
+  totals.every((r) => r.questions - r.sharedQuestions === questions.filter(
+    (q) => !q.lesson.includes('+') && (q.lesson === r.lesson)).length))
+
+const overlap = lessonOverlap(questions, full)
+check('مجموع الدرسين 110 = 100 + 10 (تداخل مقصود)', overlap.possible === 110, String(overlap.possible))
+check('التداخل = علامة السؤال التركيبي (10)', overlap.sharedPossible === 10, String(overlap.sharedPossible))
+check('بعد إزالة التداخل يعود المجموع 100', overlap.uniquePossible === 100, String(overlap.uniquePossible))
+check('مجموع الاختبار النهائي يبقى 100', overlap.examPossible === 100 && full.possible === 100)
+check('المحقَّق بعد إزالة التداخل = مجموع الاختبار', overlap.uniqueEarned === overlap.examTotal, `${overlap.uniqueEarned}/${overlap.examTotal}`)
+check('التداخل لا يُغيّر علامة الطالب', full.total === 100)
+check('lessonTotals لا تُنشئ درساً لاسم فيه «+»', totals.every((r) => !r.lesson.includes('+')))
 check('مجموع كل درس صحيح', totals.every((row) => row.possible > 0 && row.earned === row.possible))
 
 console.log('\n— سلّم التقدير —')
@@ -162,6 +183,12 @@ for (let i = 1; i <= 10; i++) check(`عنوان السؤال ${i} موجود`, r
 check('يذكر كل فرع', allParts.every(({ part }) => report.includes(`الفرع (${partLetter(allParts.filter((p) => p.q.id === part.id.slice(0, 2)).findIndex((x) => x.part.id === part.id))})`)) || true)
 check('يذكر حالة كل فرع', report.split('إجابة صحيحة').length - 1 === 44, String(report.split('إجابة صحيحة').length - 1))
 check('يذكر الدرسين', report.includes('الحركة والسكون') && report.includes('القوة والحركة'))
+check('عنوان التوزيع ينصّ على درسين فقط', report.includes('توزيع العلامات على الدرسين (درسان فقط)'))
+check('لا سطر «مجموع الدرسين» بوصفه مجموع الاختبار', report.includes('مجموع الدرسين'))
+check('يوضّح أن الدرجات لا تُجمع', report.includes('لا تُجمع'))
+check('يذكر أن مجموع الاختبار هو 100 فقط', report.includes('مجموع الاختبار هو'))
+check('يعرض حصّة السؤال التركيبي داخل كل درس', (report.match(/للسؤال التركيبي/g) || []).length === 2,
+  String((report.match(/للسؤال التركيبي/g) || []).length))
 check('فواصل الأقسام بعرض 78 خانة',
   report.split(/\r?\n/).filter((line) => /^=+$/.test(line)).every((line) => line.length === 78))
 check('العناوين الأصلية لا تحتوي أسطراً فارغة متتالية', !/\r\n\r\n\r\n/.test(report))
@@ -200,6 +227,7 @@ check('الملخّص يرصد العلامة الجزئية', sumPartial.partia
   `${sumPartial.partialSubparts}/${sumPartial.partialQuestions}`)
 check('مجموع الملخّص = نتيجة التصحيح', sumPartial.total === partialResult.total && partialResult.total < 100)
 check('النسبة موافقة للمجموع', Math.abs(sumPartial.percentage - (sumPartial.total / 100) * 100) < 0.05)
+check('مجموع الدرسين لا يُستعمل مقاماً للنسبة', sumPartial.max === 100 && sumPartial.percentage <= 100)
 
 console.log('\n— الفيزياء —')
 check('سرعة وسطية 200/80 = 2.5', averageSpeed(200, 80) === 2.5)

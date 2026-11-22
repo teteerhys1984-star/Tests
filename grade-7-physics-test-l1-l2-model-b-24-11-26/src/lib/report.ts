@@ -16,7 +16,7 @@ import {
   CONTACT,
 } from "../config";
 import type { Part, Question } from "../exam/types";
-import { describeResponse, lessonTotals, partStatus, STATUS_AR, type ExamResult } from "./grading";
+import { describeResponse, lessonOverlap, lessonTotals, partStatus, STATUS_AR, type ExamResult } from "./grading";
 import { richToPlain } from "./mathx";
 import { formatDuration, formatDurationWords, formatLong, num, pct, toLatinDigits } from "./time";
 
@@ -112,6 +112,7 @@ function partLines(part: Part, partIndex: number, partResult: ExamResult["questi
 
 export function buildReport(questions: Question[], meta: AttemptMeta, result: ExamResult, responses: Record<string, string>): string {
   const summary = summarize(questions, responses, result);
+  const overlap = lessonOverlap(questions, result);
   const lines: string[] = [];
   const push = (...items: string[]) => lines.push(...items);
 
@@ -157,11 +158,21 @@ export function buildReport(questions: Question[], meta: AttemptMeta, result: Ex
   push(`فروع إجاباتها خاطئة        : ${num(summary.wrongSubparts)}`);
   push(`فروع لم يُجب عنها          : ${num(summary.unansweredSubparts)}`);
   push("");
-  push("توزيع العلامات على الدرسين:");
-  for (const row of lessonTotals(questions, result)) {
-    push(`  ${row.lesson.padEnd(30, " ")} : ${num(row.earned)} / ${num(row.possible)}`);
+  push("توزيع العلامات على الدرسين (درسان فقط):");
+  const totals = lessonTotals(questions, result);
+  for (const row of totals) {
+    const shared =
+      row.sharedQuestions > 0
+        ? `   (منها ${num(row.sharedEarned)} / ${num(row.sharedPossible)} للسؤال التركيبي)`
+        : "";
+    push(`  ${row.lesson.padEnd(30, " ")} : ${num(row.earned)} / ${num(row.possible)}${shared}`);
   }
-  push("  (السؤال التركيبي يُحتسب في الدرسين، ولذلك يتجاوز مجموع التوزيع 100)");
+  push(`  مجموع الدرسين                        : ${num(overlap.total)} / ${num(overlap.possible)}`);
+  push(
+    `  (السؤال التركيبي يُحتسب في الدرسين معاً، فتظهر ${num(overlap.sharedPossible)} علامة مرتين:` +
+      ` مرة في كل درس. لا تُجمع الدرجات أعلاه، ومجموع الاختبار هو` +
+      ` ${num(summary.total)} / ${num(summary.max)} فقط.)`,
+  );
   push("");
   push(LINE);
   push("                       المراجعة التفصيلية لكل سؤال وفرع");

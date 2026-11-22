@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CONTACT, EXAM_TITLE, GRADE_LABEL, SEMESTER_LABEL, SUBJECT_LABEL, TOTAL_MARKS } from "../config";
 import type { Question } from "../exam/types";
 import type { ExamResult, Responses } from "../lib/grading";
-import { partLetter, partStatus, STATUS_AR } from "../lib/grading";
+import { lessonOverlap, lessonTotals, partLetter, partStatus, STATUS_AR } from "../lib/grading";
 import { Rich } from "../lib/mathx";
 import {
   reportFilename,
@@ -116,19 +116,9 @@ export function Results({
   const filename = reportFilename(meta.studentName);
   const download = () => triggerDownload(reportText, filename);
 
-  const lessons = useMemo(() => {
-    const names = Array.from(new Set(questions.map((question) => question.lesson)));
-    return names.map((lesson) => {
-      let earned = 0;
-      let possible = 0;
-      questions.forEach((question, index) => {
-        if (!(question.lesson === lesson || question.lesson.includes(lesson))) return;
-        earned += result.questions[index].earned;
-        possible += result.questions[index].possible;
-      });
-      return { lesson, earned, possible };
-    });
-  }, [questions, result]);
+  /* درسان فقط، ومعهما بيان الحصة المشتركة للسؤال التركيبي (لا فئة ثالثة). */
+  const lessons = useMemo(() => lessonTotals(questions, result), [questions, result]);
+  const overlap = useMemo(() => lessonOverlap(questions, result), [questions, result]);
 
   return (
     <div className="relative z-10 mx-auto max-w-6xl px-3 pb-10 pt-5 sm:px-4">
@@ -293,19 +283,46 @@ export function Results({
           ))}
         </div>
 
-        <div className="mt-4">
+        <div className="mt-4" data-lesson-breakdown>
           <p className="mb-1.5 text-[0.78rem] font-bold" style={{ color: "var(--ink-3)" }}>
-            توزيع العلامات على الدرسين
+            توزيع العلامات على الدرسين (درسان فقط)
           </p>
-          <div className="flex flex-wrap gap-1.5">
+          <ul className="grid gap-1.5">
             {lessons.map((row) => (
-              <span key={row.lesson} className="badge badge-teal tnum">
-                {row.lesson}: {num(row.earned)}/{num(row.possible)}
-              </span>
+              <li
+                key={row.lesson}
+                className="flex flex-wrap items-center justify-between gap-2 rounded-[var(--r-sm)] border p-2 text-[0.86rem]"
+                data-lesson={row.lesson}
+                style={{ borderColor: "var(--line-soft)", background: "var(--surface-2)" }}
+              >
+                <span className="font-bold" style={{ color: "var(--ink-1)" }}>
+                  {row.lesson}
+                  <span className="ms-1.5 text-[0.72rem] font-normal" style={{ color: "var(--ink-3)" }}>
+                    ({num(row.questions)} أسئلة)
+                  </span>
+                </span>
+                <span className="flex flex-wrap items-center gap-1.5">
+                  {row.sharedQuestions > 0 && (
+                    <span className="badge badge-part tnum" title="حصّة السؤال التركيبي المضافة إلى هذا الدرس">
+                      منها تركيبي: {num(row.sharedEarned)}/{num(row.sharedPossible)}
+                    </span>
+                  )}
+                  <span className="badge badge-teal tnum">
+                    {num(row.earned)}/{num(row.possible)}
+                  </span>
+                </span>
+              </li>
             ))}
-          </div>
-          <p className="mt-1.5 text-[0.72rem]" style={{ color: "var(--ink-3)" }}>
-            السؤال التركيبي (السؤال {num(questions.length)}) يُحتسب في الدرسين، لذلك يتجاوز مجموع التوزيع {num(TOTAL_MARKS)} علامة.
+          </ul>
+          <p className="mt-1.5 rounded-[var(--r-xs)] p-2 text-[0.74rem] leading-relaxed" style={{ background: "var(--warn-soft)", color: "var(--warn)" }}>
+            مجموع الدرسين أعلاه <strong className="tnum">{num(overlap.possible)}</strong> علامة وليس{" "}
+            <strong className="tnum">{num(overlap.examPossible)}</strong>: السؤال التركيبي (السؤال{" "}
+            {num(questions.length)}) يُحتسب في الدرسين معاً، فتظهر علاماته ({num(overlap.sharedPossible)})
+            مرتين. <strong>لا تُجمع الدرجات أعلاه</strong>؛ علامتك النهائية هي{" "}
+            <strong className="tnum">
+              {num(summary.total)} / {num(summary.max)}
+            </strong>{" "}
+            ونسبتك <strong className="tnum">{pct(summary.percentage)}</strong>.
           </p>
         </div>
       </section>

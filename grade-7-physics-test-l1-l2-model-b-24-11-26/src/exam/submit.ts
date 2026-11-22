@@ -16,7 +16,7 @@ import { EXAM_ID, EXAM_TITLE, PENDING_PREFIX, SHEETS_TOKEN, SHEETS_URL } from ".
 
 /* PENDING_PREFIX معرَّف في src/config.ts باشتقاقه من EXAM_ID، ويُعاد تصديره هنا للتوافق مع عقد المرجع. */
 import { richToPlain } from "../lib/mathx";
-import { partStatus, STATUS_AR, type ExamResult, type PartResult, type Responses } from "../lib/grading";
+import { lessonOverlap, lessonTotals, partStatus, STATUS_AR, type ExamResult, type PartResult, type Responses } from "../lib/grading";
 import { gradeLabel, summarize, type AttemptMeta } from "../lib/report";
 import type { Question } from "../exam/types";
 
@@ -42,6 +42,32 @@ export interface PayloadLesson {
   title: string;
   awarded: number;
   max: number;
+  /** عدد الأسئلة المحتسبة في الدرس (بما فيها التركيبي). */
+  questions: number;
+  /** عدد الأسئلة التركيبية المحتسبة في الدرس (حصة مشتركة مع الدرس الآخر). */
+  sharedQuestions: number;
+  /** علامة الحصة المشتركة المحقَّقة داخل هذا الدرس. */
+  sharedAwarded: number;
+  /** علامة الحصة المشتركة القصوى داخل هذا الدرس. */
+  sharedMax: number;
+}
+
+/**
+ * أرقام توزيع الدرسين الإجمالية — للتوضيح فقط: `possible` هو مجموع توزيع الدرسين
+ * (قد يتجاوز مجموع الاختبار بسبب الاحتساب المشترك)، و`sharedPossible` هو الجزء
+ * المكرّر. المرجع النهائي لعلامة الطالب ونسبتها يبقى `summary.total` و`summary.max`.
+ */
+export interface PayloadLessonTotals {
+  lessons: number;
+  total: number;
+  possible: number;
+  sharedQuestions: number;
+  sharedAwarded: number;
+  sharedPossible: number;
+  uniquePossible: number;
+  examTotal: number;
+  examPossible: number;
+  note: string;
 }
 
 export interface PayloadDetail {
@@ -67,6 +93,8 @@ export interface SubmissionPayload {
   elapsedSec: number;
   summary: PayloadSummary;
   lessons: PayloadLesson[];
+  /** حصيلة الدرسين مع بيان التداخل — لا تُستعمل مقاماً للنسبة. */
+  lessonTotals: PayloadLessonTotals;
   details: PayloadDetail[];
   reportText: string;
 }
@@ -113,17 +141,23 @@ function answerText(part: Question["parts"][number], response: string): string {
 export function buildPayload({ attemptId, meta, order, answers, result, reportText }: PayloadInput): SubmissionPayload {
   const sum = summarize(order, answers, result);
 
-  const lessons: PayloadLesson[] = Array.from(new Set(order.map((question) => question.lesson))).map((lesson) => {
-    let awarded = 0;
-    let max = 0;
-    order.forEach((question, index) => {
-      const touches = question.lesson === lesson || question.lesson.includes(lesson);
-      if (!touches) return;
-      awarded += result.questions[index].earned;
-      max += result.questions[index].possible;
-    });
-    return { title: lesson, awarded: Math.round(awarded * 100) / 100, max };
-  });
+  /*
+   * الدروس: **الدرسان الأصليان فقط**، ولا فئة ثالثة للسؤال التركيبي.
+   * السؤال التركيبي تُضاف علاماته إلى الدرسين معاً، فمجموع `max` قد يتجاوز مجموع
+   * الاختبار بمقدار حصته المشتركة؛ ولهذا يُرسَل `shared*` لكل درس و`overlap` للأرقام
+   * الإجمالية، بينما يبقى `summary.total` (مجموع الاختبار) هو المرجع للعلامة والنسبة.
+   */
+  const overlap = lessonOverlap(order, result);
+  const lessonRows = lessonTotals(order, result);
+  const lessons: PayloadLesson[] = lessonRows.map((row) => ({
+    title: row.lesson,
+    awarded: row.earned,
+    max: row.possible,
+    questions: row.questions,
+    sharedQuestions: row.sharedQuestions,
+    sharedAwarded: row.sharedEarned,
+    sharedMax: row.sharedPossible,
+  }));
 
   const details: PayloadDetail[] = order.flatMap((question, questionIndex) => {
     const graded = result.questions[questionIndex];
@@ -168,6 +202,20 @@ export function buildPayload({ attemptId, meta, order, answers, result, reportTe
       unansweredSubparts: sum.unansweredSubparts,
     },
     lessons,
+    lessonTotals: {
+      lessons: lessons.length,
+      total: overlap.total,
+      possible: overlap.possible,
+      sharedQuestions: overlap.sharedQuestions,
+      sharedAwarded: overlap.sharedEarned,
+      sharedPossible: overlap.sharedPossible,
+      uniquePossible: overlap.uniquePossible,
+      examTotal: overlap.examTotal,
+      examPossible: overlap.examPossible,
+      note:
+        "توزيع الدرسين فقط (بدون فئة ثالثة). السؤال التركيبي يُحتسب في الدرسين معاً، " +
+        `فتظهر ${overlap.sharedPossible} علامة مرتين ولا تُجمع الدرسان كمقام؛ مجموع الاختبار هو summary.total من summary.max.`,
+    },
     details,
     reportText,
   };

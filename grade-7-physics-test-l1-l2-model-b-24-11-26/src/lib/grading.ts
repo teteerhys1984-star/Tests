@@ -184,23 +184,127 @@ export function partLetter(index: number): string {
   return BRANCH_LETTERS[index] ?? String(index + 1);
 }
 
-/** إجمالي العلامات لكل درس، مع احتساب السؤال التركيبي في الدرسين. */
-export function lessonTotals(
-  questions: Question[],
-  result: ExamResult,
-): { lesson: string; earned: number; possible: number }[] {
-  const names = Array.from(new Set(questions.map((question) => question.lesson)));
-  return names.map((lesson) => {
+/**
+ * الدروس الأصلية في الاختبار — فئتان فقط، ولا تُشتقّ من تصنيف الأسئلة.
+ *
+ * السؤال التركيبي مصنّف في المصدر باسم «الحركة والسكون + القوة والحركة»، وهو سؤال واحد
+ * يُحتسب في الدرسين معاً؛ ومن ثمّ لا يجوز أن يولّد فئة ثالثة. لذلك التوزيع يُحسب على
+ * هذين الدرسين حصراً، ولذلك قد يزيد مجموع الدرسين (60 + 50 = 110 هنا) على مجموع
+ * الاختبار (100) بمقدار علامات السؤال التركيبي مرة واحدة — وهذا تداخل مقصود ومعلَن،
+ * وليس خطأً ولا فئة زائدة.
+ */
+export const BASE_LESSONS = ["الحركة والسكون", "القوة والحركة"] as const;
+
+export type LessonTotal = {
+  /** اسم الدرس الأصلي (أحد عنصري BASE_LESSONS). */
+  lesson: string;
+  /** العلامات المحقَّقة داخل الدرس، بما فيها حصة السؤال التركيبي. */
+  earned: number;
+  /** العلامة القصوى للدرس، بما فيها حصة السؤال التركيبي. */
+  possible: number;
+  /** عدد الأسئلة التي تُحتسب في الدرس (بما فيها التركيبي). */
+  questions: number;
+  /** أسئلة تركيبية تُحتسب في هذا الدرس (حصة مشتركة مع الدرس الآخر). */
+  sharedQuestions: number;
+  /** علامة الحصة المشتركة المحقَّقة داخل هذا الدرس. */
+  sharedEarned: number;
+  /** علامة الحصة المشتركة القصوى داخل هذا الدرس. */
+  sharedPossible: number;
+};
+
+/** هل ينتمي السؤال إلى درس أصلي معطى؟ (يطابق التصنيف في المصدر بدقة) */
+function belongsTo(question: Question, lesson: string): boolean {
+  return question.lesson === lesson || question.lesson.split("+").some((part) => part.trim() === lesson);
+}
+
+/**
+ * توزيع العلامات على **الدرسين الأصليين فقط**.
+ *
+ * · لا تُنشأ فئة ثالثة للسؤال التركيبي؛ بل تُضاف علاماته إلى الدرسين معاً
+ *   وتُعلَّم في `sharedQuestions`/`sharedPossible` كحصة مشتركة.
+ * · `lessonTotals(...).reduce(possible)` قد يتجاوز `result.possible` (مجموع الاختبار = 100)
+ *   بمقدار علامات الأسئلة التركيبية؛ لا يُستعمل مجموع التوزيع كمقام للنسبة أبداً.
+ */
+export function lessonTotals(questions: Question[], result: ExamResult): LessonTotal[] {
+  return BASE_LESSONS.map((lesson) => {
     let earned = 0;
     let possible = 0;
+    let count = 0;
+    let sharedQuestions = 0;
+    let sharedEarned = 0;
+    let sharedPossible = 0;
     questions.forEach((question, index) => {
-      const touches = question.lesson === lesson || question.lesson.includes(lesson);
-      if (!touches) return;
-      earned += result.questions[index].earned;
-      possible += result.questions[index].possible;
+      if (!belongsTo(question, lesson)) return;
+      const graded = result.questions[index];
+      earned += graded.earned;
+      possible += graded.possible;
+      count += 1;
+      if (question.lesson.includes("+")) {
+        sharedQuestions += 1;
+        sharedEarned += graded.earned;
+        sharedPossible += graded.possible;
+      }
     });
-    return { lesson, earned, possible };
+    return {
+      lesson,
+      earned: Math.round(earned * 100) / 100,
+      possible,
+      questions: count,
+      sharedQuestions,
+      sharedEarned: Math.round(sharedEarned * 100) / 100,
+      sharedPossible,
+    };
   });
+}
+
+/**
+ * حصيلة الدرسين معاً مع كشف التداخل.
+ *
+ * `possible` هنا **مضاعف**: مجموع توزيع الدرسين (110 في هذا الاختبار) وليس مجموع
+ * الاختبار. `sharedPossible` هو الجزء المكرّر (علامات الأسئلة التركيبية)، فإذا طُرح
+ * من `possible` عاد الناتج إلى مجموع الاختبار (100). تُستعمل هذه الدالة لعرض ملاحظة
+ * التداخل في صفحة النتيجة والتقرير والحمولة، ولا تُستعمل مقاماً لنسبة الطالب أبداً.
+ */
+export function lessonOverlap(questions: Question[], result: ExamResult) {
+  const totals = lessonTotals(questions, result);
+  const sum = (key: "earned" | "possible") =>
+    Math.round(totals.reduce((acc, row) => acc + row[key], 0) * 100) / 100;
+
+  /*
+   * التداخل يُقاس على مستوى الاختبار لا على مستوى مجموع الدروس:
+   * السؤال التركيبي الواحد يظهر في درسَين، وعلامته المكرّرة تُحسب **مرة واحدة**
+   * (لا مرتين)، وإلا لطُرحت مرتين من المجموع.
+   */
+  let sharedEarned = 0;
+  let sharedPossible = 0;
+  let sharedQuestions = 0;
+  questions.forEach((question, index) => {
+    if (!question.lesson.includes("+")) return;
+    sharedQuestions += 1;
+    sharedEarned += result.questions[index].earned;
+    sharedPossible += result.questions[index].possible;
+  });
+  sharedEarned = Math.round(sharedEarned * 100) / 100;
+  const possible = sum("possible");
+  const earned = sum("earned");
+
+  return {
+    /** مجموع توزيع الدرسين (قد يتجاوز مجموع الاختبار). */
+    earned,
+    possible,
+    total: earned,
+    sharedQuestions,
+    /** حصة السؤال التركيبي مرة واحدة (هي مقدار التكرار في المجموع). */
+    sharedEarned,
+    sharedPossible,
+    /** مجموع العلامات في الدروس كما يُعرض في كل صف (مجموع الحصص المشتركة). */
+    perLessonSharedPossible: Math.round(totals.reduce((acc, row) => acc + row.sharedPossible, 0) * 100) / 100,
+    /** مجموع الاختبار الحقيقي بعد إزالة التكرار — يجب أن يساوي result.possible. */
+    uniquePossible: Math.round((possible - sharedPossible) * 100) / 100,
+    uniqueEarned: Math.round((earned - sharedEarned) * 100) / 100,
+    examTotal: result.total,
+    examPossible: result.possible,
+  };
 }
 
 /** وصف مقروء لإجابة الطالب داخل فرع (للمراجعة والتقرير والحمولة). */
