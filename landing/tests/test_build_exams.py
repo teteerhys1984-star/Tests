@@ -60,6 +60,9 @@ EXCLUDED_SOURCE_DIRS = (
     # Source upload of the Grade 4 English foundation exam; published as
     # grade-4-english-foundation-test-22-11-26m instead (never built on its own).
     "English--foundation-test-22-11-26M",
+    # Source upload of the Grade 7 physics exam (Model B, lessons 1&2); published
+    # as grade-7-physics-test-l1-l2-model-b-24-11-26 instead (never built on its own).
+    "interactive-physics-Test-L1&2-model-B-24-11-26",
 )
 
 
