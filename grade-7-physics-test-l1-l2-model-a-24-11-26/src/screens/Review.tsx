@@ -1,5 +1,8 @@
 /**
- * صفحة مراجعة الإجابات قبل التسليم:
+ * صفحة مراجعة الإجابات قبل التسليم — شاشة إضافية لا توجد في المصدر،
+ * صُمّمت بهوية المصدر نفسها (بطاقة الترويسة المتدرجة باللون البرقوقي،
+ * البطاقات البيضاء الدائرية، شارات الألوان الفاتحة، أزرار plum).
+ *
  *  · تعرض حالة كل فرع ونصّ إجابة الطالب نفسها، بلا كشف الإجابة الصحيحة.
  *  · تتيح فلترة الناقص والعودة إلى أي سؤال لتعديل إجابته.
  *  · زر التسليم يبقى معطّلاً حتى تُجاب جميع الفروع.
@@ -9,9 +12,11 @@ import { useMemo, useState } from "react";
 import { TOTAL_MARKS } from "../config";
 import type { Question } from "../exam/types";
 import type { Responses } from "../lib/grading";
-import { isPartComplete, isPartAnswered, partLetter, progressOf } from "../lib/grading";
+import { isPartComplete, partLetter, progressOf } from "../lib/grading";
 import { MixedText, richToPlain } from "../lib/mathx";
 import { formatDuration, num } from "../lib/time";
+import { Button, Card } from "../components/ui";
+import { cn } from "../utils/cn";
 
 export function Review({
   studentName,
@@ -44,112 +49,86 @@ export function Review({
     .filter(({ stat }) => (filter === "missing" ? stat.done < stat.total : true));
 
   return (
-    <div className="relative z-10 mx-auto max-w-5xl px-3 pb-10 pt-5 sm:px-4">
-      <div
-        className="rounded-[var(--r-lg)] p-5 text-[#f4ecd8] shadow-[var(--sh-3)] sm:p-7"
-        style={{ background: "linear-gradient(135deg,#10313c 0%,#174c5b 55%,#0f766e 100%)" }}
-      >
-        <p className="text-[0.72rem] font-bold uppercase tracking-[0.16em]" style={{ color: "#ffd97a" }}>
-          الخطوة قبل الأخيرة
-        </p>
-        <h1 className="mt-1 text-[clamp(1.35rem,4vw,2rem)] font-extrabold" style={{ color: "#fff8e8" }}>
-          مراجعة الإجابات قبل التسليم
-        </h1>
-        <p className="mt-2 max-w-2xl text-[0.93rem] leading-relaxed opacity-90">
-          راجعي حالة كل سؤال وإجاباتك المدخلة أدناه. يمكنك العودة إلى أي سؤال لتعديل إجابتك. عند الضغط على
-          «تسليم الاختبار» يُصحَّح الاختبار تلقائياً، ويُنزَّل تقرير TXT، وتُرسَل نتيجتك إلى معلّمك.
-        </p>
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-[0.88rem]">
-          <span
-            className="badge"
-            style={{ background: "rgba(255,217,122,0.2)", color: "#ffd97a", borderColor: "rgba(255,217,122,0.45)" }}
-          >
-            الطالب: <strong>{studentName}</strong>
-          </span>
-          <span
-            className="badge tnum"
-            style={{ background: "rgba(255,248,232,0.14)", color: "#dcebee", borderColor: "rgba(255,248,232,0.24)" }}
-          >
-            الفروع المُجابة: {num(answered)} / {num(totalParts)}
-          </span>
-          <span
-            className="badge tnum"
-            style={{ background: "rgba(15,118,110,0.35)", color: "#bff0e6", borderColor: "rgba(15,118,110,0.6)" }}
-          >
-            الزمن: {formatDuration(elapsedMs)}
-          </span>
-          <span
-            className="badge tnum"
-            style={{ background: "rgba(255,248,232,0.1)", color: "#e7f0f1", borderColor: "rgba(255,248,232,0.2)" }}
-          >
-            المجموع: {num(TOTAL_MARKS)}
-          </span>
+    <div className="mx-auto w-full max-w-5xl flex-1 px-4 pb-10 pt-6 sm:pt-8">
+      <Card className="overflow-hidden">
+        <div className="bg-gradient-to-l from-plum-700 via-plum-600 to-blush-500 p-6 text-white">
+          <p className="text-sm opacity-90">الخطوة قبل الأخيرة</p>
+          <h1 className="mt-1 text-2xl font-bold leading-9">مراجعة الإجابات قبل التسليم</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-7 opacity-90">
+            راجعي حالة كل سؤال وإجاباتك المدخلة أدناه. يمكنك العودة إلى أي سؤال لتعديل إجابتك. عند الضغط على
+            «تسليم الاختبار» يُصحَّح الاختبار تلقائياً، ويُنزَّل تقرير TXT، وتُرسَل نتيجتك إلى معلّمك.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+            <span className="rounded-full bg-white/15 px-3 py-1 font-semibold">
+              الطالبة: <b>{studentName}</b>
+            </span>
+            <span className="tabular rounded-full bg-white/15 px-3 py-1 font-semibold">
+              الفروع المُجابة: {num(answered)} / {num(totalParts)}
+            </span>
+            <span className="tabular rounded-full bg-white/15 px-3 py-1 font-semibold">الزمن: {formatDuration(elapsedMs)}</span>
+            <span className="tabular rounded-full bg-white/15 px-3 py-1 font-semibold">المجموع: {num(TOTAL_MARKS)}</span>
+          </div>
         </div>
-      </div>
+      </Card>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex gap-2">
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-2">
           {(
             [
-              { id: "all" as const, label: `كل الأسئلة (${num(questions.length)})`, count: questions.length },
+              { id: "all" as const, label: `كل الأسئلة (${num(questions.length)})` },
               {
                 id: "missing" as const,
                 label: `غير المكتملة (${num(stats.filter((stat) => stat.done < stat.total).length)})`,
-                count: 0,
               },
             ]
           ).map((option) => (
             <button
               key={option.id}
               type="button"
-              className="btn !min-h-0 !px-3 !py-1.5 text-sm"
               onClick={() => setFilter(option.id)}
               aria-pressed={filter === option.id}
-              style={
+              className={cn(
+                "cursor-pointer rounded-full border-2 px-3 py-1.5 text-sm font-semibold transition-colors",
                 filter === option.id
-                  ? { background: "var(--navy)", color: "#ffd97a", border: "1px solid var(--navy)" }
-                  : { background: "var(--surface)", color: "var(--ink-2)", border: "1px solid var(--line)" }
-              }
+                  ? "border-plum-600 bg-plum-600 text-white"
+                  : "border-blush-100 bg-white text-ink-soft hover:border-lilac-300",
+              )}
             >
               {option.label}
             </button>
           ))}
         </div>
-        <button type="button" className="btn btn-ghost !min-h-0 !px-3 !py-1.5 text-sm" onClick={onExit} data-action="back-to-exam">
+        <Button variant="secondary" size="sm" onClick={onExit} data-action="back-to-exam">
           رجوع إلى الأسئلة
-        </button>
+        </Button>
       </div>
 
-      <div className="mt-3 grid gap-3">
+      <div className="mt-3 space-y-3">
         {rows.map(({ question, index, stat }) => {
           const complete = stat.done === stat.total;
           return (
-            <article key={question.id} className="card overflow-hidden" data-review-question={question.id}>
-              <header className="flex flex-wrap items-center gap-3 p-3.5" style={{ background: "var(--surface-2)" }}>
+            <Card key={question.id} className="overflow-hidden" data-review-question={question.id}>
+              <header className="flex flex-wrap items-center gap-3 border-b border-blush-100 bg-blush-50/50 p-3.5">
                 <span
-                  className="tnum grid h-9 w-9 shrink-0 place-items-center rounded-[var(--r-sm)] font-extrabold"
-                  style={{ background: complete ? "var(--teal)" : "var(--clay-soft)", color: complete ? "#fff" : "var(--clay)" }}
+                  className={cn(
+                    "tabular grid h-9 w-9 shrink-0 place-items-center rounded-xl font-bold",
+                    complete ? "bg-mint-100 text-mint-700" : "bg-coral-100 text-[#a9374b]",
+                  )}
                 >
                   {num(index + 1)}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[0.98rem] font-extrabold" style={{ color: "var(--ink-1)" }}>
-                    {question.title}
-                  </p>
-                  <p className="text-[0.76rem]" style={{ color: "var(--ink-3)" }}>
+                  <p className="font-semibold leading-7">{question.title}</p>
+                  <p className="text-xs leading-6 text-ink-soft">
                     {question.lesson} · {question.pages}
                   </p>
                 </div>
-                <span className={`badge ${complete ? "badge-ok" : "badge-err"} tnum`}>
+                <span className={cn("tabular rounded-full px-3 py-1 text-xs font-semibold", complete ? "bg-mint-100 text-mint-700" : "bg-coral-100 text-[#a9374b]")}>
                   {complete ? "مكتمل" : `ناقص ${num(stat.total - stat.done)}`}
                 </span>
-                <button
-                  type="button"
-                  className="btn btn-ghost !min-h-0 !px-2.5 !py-1 text-[0.8rem]"
-                  onClick={() => onBackToQuestion(index)}
-                >
+                <Button variant="ghost" size="sm" onClick={() => onBackToQuestion(index)}>
                   تعديل
-                </button>
+                </Button>
               </header>
 
               <ul className="grid gap-2 p-3.5">
@@ -162,59 +141,52 @@ export function Review({
                         ? (answers[`${input.id}:verdict`] ?? "").trim()
                         : input.kind === "number"
                           ? (answers[`${input.id}:value`] ?? "").trim()
-                          : isPartAnswered(answers[input.id]),
+                          : (answers[input.id] ?? "").trim(),
                   ).length;
                   return (
-                    <li key={part.id} className="flex flex-wrap items-start gap-2 text-[0.9rem]" data-review-part={part.id}>
-                      <span className={`badge ${done ? "badge-teal" : "badge-mute"} shrink-0`}>{partLetter(partIndex)}</span>
-                      <span className="min-w-0 flex-1" style={{ color: "var(--ink-2)" }}>
-                        <MixedText text={richToPlain(part.label)} />
+                    <li key={part.id} className="flex flex-wrap items-start gap-2 text-sm" data-review-part={part.id}>
+                      <span className={cn("shrink-0 rounded-full px-2.5 py-0.5 text-xs font-bold", done ? "bg-mint-100 text-mint-700" : "bg-blush-100 text-blush-500")}>
+                        {partLetter(partIndex)}
                       </span>
-                      <span className={`badge ${done ? "badge-ok" : "badge-err"} shrink-0 tnum`}>
+                      <span className="min-w-0 flex-1 leading-7 text-ink-soft">
+                        <MixedText as="span" text={richToPlain(part.label)} />
+                      </span>
+                      <span className={cn("tabular shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold", done ? "bg-mint-100 text-mint-700" : "bg-coral-100 text-[#a9374b]")}>
                         {done ? `مكتمل (${num(part.inputs.length)}/${num(part.inputs.length)})` : `${num(answeredInputs)}/${num(part.inputs.length)}`}
                       </span>
                     </li>
                   );
                 })}
               </ul>
-            </article>
+            </Card>
           );
         })}
       </div>
 
-      <div className="card mt-4 p-4 sm:p-5">
+      <Card className="mt-4 p-4 sm:p-5">
         {canSubmit ? (
-          <p className="text-sm font-bold" style={{ color: "var(--ok)" }}>
+          <p className="text-sm font-semibold text-mint-700">
             أجبتِ عن جميع الفروع ({num(totalParts)} فرعاً). اضغطي «تسليم الاختبار» للتصحيح وتنزيل التقرير تلقائياً.
           </p>
         ) : (
-          <p className="text-sm font-bold" style={{ color: "var(--warn)" }} role="status">
+          <p className="text-sm font-semibold text-sun-600" role="status">
             {remaining > 0
               ? `تبقّى ${num(remaining)} فرعاً بلا إجابة — لا يمكن التسليم قبل إكمالها.`
               : "جارٍ تجهيز النتيجة…"}
           </p>
         )}
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            className="btn btn-danger"
-            onClick={onSubmit}
-            disabled={!canSubmit}
-            data-action="submit-exam"
-          >
+          <Button variant="danger" onClick={onSubmit} disabled={!canSubmit} data-action="submit-exam">
             {submitting ? "جارٍ التسليم…" : "تسليم الاختبار"}
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" aria-hidden>
-              <path d="M12 3v12M7 10l5 5 5-5M4 21h16" />
-            </svg>
-          </button>
-          <button type="button" className="btn btn-ghost" onClick={onExit}>
+          </Button>
+          <Button variant="secondary" onClick={onExit}>
             متابعة المراجعة
-          </button>
+          </Button>
         </div>
-        <p className="mt-2 text-[0.76rem]" style={{ color: "var(--ink-3)" }}>
+        <p className="mt-2 text-xs leading-6 text-ink-faint">
           لا يمكن التراجع عن التسليم؛ بعد التسليم تُعرض النتيجة والتصحيح التفصيلي وتُرسَل النتيجة إلى المعلّم.
         </p>
-      </div>
+      </Card>
     </div>
   );
 }

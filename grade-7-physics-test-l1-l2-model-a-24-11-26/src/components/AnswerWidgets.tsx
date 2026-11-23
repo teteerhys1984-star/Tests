@@ -1,16 +1,25 @@
 /**
- * عناصر إدخال الإجابة لكل نوع حقل — بلا أي كشف للإجابة الصحيحة.
- * كل عنصر يحمل `data-part-id` و`data-input-id` لتتمكّن الاختبارات الآلية من التحقّق
- * من التغطية الكاملة لكل الفروع والحقول.
+ * عناصر إدخال الإجابة لكل نوع حقل — بهوية المصدر الأصلي
+ * (grade-7-physics-test-Model-A-24-11-26/src/components/inputs.tsx):
+ * أزرار الخيارات الدائرية، بطاقة صح/خطأ، حقول الإدخال بحدود وردية،
+ * جدول التصنيف، وبطاقة الفرع بحرفها وشارة علاماتها.
+ *
+ * كل عنصر يحمل `data-input-id` (وما يلزم من `data-opt-id` و`data-verdict`
+ * و`data-*-field` و`data-matrix-row`/`data-col-id`) لتتمكّن الاختبارات
+ * الآلية من التحقّق من التغطية الكاملة لكل الفروع والحقول.
  */
 
 import type { Input, Part } from "../exam/types";
 import { FIGURE_CHOICE_IDS } from "../exam/types";
 import { Figure } from "../exam/figures";
-import { MathText, MixedText, richToPlain } from "../lib/mathx";
-import { partLetter, ANSWER_KEYS } from "../lib/grading";
+import { MixedText, richToPlain } from "../lib/mathx";
+import { ANSWER_KEYS, partLetter } from "../lib/grading";
+import { partMaxMarks } from "../lib/marks";
+import { cn } from "../utils/cn";
+import { inputCls, labelCls, MarkBadge } from "./ui";
 
-const CHOICE_LETTERS = ["أ", "ب", "ج", "د", "هـ"];
+export { richToPlain };
+export const LETTERS = ["أ", "ب", "ج", "د", "هـ", "و", "ز", "ح"];
 
 /** نصّ صرف من نصّ قد يحوي $...$ — للسمات الدلالية فقط. */
 export function plainLabel(part: Part): string {
@@ -23,6 +32,14 @@ type WidgetProps = {
   set: (key: string, value: string) => void;
 };
 
+function RadioDot({ selected }: { selected: boolean }) {
+  return (
+    <span className={cn("mt-1.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 bg-white", selected ? "border-plum-600" : "border-ink-faint")}>
+      {selected && <span className="h-2.5 w-2.5 rounded-full bg-plum-600" />}
+    </span>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /* اختيار من متعدد                                                    */
 /* ------------------------------------------------------------------ */
@@ -32,45 +49,42 @@ function ChoiceField({ input, value, set }: WidgetProps & { input: Extract<Input
   const withFigures = input.options.some((option) => option.diagram && FIGURE_CHOICE_IDS.has(option.diagram));
   return (
     <div
-      className={withFigures ? "grid gap-2.5 sm:grid-cols-2" : "grid gap-2"}
+      className={withFigures ? "grid gap-2 sm:grid-cols-2" : "grid gap-2"}
       role="radiogroup"
       aria-label={richToPlain(input.prompt) || "اختر الإجابة"}
       data-part-id={input.id}
       data-input-id={input.id}
       data-input-kind="choice"
     >
-      {input.options.map((option, index) => {
+      {input.options.map((option) => {
         const on = selected === option.id;
         return (
-          <button
+          <label
             key={option.id}
-            type="button"
-            className="chip"
             data-opt-id={option.id}
-            data-on={on ? "1" : "0"}
-            role="radio"
-            aria-checked={on}
-            onClick={() => set(input.id, on ? "" : option.id)}
+            className={cn(
+              "relative flex cursor-pointer items-start gap-3 rounded-2xl border-2 px-4 py-3 transition-colors",
+              on ? "border-plum-500 bg-lilac-100" : "border-blush-100 bg-white hover:border-lilac-300",
+            )}
           >
-            <span className="chip-dot" aria-hidden />
-            <span className="badge badge-mute !px-1.5" style={{ minWidth: 26, justifyContent: "center" }}>
-              {CHOICE_LETTERS[index] ?? String(index + 1)}
-            </span>
-            <span className="min-w-0 flex-1">
-              {option.diagram ? (
-                <span className="figure-option">
-                  <span className="text-[0.86rem] font-bold" style={{ color: "var(--ink-2)" }}>
-                    {option.label}
-                  </span>
-                  <span className="rounded-[var(--r-xs)] bg-white p-1">
-                    <Figure type={option.diagram} />
-                  </span>
+            <input type="radio" name={input.id} className="sr-only" checked={on} onChange={() => set(input.id, on ? "" : option.id)} />
+            {option.diagram ? (
+              <div className="w-full">
+                <div className="mb-1 flex items-center gap-2">
+                  <RadioDot selected={on} />
+                  <span className="text-sm font-medium">{option.label}</span>
+                </div>
+                <Figure type={option.diagram} variant="option" />
+              </div>
+            ) : (
+              <>
+                <RadioDot selected={on} />
+                <span className="leading-7">
+                  <MixedText as="span" text={option.label} />
                 </span>
-              ) : (
-                <MixedText as="span" text={option.label} />
-              )}
-            </span>
-          </button>
+              </>
+            )}
+          </label>
         );
       })}
     </div>
@@ -84,12 +98,17 @@ function ChoiceField({ input, value, set }: WidgetProps & { input: Extract<Input
 function TextField({ input, value, set }: WidgetProps & { input: Extract<Input, { kind: "text" }> }) {
   return (
     <div data-part-id={input.id} data-input-id={input.id} data-input-kind="text">
+      {input.prompt && (
+        <p className="mb-1.5 font-medium leading-7">
+          <MixedText as="span" text={input.prompt} />
+        </p>
+      )}
       <textarea
-        className="field"
         rows={input.rows ?? 3}
         value={value(input.id)}
         placeholder={input.placeholder ?? "اكتبي إجابتك بأسلوبك"}
         aria-label={richToPlain(input.prompt) || "إجابة قصيرة"}
+        className={inputCls}
         onChange={(event) => set(input.id, event.target.value)}
       />
     </div>
@@ -102,51 +121,50 @@ function TextField({ input, value, set }: WidgetProps & { input: Extract<Input, 
 
 function NumberField({ input, value, set }: WidgetProps & { input: Extract<Input, { kind: "number" }> }) {
   return (
-    <div className="grid gap-2" data-part-id={input.id} data-input-id={input.id} data-input-kind="number">
+    <div className="space-y-3" data-part-id={input.id} data-input-id={input.id} data-input-kind="number">
+      {input.prompt && (
+        <p className="font-medium leading-7">
+          <MixedText as="span" text={input.prompt} />
+        </p>
+      )}
       {input.requiresSteps && (
         <label className="block">
-          <span className="mb-1 block text-[0.82rem] font-bold" style={{ color: "var(--ink-3)" }}>
-            خطوة الحل (التعويض):
-          </span>
+          <span className={labelCls}>خطوة الحل (التعويض):</span>
           <textarea
-            className="field !min-h-[64px]"
             rows={2}
             value={value(ANSWER_KEYS.steps(input.id))}
             placeholder="مثال: v = d ÷ t = 27 ÷ 0.5"
             aria-label="خطوة الحل للفرع"
             data-step-field={input.id}
+            className={inputCls}
             onChange={(event) => set(ANSWER_KEYS.steps(input.id), event.target.value)}
           />
         </label>
       )}
-      <div className="flex flex-wrap items-end gap-2">
-        <label className="min-w-[8rem] flex-1">
-          <span className="mb-1 block text-[0.82rem] font-bold" style={{ color: "var(--ink-3)" }}>
-            النتيجة العددية
-          </span>
+      <div className="flex items-end gap-2">
+        <label className="block flex-1">
+          <span className={labelCls}>النتيجة العددية</span>
           <input
-            className="field field-math"
-            dir="ltr"
-            inputMode="decimal"
-            autoComplete="off"
             type="text"
+            inputMode="decimal"
+            dir="ltr"
+            autoComplete="off"
             value={value(ANSWER_KEYS.value(input.id))}
             placeholder="العدد"
             aria-label={`النتيجة العددية — ${richToPlain(input.prompt) || "الفرع"}`}
             data-value-field={input.id}
+            className={cn(inputCls, "tabular")}
             onChange={(event) => set(ANSWER_KEYS.value(input.id), event.target.value)}
           />
         </label>
         {input.unitOptions && (
-          <label className="w-32 shrink-0">
-            <span className="mb-1 block text-[0.82rem] font-bold" style={{ color: "var(--ink-3)" }}>
-              الوحدة
-            </span>
+          <label className="block w-32 shrink-0">
+            <span className={labelCls}>الوحدة</span>
             <select
-              className="field"
               value={value(ANSWER_KEYS.unit(input.id))}
               aria-label="وحدة النتيجة"
               data-unit-field={input.id}
+              className={inputCls}
               onChange={(event) => set(ANSWER_KEYS.unit(input.id), event.target.value)}
             >
               <option value="">اختيار</option>
@@ -169,48 +187,50 @@ function NumberField({ input, value, set }: WidgetProps & { input: Extract<Input
 
 function TrueFalseField({ input, value, set }: WidgetProps & { input: Extract<Input, { kind: "tf" }> }) {
   const verdict = value(ANSWER_KEYS.verdict(input.id));
+  const options: { v: "true" | "false"; label: string }[] = [
+    { v: "true", label: "صحيحة" },
+    { v: "false", label: "خاطئة" },
+  ];
   return (
     <div data-part-id={input.id} data-input-id={input.id} data-input-kind="tf">
-      <p
-        className="mb-2 rounded-[var(--r-sm)] border p-2.5 text-[0.94rem] leading-relaxed"
-        style={{ borderColor: "var(--line-soft)", background: "var(--surface-2)" }}
-      >
-        <MixedText text={input.statement} />
+      <p className="mb-3 rounded-2xl bg-blush-50 px-4 py-3 font-medium leading-8">
+        <MixedText as="span" text={input.statement} />
       </p>
       <div className="flex gap-2" role="group" aria-label="حكم العبارة">
-        {[
-          { id: "true", label: "صحيحة" },
-          { id: "false", label: "خاطئة" },
-        ].map((option) => {
-          const on = verdict === option.id;
+        {options.map((o) => {
+          const on = verdict === o.v;
           return (
             <button
-              key={option.id}
               type="button"
-              className="chip flex-1"
-              data-verdict={option.id}
-              data-on={on ? "1" : "0"}
+              key={o.v}
               aria-pressed={on}
-              onClick={() => set(ANSWER_KEYS.verdict(input.id), on ? "" : option.id)}
+              data-verdict={o.v}
+              data-on={on ? "1" : "0"}
+              onClick={() => set(ANSWER_KEYS.verdict(input.id), on ? "" : o.v)}
+              className={cn(
+                "flex-1 cursor-pointer rounded-2xl border-2 px-4 py-3 font-semibold transition-colors",
+                on
+                  ? o.v === "true"
+                    ? "border-mint-500 bg-mint-100 text-mint-700"
+                    : "border-coral-500 bg-coral-100 text-[#a9374b]"
+                  : "border-blush-100 bg-white hover:border-lilac-300",
+              )}
             >
-              <span className="chip-dot" aria-hidden />
-              <span className="font-bold">{option.label}</span>
+              {o.label}
             </button>
           );
         })}
       </div>
       {verdict === "false" && input.allowsCorrection && (
-        <label className="mt-2 block">
-          <span className="mb-1 block text-[0.82rem] font-bold" style={{ color: "var(--ink-3)" }}>
-            صحّحي العبارة:
-          </span>
+        <label className="mt-3 block">
+          <span className={labelCls}>اكتبي التصحيح:</span>
           <textarea
-            className="field !min-h-[64px]"
             rows={2}
             value={value(ANSWER_KEYS.correction(input.id))}
             placeholder="العبارة الصحيحة هي…"
             aria-label="تصحيح العبارة"
             data-correction-field={input.id}
+            className={inputCls}
             onChange={(event) => set(ANSWER_KEYS.correction(input.id), event.target.value)}
           />
         </label>
@@ -224,17 +244,11 @@ function TrueFalseField({ input, value, set }: WidgetProps & { input: Extract<In
 /* ------------------------------------------------------------------ */
 
 function MatrixField({ input, value, set }: WidgetProps & { input: Extract<Input, { kind: "matrix" }> }) {
+  const cols = `minmax(0,1.3fr) repeat(${input.columns.length}, minmax(0,1fr))`;
   return (
     <div data-part-id={input.id} data-input-id={input.id} data-input-kind="matrix">
-      <div className="overflow-hidden rounded-[var(--r-sm)] border" style={{ borderColor: "var(--line-soft)" }}>
-        <div
-          className="hidden gap-2 px-2.5 py-1.5 text-[0.8rem] font-bold sm:grid"
-          style={{
-            gridTemplateColumns: `minmax(0,1.15fr) repeat(${input.columns.length}, minmax(0,1fr))`,
-            background: "var(--surface-2)",
-            color: "var(--navy)",
-          }}
-        >
+      <div className="overflow-hidden rounded-2xl border border-blush-100">
+        <div className="hidden bg-lilac-100/60 px-4 py-2 text-sm font-semibold sm:grid" style={{ gridTemplateColumns: cols }}>
           <span>الحالة</span>
           {input.columns.map((column) => (
             <span key={column.id} className="text-center">
@@ -242,38 +256,29 @@ function MatrixField({ input, value, set }: WidgetProps & { input: Extract<Input
             </span>
           ))}
         </div>
-        {input.rows.map((row, rowIndex) => {
+        {input.rows.map((row, index) => {
           const current = value(ANSWER_KEYS.matrixRow(input.id, row.id));
           return (
-            <div
-              key={row.id}
-              className="border-t px-2.5 py-2"
-              style={{ borderColor: "var(--line-soft)", background: rowIndex % 2 ? "#fff" : "var(--surface-2)" }}
-              data-matrix-row={row.id}
-            >
-              <div
-                className="grid gap-2 sm:items-center"
-                style={{ gridTemplateColumns: `minmax(0,1.15fr) repeat(${input.columns.length}, minmax(0,1fr))` }}
-              >
-                <p className="text-[0.9rem] leading-relaxed">
-                  <MixedText text={row.label} />
+            <div key={row.id} className={cn("border-t border-blush-100 px-4 py-3", index % 2 ? "bg-white" : "bg-blush-50/40")} data-matrix-row={row.id}>
+              <div className="sm:grid sm:items-center" style={{ gridTemplateColumns: cols }}>
+                <p className="mb-2 leading-7 sm:mb-0">
+                  <MixedText as="span" text={row.label} />
                 </p>
-                <div
-                  className="grid gap-1.5 sm:col-span-full"
-                  style={{ gridTemplateColumns: `repeat(${input.columns.length}, minmax(0,1fr))` }}
-                >
+                <div className="flex flex-wrap gap-2 sm:justify-center">
                   {input.columns.map((column) => {
                     const on = current === column.id;
                     return (
                       <button
-                        key={column.id}
                         type="button"
-                        className="matrix-chip"
+                        key={column.id}
+                        aria-pressed={on}
                         data-col-id={column.id}
                         data-on={on ? "1" : "0"}
-                        aria-pressed={on}
-                        aria-label={`${row.label}: ${column.label}`}
                         onClick={() => set(ANSWER_KEYS.matrixRow(input.id, row.id), on ? "" : column.id)}
+                        className={cn(
+                          "cursor-pointer rounded-full border-2 px-3 py-1.5 text-sm font-medium transition-colors",
+                          on ? "border-plum-600 bg-plum-600 text-white" : "border-blush-100 bg-white hover:border-lilac-300",
+                        )}
                       >
                         {column.label}
                       </button>
@@ -308,21 +313,48 @@ export function AnswerWidget({ input, value, set }: WidgetProps) {
   }
 }
 
-/** عنوان الفرع: حرفه + نصّه. */
-export function PartHeading({ part, index }: { part: Part; index: number }) {
+/* ------------------------------------------------------------------ */
+/* بطاقة الفرع — حرف الفرع + نصّه + شارة علاماته                       */
+/* ------------------------------------------------------------------ */
+
+export function PartView({
+  part,
+  index,
+  questionId,
+  value,
+  set,
+}: {
+  part: Part;
+  index: number;
+  questionId: string;
+  value: (key: string) => string;
+  set: (key: string, value: string) => void;
+}) {
   return (
-    <div className="mb-2 flex items-start gap-2.5">
-      <span
-        className="grid h-8 w-8 shrink-0 place-items-center rounded-[var(--r-xs)] text-base font-bold"
-        style={{ background: "var(--gold-soft)", color: "var(--gold-deep)" }}
-        aria-hidden
-      >
-        {partLetter(index)}
-      </span>
-      <p className="min-w-0 flex-1 text-[0.97rem] font-bold leading-relaxed" style={{ color: "var(--navy)" }}>
-        <MixedText text={part.label} />
-      </p>
-    </div>
+    <section className="rounded-2xl border border-blush-100 bg-white/80 p-4 sm:p-5" data-part-card={part.id} aria-labelledby={`${part.id}-heading`}>
+      <div id={`${part.id}-heading`} className="mb-3 flex items-start gap-3">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-lilac-100 font-bold text-plum-700" aria-hidden>
+          {LETTERS[index] ?? ""}
+        </span>
+        <p className="flex-1 pt-0.5 text-[17px] leading-8">
+          <MixedText as="span" text={part.label} />
+        </p>
+        <MarkBadge marks={partMaxMarks(part, questionId)} />
+      </div>
+      {part.figure && <Figure type={part.figure} variant="part" />}
+      <div className="space-y-5">
+        {part.inputs.map((input) => (
+          <div key={input.id}>
+            {part.inputs.length > 1 && input.prompt && (
+              <p className="mb-1.5 text-sm font-semibold text-ink-soft">
+                <MixedText as="span" text={input.prompt} />
+              </p>
+            )}
+            <AnswerWidget input={input} value={value} set={set} />
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -330,11 +362,22 @@ export function PartHeading({ part, index }: { part: Part; index: number }) {
 export function InputHeading({ input }: { input: Input }) {
   if (!input.prompt) return null;
   return (
-    <p className="mb-1.5 text-[0.9rem] leading-relaxed" style={{ color: "var(--ink-2)" }}>
-      <MixedText text={input.prompt} />
+    <p className="mb-1.5 text-sm font-semibold text-ink-soft">
+      <MixedText as="span" text={input.prompt} />
     </p>
   );
 }
 
-/** نصّ رياضي حقيقي (LTR) — يُصدَّر للاستعمال في العناوين عند الحاجة. */
-export { MathText };
+/** عنوان الفرع: حرفه + نصّه (يُستعمل في المراجعة). */
+export function PartHeading({ part, index }: { part: Part; index: number }) {
+  return (
+    <div className="mb-2 flex items-start gap-2.5">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-lilac-100 font-bold text-plum-700" aria-hidden>
+        {partLetter(index)}
+      </span>
+      <p className="min-w-0 flex-1 text-[17px] font-semibold leading-8">
+        <MixedText as="span" text={part.label} />
+      </p>
+    </div>
+  );
+}

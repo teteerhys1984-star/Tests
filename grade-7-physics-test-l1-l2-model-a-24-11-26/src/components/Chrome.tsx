@@ -1,187 +1,73 @@
 /**
- * عناصر الواجهة المشتركة: شريط التواصل، الترويسة (الزمن والتقدّم)، والتذييل
- * مع زر دخول المعلّم. لا تحتوي أي معلومة إجابة.
+ * عناصر الواجهة المشتركة: تذييل المصدر الأصلي (المهندس سومر شاهين + الهاتف +
+ * واتساب + منطقة المعلم). لا يحتوي أي معلومة إجابة.
+ *
+ * المصدر: grade-7-physics-test-Model-A-24-11-26/src/components/Footer.tsx
+ * — نُقل بتركيبه وطباعته وألوانه كما هو.
  */
 
-import {
-  CONTACT,
-  EXAM_SHORT_TITLE,
-  GRADE_LABEL,
-  SEMESTER_LABEL,
-  SUBJECT_LABEL,
-  TOTAL_MARKS,
-} from "../config";
-import { formatDuration, num } from "../lib/time";
+import { CONTACT } from "../config";
 
-export function ContactBar() {
+function WhatsAppIcon({ size = 18 }: { size?: number }) {
   return (
-    <div
-      className="no-print relative z-10"
-      style={{
-        background: "linear-gradient(90deg,#10313c 0%,#1b5666 50%,#10313c 100%)",
-        color: "#f3e7c9",
-      }}
-    >
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-4 gap-y-1 px-3 py-2 text-center text-[0.85rem] font-semibold">
-        <span>
-          {CONTACT.name}: <span className="tnum" dir="ltr">{CONTACT.phone}</span>
-        </span>
-        <a
-          href={CONTACT.whatsapp}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline decoration-dotted underline-offset-4"
-          style={{ color: "#ffd97a" }}
-        >
-          واتساب
-        </a>
-        <span className="hidden text-[0.78rem] opacity-75 sm:inline">
-          للتواصل فقط — تُرسَل نتيجتك إلى معلّمك عند التسليم
-        </span>
-      </div>
-    </div>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
+    </svg>
   );
 }
 
-export function Header({
-  elapsedMs,
-  answered,
-  totalParts,
-  muted,
-  onToggleMute,
-  showTimer,
-}: {
-  elapsedMs: number;
-  answered: number;
-  totalParts: number;
-  muted: boolean;
-  onToggleMute: () => void;
-  showTimer: boolean;
-}) {
+function UserIcon({ size = 18 }: { size?: number }) {
   return (
-    <div
-      className="sticky top-0 z-40 border-b backdrop-blur"
-      style={{ borderColor: "var(--line)", background: "rgba(253,250,244,0.94)" }}
-    >
-      <header className="mx-auto flex min-h-[68px] max-w-6xl flex-wrap items-center justify-between gap-2 px-3 py-2 sm:px-4">
-        <div className="flex min-w-0 items-center gap-3">
-          <span
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-[var(--r-sm)]"
-            style={{ background: "var(--navy)", color: "#ffd97a" }}
-            aria-hidden
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <circle cx="12" cy="12" r="8" />
-              <path d="M12 8v4l3 2" />
-            </svg>
-          </span>
-          <div className="min-w-0">
-            <p className="truncate text-[0.95rem] font-extrabold" style={{ color: "var(--navy)" }}>
-              {EXAM_SHORT_TITLE}
-            </p>
-            <p className="truncate text-[0.74rem]" style={{ color: "var(--ink-3)" }}>
-              {GRADE_LABEL} · {SEMESTER_LABEL} · {SUBJECT_LABEL} · {num(TOTAL_MARKS)} علامة
-            </p>
-          </div>
-        </div>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
 
-        <div className="flex items-center gap-2">
-          {showTimer && (
-            <div
-              className="tnum flex items-center gap-1.5 rounded-[var(--r-sm)] px-2.5 py-1.5 text-[0.9rem] font-bold"
-              style={{ background: "var(--surface-2)", border: "1px solid var(--line)", color: "var(--ink-2)" }}
-              title="الزمن المنقضي منذ بدء الاختبار"
-              role="timer"
-              aria-live="off"
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden>
-                <circle cx="12" cy="13" r="8" />
-                <path d="M12 9v4l2.5 2M9 2h6" />
-              </svg>
-              {formatDuration(elapsedMs)}
-            </div>
-          )}
-          <button
-            type="button"
-            className="btn btn-ghost !min-h-0 !px-2.5 !py-1.5"
-            onClick={onToggleMute}
-            aria-label={muted ? "تشغيل الصوت" : "كتم الصوت"}
-            aria-pressed={muted}
-            data-action="toggle-sound"
-          >
-            {muted ? (
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                <path d="M11 5 6 9H3v6h3l5 4V5Z" />
-                <path d="m17 9 4 6M21 9l-4 6" />
-              </svg>
-            ) : (
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                <path d="M11 5 6 9H3v6h3l5 4V5Z" />
-                <path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12" />
-              </svg>
-            )}
-          </button>
-        </div>
-      </header>
-      {showTimer && (
-        <div
-          className="h-1 w-full"
-          role="progressbar"
-          aria-label="نسبة الفروع المجابة"
-          aria-valuemin={0}
-          aria-valuemax={totalParts}
-          aria-valuenow={answered}
-          style={{ background: "var(--paper-deep)" }}
-        >
-          <div
-            className="h-full"
-            style={{
-              width: `${totalParts ? (answered / totalParts) * 100 : 0}%`,
-              background: "linear-gradient(90deg,#0f766e,#b5851d)",
-              transition: "width .4s ease",
-            }}
-          />
-        </div>
-      )}
-    </div>
+function PhoneIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+    </svg>
   );
 }
 
 export function Footer({ onTeacher }: { onTeacher: () => void }) {
   return (
-    <footer className="no-print relative z-10 mt-8 border-t" style={{ borderColor: "var(--line)" }}>
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-4 py-6 text-center">
-        <p className="text-sm font-bold" style={{ color: "var(--ink-2)" }}>
-          {CONTACT.name}: <span className="tnum" dir="ltr">{CONTACT.phone}</span>
-          {"  ·  "}
+    <footer className="mt-auto border-t border-blush-100 bg-white/80">
+      <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4 text-sm">
+        <div className="flex items-center gap-2 font-semibold">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-lilac-100 text-plum-700">
+            <UserIcon size={18} />
+          </span>
+          {CONTACT.name}
+        </div>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <a href={`tel:+963${CONTACT.phone}`} className="inline-flex items-center gap-2 rounded-full border border-blush-100 px-3 py-1.5 transition-colors hover:bg-blush-50" dir="ltr">
+            <span className="text-plum-600">
+              <PhoneIcon size={16} />
+            </span>
+            <span className="tabular font-semibold">{CONTACT.phone}</span>
+          </a>
           <a
             href={CONTACT.whatsapp}
             target="_blank"
-            rel="noopener noreferrer"
-            className="underline decoration-dotted underline-offset-4"
-            style={{ color: "var(--teal)" }}
+            rel="noreferrer noopener"
+            className="inline-flex items-center gap-2 rounded-full border border-mint-100 bg-mint-100/60 px-3 py-1.5 font-semibold text-mint-700 transition-colors hover:bg-mint-100"
           >
-            واتساب
+            <WhatsAppIcon size={18} />
+            WhatsApp
           </a>
-        </p>
-        <p className="max-w-3xl text-[0.76rem] leading-relaxed" style={{ color: "var(--ink-3)" }}>
-          اختبار إلكتروني في الدرسين الأول والثاني من الوحدة الأولى (الحركة والسكون، والقوة والحركة) —{" "}
-          {GRADE_LABEL}، {SEMESTER_LABEL}، {SUBJECT_LABEL} — النموذج A. يُصحَّح داخل المتصفح، ويُنزَّل تقرير TXT عند
-          التسليم، وتُرسَل النتيجة إلى المعلّم.
-        </p>
-        <button
-          type="button"
-          onClick={onTeacher}
-          className="mt-1 inline-flex items-center gap-1.5 rounded-[var(--r-sm)] px-3 py-1.5 text-[0.78rem] font-bold"
-          style={{ color: "var(--ink-3)", border: "1px dashed var(--line)" }}
-          data-action="open-teacher"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-            <rect x="3" y="11" width="18" height="10" rx="2" />
-            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-          </svg>
-          دخول المعلّم
-        </button>
+          <button
+            type="button"
+            onClick={onTeacher}
+            className="cursor-pointer text-xs text-ink-faint underline-offset-4 transition-colors hover:text-ink-soft hover:underline"
+            data-action="open-teacher"
+          >
+            منطقة المعلم
+          </button>
+        </div>
       </div>
     </footer>
   );

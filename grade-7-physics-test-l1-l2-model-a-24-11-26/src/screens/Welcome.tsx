@@ -1,6 +1,9 @@
 /**
- * صفحة الترحيب: هوية الاختبار، نطاق الدرسين، إدخال اسم الطالب، وتعليمات البدء.
- * إن وُجدت محاولة محفوظة تُعرض بطاقة استعادة بدل نموذج البدء.
+ * شاشة الترحيب — نفس تركيبة شاشة البدء في المصدر الأصلي
+ * (grade-7-physics-test-Model-A-24-11-26/src/components/StartScreen.tsx):
+ * بطاقة الهوية مع صورة البطل، تعليمات الاختبار، حقل الاسم، زر البدء، وزر الصوت.
+ * أُضيف داخل البطاقة نفسها: بطاقة الاستعادة عند وجود محاولة محفوظة،
+ * وبطاقة «الدرسان المشمولان» أسفل الشبكة بهوية المصدر.
  */
 
 import { useState } from "react";
@@ -12,21 +15,74 @@ import {
   TOTAL_MARKS,
 } from "../config";
 import { questions } from "../data/questions";
-import { countParts } from "../lib/grading";
 import { EXAM_LESSON_L1, EXAM_LESSON_L2, belongsToLesson, isSharedQuestion } from "../exam/types";
 import { num } from "../lib/time";
 import type { Attempt } from "../lib/persistence";
+import { Button, Card, inputCls, labelCls } from "../components/ui";
+import heroUrl from "../assets/hero.jpg";
+
+/** أيقونات تعليمات المصدر (ListChecks · ShieldCheck · Clock · Save · ChevronLeft) */
+function Icon({ name }: { name: "list" | "shield" | "clock" | "save" | "chevron" }) {
+  const common = { width: 18, height: 18, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
+  switch (name) {
+    case "list":
+      return (
+        <svg {...common}>
+          <path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17M11 6h10M11 12h10M11 18h10" />
+        </svg>
+      );
+    case "shield":
+      return (
+        <svg {...common}>
+          <path d="M20 13c0 5-3.5 7.5-7.7 9a.6.6 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 .7-1c2.4-.6 4.9-1.4 7.3-2.6a1 1 0 0 1 1 0c2.4 1.2 4.9 2 7.3 2.6a1 1 0 0 1 .7 1z" />
+          <path d="m9 12 2 2 4-4" />
+        </svg>
+      );
+    case "clock":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 2" />
+        </svg>
+      );
+    case "save":
+      return (
+        <svg {...common}>
+          <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+          <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7M7 3v4a1 1 0 0 0 1 1h7" />
+        </svg>
+      );
+    case "chevron":
+      return (
+        <svg {...common}>
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      );
+  }
+}
+
+const INSTRUCTIONS: { icon: "list" | "shield" | "clock" | "save" | "chevron"; text: string }[] = [
+  { icon: "list", text: "10 أسئلة رئيسية، لكل سؤال 10 علامات، والمجموع 100 علامة." },
+  { icon: "shield", text: "أجيبي عن جميع الفروع؛ لا يمكن التسليم قبل إكمال جميع الفروع المطلوبة." },
+  { icon: "clock", text: "يبدأ المؤقت عند الضغط على «بدء الاختبار» فقط، ويُحفظ تقدّمك تلقائياً عند التنقل أو التحديث." },
+  { icon: "save", text: "لا تُعرض الإجابات الصحيحة ولا العلامات إلا في صفحة النتائج بعد التسليم." },
+  { icon: "chevron", text: "راجعي إجاباتك قبل التسليم، ثم اضغطي «تسليم الاختبار» في صفحة المراجعة." },
+];
 
 export function Welcome({
   storedAttempt,
   onStart,
   onResume,
   onDiscard,
+  muted,
+  onToggleMute,
 }: {
   storedAttempt: Attempt | null;
   onStart: (name: string) => void;
   onResume: () => void;
   onDiscard: () => void;
+  muted: boolean;
+  onToggleMute: () => void;
 }) {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
@@ -34,14 +90,13 @@ export function Welcome({
 
   const go = () => {
     if (trimmed.length < 3) {
-      setError("اكتبي اسمك الكامل (ثلاثة أحرف على الأقل) لبدء الاختبار.");
+      setError("اكتبي اسمك الثلاثي من فضلك (3 أحرف على الأقل).");
       return;
     }
     setError("");
     onStart(trimmed);
   };
 
-  const totalParts = countParts(questions);
   const shared = questions.filter((question) => isSharedQuestion(question));
   const lessons = [
     {
@@ -59,212 +114,155 @@ export function Welcome({
   ];
 
   return (
-    <div className="relative z-10 mx-auto max-w-6xl px-3 pb-6 pt-5 sm:px-4 sm:pt-8">
-      {/* ===== لوحة الهوية ===== */}
-      <section
-        className="relative overflow-hidden rounded-[var(--r-lg)] shadow-[var(--sh-3)]"
-        style={{ background: "linear-gradient(135deg,#10313c 0%,#174c5b 48%,#0f766e 100%)" }}
-      >
-        <div
-          className="absolute inset-0 opacity-[0.13]"
-          aria-hidden
-          style={{
-            backgroundImage:
-              "linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)",
-            backgroundSize: "30px 30px",
-          }}
-        />
-        <div className="relative grid gap-6 p-5 sm:p-8 lg:grid-cols-[1.15fr_1fr] lg:gap-10 lg:p-10">
-          <div className="text-[#f4ecd8]">
-            <p className="text-[0.72rem] font-bold uppercase tracking-[0.16em]" style={{ color: "#ffd97a" }}>
-              {GRADE_LABEL} · {SEMESTER_LABEL} · {SUBJECT_LABEL} · النموذج A
-            </p>
-            <h1 className="mt-2 text-[clamp(1.35rem,4.2vw,2.3rem)] font-extrabold leading-[1.35]" style={{ color: "#fff8e8" }}>
-              {EXAM_TITLE}
-            </h1>
-            <p className="mt-3 max-w-xl text-[0.96rem] leading-relaxed opacity-90">
-              اختبار إلكتروني في الدرس الأول (الحركة والسكون) والدرس الثاني (القوة والحركة) من الوحدة الأولى.
-              الأسئلة مرتّبة كما في المصدر، وكل سؤال رئيسي يتفرّع إلى فروع مُقوّمة بعلامات جزئية عند استحقاقها.
-            </p>
-
-            <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-              {[
-                { key: num(questions.length), label: "سؤالاً رئيسياً" },
-                { key: num(totalParts), label: "فرعاً مُقوّماً" },
-                { key: num(2), label: "درسان" },
-                { key: num(TOTAL_MARKS), label: "علامة" },
-              ].map((stat) => (
-                <div
-                  key={stat.label}
-                  className="rounded-[var(--r-md)] border p-2.5 text-center"
-                  style={{ borderColor: "rgba(255,248,232,0.24)", background: "rgba(255,248,232,0.07)" }}
-                >
-                  <div className="tnum text-[clamp(1.4rem,3.6vw,1.9rem)] font-extrabold leading-none" style={{ color: "#ffd97a" }}>
-                    {stat.key}
-                  </div>
-                  <div className="mt-1 text-[0.76rem] opacity-85">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="relative flex items-center justify-center">
-            <svg viewBox="0 0 330 240" className="h-auto w-full max-w-[380px]" role="img" aria-label="زخرفة: مخطط حركة وسهم قوة">
-              <path
-                d="M14 200 C70 200 96 92 150 92 S236 196 316 44"
-                stroke="#ffd97a"
-                strokeOpacity="0.8"
-                strokeWidth="2.4"
-                fill="none"
-                strokeDasharray="7 9"
-              />
-              <line x1="14" y1="214" x2="316" y2="214" stroke="#fff8e8" strokeOpacity="0.45" strokeWidth="2" />
-              <line x1="14" y1="30" x2="14" y2="214" stroke="#fff8e8" strokeOpacity="0.45" strokeWidth="2" />
-              {[
-                [14, 200],
-                [150, 92],
-                [232, 92],
-                [316, 44],
-              ].map(([x, y], index) => (
-                <circle key={index} cx={x} cy={y} r="5" fill="#fff8e8" stroke="#b5851d" strokeWidth="2" />
-              ))}
-              <line x1="60" y1="232" x2="170" y2="232" stroke="#7fe0d3" strokeWidth="5" strokeLinecap="round" />
-              <path d="M170 226 L186 232 L170 238 Z" fill="#7fe0d3" />
-              <text x="196" y="238" fill="#ffd97a" fontSize="14" fontWeight="700" fontFamily="Cairo, sans-serif">
-                2 cm = 20 N
-              </text>
-            </svg>
-          </div>
+    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-12">
+      <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.05fr]">
+        <div className="order-2">
+          <img src={heroUrl} alt="" className="mx-auto aspect-[4/3] w-full max-w-md rounded-card object-cover shadow-card" />
         </div>
-      </section>
-
-      <div className="mt-5 grid gap-4 lg:grid-cols-[1.35fr_1fr]">
-        {/* ===== نطاق الاختبار ===== */}
-        <section className="card p-4 sm:p-6">
-          <p className="text-[0.72rem] font-bold uppercase tracking-[0.14em]" style={{ color: "var(--gold-deep)" }}>
-            نطاق الاختبار
+        <Card className="order-1 p-6 sm:p-8">
+          <p className="mb-1 text-sm font-semibold text-blush-500">الوحدة الأولى — الدرس الأول والدرس الثاني</p>
+          <h1 className="text-2xl font-bold leading-9 sm:text-3xl">اختبار الفيزياء — الصف السابع</h1>
+          <p className="mt-1 text-ink-soft">النموذج A</p>
+          <p className="sr-only">
+            {EXAM_TITLE} · {GRADE_LABEL} · {SEMESTER_LABEL} · {SUBJECT_LABEL} · 37 فرعاً مُقوّماً
           </p>
-          <h2 className="text-[1.5rem] font-extrabold" style={{ color: "var(--navy)" }}>
-            الدرسان المشمولان
-          </h2>
-          <ul className="mt-3 grid gap-2">
-            {lessons.map((lesson) => (
-              <li
-                key={lesson.id}
-                className="flex items-start gap-3 rounded-[var(--r-sm)] border p-2.5"
-                style={{ borderColor: "var(--line-soft)", background: "var(--surface-2)" }}
-              >
-                <span
-                  className="tnum grid h-8 w-8 shrink-0 place-items-center rounded-[var(--r-sm)] text-base font-bold"
-                  style={{ background: "var(--navy)", color: "#ffd97a" }}
-                >
-                  {num(lesson.id)}
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[0.95rem] font-bold" style={{ color: "var(--ink-1)" }}>
-                    {lesson.title}
-                  </span>
-                  <span className="block text-[0.76rem]" style={{ color: "var(--ink-3)" }}>
-                    {lesson.pages} · {num(lesson.count)} أسئلة رئيسية (منها السؤال التركيبي)
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ul>
-          <p
-            className="mt-3 rounded-[var(--r-sm)] p-2.5 text-[0.82rem] leading-relaxed"
-            style={{ background: "var(--gold-soft)", color: "var(--gold-deep)" }}
-          >
-            السؤال {num(questions.indexOf(shared[0]) + 1)} تركيبي بين الدرسين ({num(shared.length)} سؤال)، ويُحتسب في
-            توزيع الدرسين معاً دون إنشاء درس ثالث. توزيع العلامات: {num(questions.length)} أسئلة ×{" "}
-            {num(10)} علامات = {num(TOTAL_MARKS)} علامة.
-          </p>
-          <ul className="mt-3 grid gap-1.5 text-[0.85rem]" style={{ color: "var(--ink-2)" }}>
-            <li>· يُمنع تسليم الاختبار قبل إكمال جميع الفروع.</li>
-            <li>· المؤقّت تصاعدي ويبدأ عند الضغط على «بدء الاختبار» فقط.</li>
-            <li>· لا تظهر أي إجابة صحيحة ولا علامة قبل التسليم.</li>
-            <li>· يمكن مراجعة الإجابات قبل التسليم والعودة لتعديلها.</li>
-          </ul>
-        </section>
 
-        {/* ===== البدء أو الاستعادة ===== */}
-        <section className="card p-4 sm:p-6" style={{ borderColor: "#cdbfa4" }}>
           {storedAttempt ? (
-            <div data-testid="resume-card">
-              <p className="text-[0.72rem] font-bold uppercase tracking-[0.14em]" style={{ color: "var(--gold-deep)" }}>
-                محاولة محفوظة
-              </p>
-              <h2 className="mt-1 text-[1.35rem] font-extrabold leading-snug" style={{ color: "var(--navy)" }}>
-                {storedAttempt.status === "in_progress" ? "لديك محاولة لم تُسلَّم بعد" : "لديك نتيجة محفوظة"}
-              </h2>
-              <p className="mt-2 text-[0.9rem]" style={{ color: "var(--ink-2)" }}>
-                الاسم: <strong>{storedAttempt.studentName}</strong>
-                <br />
-                {storedAttempt.status === "in_progress"
-                  ? "إجاباتك ووقتك محفوظان على هذا الجهاز. يمكنك المتابعة من حيث توقفتِ."
-                  : "الاختبار مُسلَّم ومُصحَّح. يمكنك مراجعة النتيجة وتنزيل التقرير مرة أخرى."}
-              </p>
-              <button type="button" className="btn btn-gold mt-4 w-full text-[1.02rem]" onClick={onResume} data-action="resume-attempt">
+            <div className="mt-6" data-testid="resume-card">
+              <div className="rounded-2xl bg-blush-50 p-4">
+                <p className="mb-1 text-sm font-semibold text-plum-700">لديك محاولة محفوظة</p>
+                <h2 className="text-lg font-bold leading-8">
+                  {storedAttempt.status === "in_progress" ? "لم تُسلَّم محاولتك بعد" : "لديك نتيجة محفوظة"}
+                </h2>
+                <p className="mt-1 text-sm leading-7 text-ink-soft">
+                  الاسم: <b className="text-ink">{storedAttempt.studentName}</b>
+                  <br />
+                  {storedAttempt.status === "in_progress"
+                    ? "إجاباتك ووقتك محفوظان على هذا الجهاز. يمكنك المتابعة من حيث توقفتِ."
+                    : "الاختبار مُسلَّم ومُصحَّح. يمكنك مراجعة النتيجة وتنزيل التقرير مرة أخرى."}
+                </p>
+              </div>
+              <Button size="lg" className="mt-4 w-full" onClick={onResume} data-action="resume-attempt">
                 {storedAttempt.status === "in_progress" ? "متابعة الاختبار" : "عرض النتيجة المحفوظة"}
-              </button>
-              <button type="button" className="btn btn-ghost mt-2 w-full" onClick={onDiscard} data-action="discard-attempt">
+              </Button>
+              <Button variant="ghost" size="sm" className="mt-2 w-full" onClick={onDiscard} data-action="discard-attempt">
                 حذف المحاولة والبدء من جديد
-              </button>
-              <p className="mt-3 text-[0.76rem]" style={{ color: "var(--ink-3)" }}>
-                بيانات هذه المحاولة محفوظة لهذا الاختبار وحده ({GRADE_LABEL} — {SUBJECT_LABEL} — النموذج A) ولا تتقاطع
-                مع النموذج B أو أي اختبار آخر.
+              </Button>
+              <p className="mt-3 text-xs leading-6 text-ink-faint">
+                بيانات هذه المحاولة محفوظة لهذا الاختبار وحده ({GRADE_LABEL} — {SUBJECT_LABEL} — النموذج A).
               </p>
             </div>
           ) : (
-            <div>
-              <p className="text-[0.72rem] font-bold uppercase tracking-[0.14em]" style={{ color: "var(--gold-deep)" }}>
-                ابدأ الاختبار
-              </p>
-              <h2 className="mt-1 text-[1.4rem] font-extrabold leading-snug" style={{ color: "var(--navy)" }}>
-                اكتبي اسمك ثم اضغطي «بدء الاختبار»
-              </h2>
-              <div className="mt-3">
-                <label htmlFor="student-name" className="mb-1.5 block text-sm font-bold" style={{ color: "var(--ink-2)" }}>
-                  اسم الطالب / الطالبة <span style={{ color: "var(--clay)" }}>*</span>
-                </label>
+            <form
+              className="mt-6 space-y-5"
+              onSubmit={(event) => {
+                event.preventDefault();
+                go();
+              }}
+            >
+              <label className="block">
+                <span className={labelCls}>
+                  اسم الطالبة <span className="text-coral-500">*</span>
+                </span>
                 <input
                   id="student-name"
-                  className="field"
                   value={name}
                   autoComplete="name"
+                  autoFocus
                   maxLength={70}
-                  placeholder="مثال: رنا أحمد"
+                  placeholder="اكتبي اسمك الثلاثي"
                   aria-required="true"
                   aria-invalid={!!error}
-                  aria-describedby="student-name-note"
+                  className={inputCls}
                   onChange={(event) => {
                     setName(event.target.value);
                     setError("");
                   }}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") go();
-                  }}
                 />
-                <p id="student-name-note" className="mt-1 text-[0.76rem]" style={{ color: "var(--ink-3)" }}>
-                  يُستعمل الاسم في تقرير النتيجة المرفوع إلى معلّمك.
-                </p>
                 {error && (
-                  <p role="alert" className="mt-1 text-[0.85rem] font-bold" style={{ color: "var(--clay)" }}>
+                  <p role="alert" className="mt-1 text-sm text-coral-500">
                     {error}
                   </p>
                 )}
+              </label>
+
+              <div className="rounded-2xl bg-blush-50 p-4 text-sm leading-7">
+                <p className="mb-2 font-semibold">تعليمات الاختبار</p>
+                <ul className="space-y-2">
+                  {INSTRUCTIONS.map((item, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="mt-1 shrink-0 text-plum-500">
+                        <Icon name={item.icon} />
+                      </span>
+                      <span>{item.text}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <button type="button" className="btn btn-gold mt-4 w-full text-[1.02rem]" onClick={go} data-action="start-exam">
+
+              <Button type="submit" size="lg" className="w-full" data-action="start-exam">
                 بدء الاختبار
-              </button>
-              <p className="mt-3 text-[0.76rem] leading-relaxed" style={{ color: "var(--ink-3)" }}>
-                بالتسليم تُصحَّح الإجابات تلقائياً وفق سلّم معايير معتمد، ويُنزَّل تقرير TXT تفصيلي، وتُرسَل النتيجة إلى
-                معلّمك.
-              </p>
-            </div>
+              </Button>
+            </form>
           )}
-        </section>
+
+          <div className="mt-4 flex justify-center">
+            <button
+              type="button"
+              onClick={onToggleMute}
+              className="flex cursor-pointer items-center gap-2 text-sm text-ink-soft transition-colors hover:text-ink"
+              data-action="toggle-sound"
+            >
+              {muted ? <VolumeOffIcon /> : <VolumeOnIcon />}
+              الصوت: {muted ? "مكتوم" : "مفعّل"}
+            </button>
+          </div>
+        </Card>
       </div>
-    </div>
+
+      <Card className="mt-8 p-5 sm:p-6">
+        <h2 className="text-lg font-bold">الدرسان المشمولان</h2>
+        <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+          {lessons.map((lesson) => (
+            <li key={lesson.id} className="flex items-start gap-3 rounded-2xl border border-blush-100 bg-blush-50/60 p-3">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-plum-600 text-sm font-bold text-white">
+                {num(lesson.id)}
+              </span>
+              <span className="min-w-0">
+                <span className="block font-semibold leading-7">{lesson.title}</span>
+                <span className="block text-xs leading-6 text-ink-soft">
+                  {lesson.pages} · {num(lesson.count)} أسئلة رئيسية (منها السؤال التركيبي)
+                </span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 rounded-2xl bg-sun-100/70 p-3 text-sm leading-7 text-sun-600">
+          السؤال {num(questions.indexOf(shared[0]) + 1)} تركيبي بين الدرسين ({num(shared.length)} سؤال)، ويُحتسب في
+          توزيع الدرسين معاً دون إنشاء درس ثالث. توزيع العلامات: {num(questions.length)} أسئلة × {num(10)} علامات ={" "}
+          {num(TOTAL_MARKS)} علامة.
+        </p>
+      </Card>
+    </main>
+  );
+}
+
+/** أيقونتا الصوت — بديل محلي لأيقونات lucide في المصدر (بلا اعتمادية إضافية). */
+function VolumeOnIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M11 5 6 9H3v6h3l5 4V5Z" />
+      <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+      <path d="M18.5 5.5a9 9 0 0 1 0 13" />
+    </svg>
+  );
+}
+
+function VolumeOffIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M11 5 6 9H3v6h3l5 4V5Z" />
+      <path d="m16 9 6 6M22 9l-6 6" />
+    </svg>
   );
 }
