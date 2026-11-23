@@ -1,0 +1,37 @@
+{
+  "name": "grade-7-physics-l1-l2-problems",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "مسائل الدرسين الأول والثاني — الصف السابع — الفصل الأول — الفيزياء",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "node tests/run-tests.mjs"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-sans-arabic": "^5.2.6",
+    "clsx": "2.1.1",
+    "katex": "^0.19.1",
+    "lucide-react": "^1.78.0",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "tailwind-merge": "3.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.1.17",
+    "@types/katex": "^0.16.8",
+    "@types/node": "22.19.17",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "5.1.1",
+    "esbuild": "0.25.10",
+    "jsdom": "^29.1.1",
+    "tailwindcss": "4.1.17",
+    "typescript": "5.9.3",
+    "vite": "7.3.7",
+    "vite-plugin-singlefile": "2.3.0"
+  }
+}

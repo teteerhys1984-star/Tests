@@ -34,6 +34,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 from urllib.parse import quote
 
@@ -105,6 +106,11 @@ _EASTERN_DIGITS = {}
 for _i in range(10):
     _EASTERN_DIGITS[0x0660 + _i] = str(_i)  # ٠-٩
     _EASTERN_DIGITS[0x06F0 + _i] = str(_i)  # ۰-۹
+DATE_RE = re.compile(r"^\d{2}-\d{2}-\d{4}$")
+META_ADDED_AT_RE = re.compile(
+    r'<meta\b[^>]*name=["\']exam-added-at["\'][^>]*content=["\'](\d{2}-\d{2}-\d{4})["\']',
+    re.IGNORECASE,
+)
 EMPTY_EXAM_TEXT = "لا توجد اختبارات بعد"
 EMPTY_GRADE_TEXT = "لم يُنشر أي اختبار لهذا الصف بعد"
 
@@ -217,6 +223,70 @@ def as_semester(value):
     return 0
 
 
+def valid_date(value):
+    text = num(str(value or "")).strip()
+    return text if DATE_RE.match(text) else ""
+
+
+def git_added_date(folder):
+    """يستخرج تاريخ أول إضافة للمجلد من Git إن وُجد سجل غير مبتور (بدون تخمين)."""
+    if not os.path.isdir(folder):
+        return ""
+    try:
+        proc = subprocess.run(
+            [
+                "git",
+                "log",
+                "--diff-filter=A",
+                "--follow",
+                "--reverse",
+                "--format=%H\t%cd",
+                "--date=format:%d-%m-%Y",
+                "--",
+                folder,
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if proc.returncode != 0 or not proc.stdout.strip():
+            return ""
+        first_line = proc.stdout.strip().splitlines()[0]
+        if "\t" not in first_line:
+            return ""
+        sha, date_str = first_line.split("\t", 1)
+        # تأكد أن الـ commit ليس جذر نسخة shallow مبتورة
+        parent = subprocess.run(
+            ["git", "rev-parse", "--verify", "--quiet", sha + "^"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if parent.returncode != 0:
+            return ""
+        return valid_date(date_str)
+    except OSError:
+        return ""
+
+
+def resolve_added_at(folder, content, override):
+    """يحدّد تاريخ إضافة الاختبار الثابت:
+    1) الحقل addedAt في landing/exams.json (ثابت عبر إعادة البناء).
+    2) وسم <meta name="exam-added-at" content="DD-MM-YYYY"> في صفحة الاختبار.
+    3) تاريخ أول إضافة للمجلد في سجل Git الكامل (إن لم يكن shallow root).
+    4) وإلا فارغ "" (لا اختراع لتواريخ الاختبارات القديمة).
+    """
+    from_override = valid_date(override.get("addedAt"))
+    if from_override:
+        return from_override
+    meta_match = META_ADDED_AT_RE.search(content)
+    if meta_match:
+        from_meta = valid_date(meta_match.group(1))
+        if from_meta:
+            return from_meta
+    return git_added_date(folder)
+
+
 def collect_exams(site_dir):
     """يقرأ المجلدات المنشورة ويعيد قائمة الاختبارات المصنّفة."""
     exams = []
@@ -252,6 +322,7 @@ def collect_exams(site_dir):
             semester, semester_source = SEMESTER_DEFAULT, "default"
         if not grade or not subject:
             continue
+        added_at = resolve_added_at(name, content, override)
         exams.append(
             {
                 "folder": name,
@@ -262,6 +333,7 @@ def collect_exams(site_dir):
                 "semester_key": semester_key(semester),
                 "semester_label": semester_name(semester),
                 "semester_source": semester_source,
+                "added_at": added_at,
                 "url": "./%s/" % quote(name),
             }
         )
@@ -527,7 +599,8 @@ def build_exams_view(grade, sem_row, key, items):
     hue = subject_hue(key)
     cards = []
     for index, exam in enumerate(items):
-        searchable = "%s %s %s %s %s %d %s" % (
+        added_at = exam.get("added_at", "")
+        searchable = "%s %s %s %s %s %d %s %s" % (
             exam["title"],
             subject_label(key),
             sem_label,
@@ -535,14 +608,23 @@ def build_exams_view(grade, sem_row, key, items):
             GRADES[grade - 1],
             grade,
             exam["folder"],
+            added_at,
+        )
+        added_attr = ' data-added-at="%s"' % e(added_at) if added_at else ""
+        date_badge = (
+            '\n            <span class="exam-card__date" dir="ltr">%s</span>' % e(added_at)
+            if added_at
+            else ""
         )
         cards.append(
             """      <a class="exam-card stagger" style="--i:%d" href="%s"
-         data-grade="%d" data-semester="%s" data-subject="%s" data-hue="%d" data-search="%s">
+         data-grade="%d" data-semester="%s" data-subject="%s" data-hue="%d" data-search="%s"%s>
         <span class="exam-card__idx" aria-hidden="true">%s</span>
         <span>
           <span class="exam-card__title">%s</span>
-          <span class="exam-card__path">%s · %s · %s</span>
+          <span class="exam-card__meta">
+            <span class="exam-card__path">%s · %s · %s</span>%s
+          </span>
         </span>
         <span class="exam-card__cta">ابدأ %s</span>
       </a>
@@ -555,11 +637,13 @@ def build_exams_view(grade, sem_row, key, items):
                 key,
                 hue,
                 e(normalize(searchable)),
+                added_attr,
                 num(index + 1),
                 e(num(exam["title"])),
                 grade_name(grade),
                 sem_label,
                 subject_label(key),
+                date_badge,
                 icon("#s-arrow", "ic-fwd"),
             )
         )

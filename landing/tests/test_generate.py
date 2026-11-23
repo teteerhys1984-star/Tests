@@ -637,5 +637,78 @@ class RealSiteSemesters(unittest.TestCase):
             [m for m in re.findall(r'id="view-exams-[^"]+"', page) if "-s2-" in m], [])
 
 
+class AddedAtDateFeature(Landing):
+    """يتحقق من تسجيل وعرض تاريخ إضافة الاختبار (addedAt) بصيغة DD-MM-YYYY."""
+
+    def test_new_physics_exam_renders_added_at_and_never_word_date(self):
+        page = self.build([
+            ("grade-7-physics-l1-l2-problems", "مسائل الدرسين الأول والثاني"),
+            ("grade4-adam-test", "اختبار الصف الرابع — اللغة العربية"),
+        ])
+        card = re.search(
+            r'<a class="exam-card\b[^>]*href="\./grade-7-physics-l1-l2-problems/".*?</a>',
+            page,
+            re.S,
+        )
+        self.assertIsNotNone(card)
+        card_html = card.group(0)
+        self.assertIn("مسائل الدرسين الأول والثاني", card_html)
+        self.assertIn('data-added-at="23-11-2026"', card_html)
+        self.assertIn('class="exam-card__date" dir="ltr">23-11-2026<', card_html)
+        self.assertNotIn("Date", card_html)
+
+        # Legacy exam without addedAt in exams.json or git history gets no invented date
+        legacy_card = re.search(
+            r'<a class="exam-card\b[^>]*href="\./grade4-adam-test/".*?</a>',
+            page,
+            re.S,
+        )
+        self.assertIsNotNone(legacy_card)
+        self.assertNotIn("exam-card__date", legacy_card.group(0))
+        self.assertNotIn("Date", legacy_card.group(0))
+
+    def test_added_at_persists_across_rebuilds_even_when_html_changes(self):
+        site = make_site(
+            self.tmp,
+            [("grade-7-physics-l1-l2-problems", "مسائل الدرسين الأول والثاني")],
+        )
+        generate.main(["generate.py", site])
+        with open(os.path.join(site, "index.html"), "r", encoding="utf-8") as fh:
+            page1 = fh.read()
+        # Simulate rebuilding the exam later with updated HTML content
+        with open(
+            os.path.join(site, "grade-7-physics-l1-l2-problems", "index.html"),
+            "w",
+            encoding="utf-8",
+        ) as fh:
+            fh.write(
+                '<!doctype html><html lang="ar" dir="rtl"><head>'
+                '<meta name="exam-added-at" content="01-01-2030">'
+                '<title>مسائل الدرسين الأول والثاني</title></head><body>updated</body></html>'
+            )
+        generate.main(["generate.py", site])
+        with open(os.path.join(site, "index.html"), "r", encoding="utf-8") as fh:
+            page2 = fh.read()
+        self.assertIn('data-added-at="23-11-2026"', page1)
+        self.assertIn('data-added-at="23-11-2026"', page2)
+        self.assertNotIn("01-01-2030", page2)
+
+    def test_future_exam_meta_added_at_is_indexed_automatically(self):
+        site = os.path.join(self.tmp, "_site")
+        folder = os.path.join(site, "grade8-math-future-test")
+        os.makedirs(folder, exist_ok=True)
+        with open(os.path.join(folder, "index.html"), "w", encoding="utf-8") as fh:
+            fh.write(
+                '<!doctype html><html lang="ar" dir="rtl"><head>'
+                '<meta name="exam-added-at" content="15-12-2026">'
+                '<title>اختبار الرياضيات — الصف الثامن</title></head><body></body></html>'
+            )
+        generate.main(["generate.py", site])
+        with open(os.path.join(site, "index.html"), "r", encoding="utf-8") as fh:
+            page = fh.read()
+        self.assertIn('data-added-at="15-12-2026"', page)
+        self.assertIn('class="exam-card__date" dir="ltr">15-12-2026<', page)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

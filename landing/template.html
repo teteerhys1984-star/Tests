@@ -564,8 +564,20 @@ input::placeholder, textarea::placeholder { font-family: var(--font); }
   background: hsl(var(--h) 90% 95%); color: hsl(var(--h) 65% 32%);
   font-weight: 800; font-size: .95rem;
 }
-.exam-card__title { font-weight: 700; font-size: .96rem; line-height: 1.45; }
-.exam-card__path { display: block; color: var(--ink-3); font-size: .78rem; }
+.exam-card__title { display: block; font-weight: 700; font-size: .96rem; line-height: 1.45; }
+.exam-card__meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .45rem;
+  margin-block-start: .2rem;
+}
+.exam-card__path { display: inline-block; color: var(--ink-3); font-size: .78rem; }
+.exam-card__date {
+  display: inline-flex; align-items: center;
+  padding: .1rem .48rem; border-radius: 999px;
+  background: hsl(var(--h) 85% 95%); color: hsl(var(--h) 62% 32%);
+  border: 1px solid hsl(var(--h) 70% 88%);
+  font-size: .72rem; font-weight: 700; font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
 .exam-card__cta {
   display: inline-flex; align-items: center; gap: .3rem; flex: none;
   padding: .45rem .8rem; border-radius: 999px;

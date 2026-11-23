@@ -10,11 +10,13 @@ landing/
 ├── fonts/               # ملفات خط Cairo المتغير (WOFF2) المضمَّنة محليًا
 ├── generate.py          # يقرأ المجلدات المنشورة في _site وينسخ الخطوط ويبني _site/index.html
 ├── exams.json           # (اختياري) تصنيف يدوي لتجاوز التصنيف التلقائي (صف/مادة/فصل)
-├── tests/test_generate.py   # اختبارات البنية والفصول والروابط والخط وبوابة الدخول (Python)
-├── tests/gate.test.mjs      # اختبارات سلوك بوابة الدخول (Node، بلا اعتماديات)
-├── scripts/password-hash.mjs  # حساب بصمة كلمة مرور جديدة للبوابة
-├── scripts/build-exams.sh   # محاكاة خطوة بناء الاختبارات في النشر
-└── scripts/verify-site.py   # تحقق شامل من الموقع الناتج بعد البناء
+├── tests/test_generate.py      # اختبارات البنية والفصول والروابط وتواريخ الإضافة والخط وبوابة الدخول (Python)
+├── tests/test_build_exams.py   # اختبارات استبعاد مجلدات المصدر ومطابقة deploy.yml مع build-exams.sh (Python)
+├── tests/gate.test.mjs         # اختبارات سلوك بوابة الدخول (Node، بلا اعتماديات)
+├── scripts/password-hash.mjs   # حساب بصمة كلمة مرور جديدة للبوابة
+├── scripts/register-exam-dates.py # تسجيل تاريخ إضافة اختبار جديد (addedAt) في landing/exams.json دون مساس بالقديم
+├── scripts/build-exams.sh      # محاكاة خطوة بناء الاختبارات في النشر
+└── scripts/verify-site.py      # تحقق شامل من الموقع الناتج بعد البناء
 ```
 
 ## تجربة الاستخدام: أربع خطوات
@@ -174,22 +176,45 @@ bash landing/scripts/build-exams.sh
 # 2) توليد الصفحة الرئيسية
 python3 landing/generate.py _site
 
-# 3) اختبارات البنية والفصول والروابط وبوابة الدخول
+# 3) اختبارات البنية والفصول والروابط وتواريخ الإضافة وبوابة الدخول
 python3 landing/tests/test_generate.py
 
-# 4) اختبارات سلوك بوابة الدخول (تتطلب Node فقط، بلا حزم)
+# 4) اختبارات استبعاد مجلدات المصدر ومطابقة منطق النشر
+python3 landing/tests/test_build_exams.py
+
+# 5) اختبارات سلوك بوابة الدخول (تتطلب Node فقط، بلا حزم)
 node landing/tests/gate.test.mjs
 
-# 5) فحص الموقع الناتج (الروابط، EXAM_ID، الفصول، قاعدة المواد، الأرقام، البوابة)
+# 6) فحص الموقع الناتج (الروابط، EXAM_ID، الفصول، التواريخ، قاعدة المواد، الأرقام، البوابة)
 python3 landing/scripts/verify-site.py _site
 
-# 6) معاينة محلية
+# 7) معاينة محلية
 python3 -m http.server 8080 --directory _site
+```
+
+## تواريخ إضافة الاختبارات (`addedAt` بصيغة `DD-MM-YYYY`)
+
+يعرض الفهرس تاريخ إضافة كل اختبار جديد على بطاقته بصيغة `DD-MM-YYYY` وبأرقام
+إنجليزية، دون كتابة كلمة `Date` في البطاقة. مصدر التاريخ ثابت ولا يتغير عند
+إعادة البناء أو تعديل الاختبار:
+
+1. الحقل `"addedAt": "DD-MM-YYYY"` في `landing/exams.json` (الأعلى أولوية وثباتًا).
+2. الوسم `<meta name="exam-added-at" content="DD-MM-YYYY">` في صفحة الاختبار.
+3. تاريخ أوّل commit أضاف مجلد الاختبار في Git (`--diff-filter=A`) عند توفر
+   سجل تاريخي غير مقطوع (`fetch-depth: 0` في `.github/workflows/deploy.yml`).
+4. الاختبارات القديمة غير المسجّلة لا يُخترع لها تاريخ ولا يُعدّل بناؤها.
+
+لتسجيل تاريخ اختبار جديد يدويًا وبشكل آمن (Idempotent) في `landing/exams.json`:
+
+```bash
+python3 landing/scripts/register-exam-dates.py --exam <exam-folder> --date DD-MM-YYYY
 ```
 
 ## الملفات التي يلمسها النشر
 
-`.github/workflows/deploy.yml` لم يتغيّر: خطوة «Generate landing page» تستدعي
-`python3 landing/generate.py _site`، وخطوات بناء الاختبارات والنشر نفسها لم
-تتغيّر. كل تعديلات هذه الميزة محصورة في `landing/` (المولّد، القالب، الاختبارات،
-السكربتات، الوثائق) دون أي تعديل داخل مجلدات الاختبارات.
+يستبعد كل من `.github/workflows/deploy.yml` و`landing/scripts/build-exams.sh`
+مجلدات المصدر (غير المستقلة، مثل `physics-7th-l1&l2-problems`) من البناء والنشر،
+ويستخدم خطوة سحب كامل السجل (`fetch-depth: 0`) لدعم قراءة تاريخ الإضافة عند
+الحاجة، ثم يستدعي `python3 landing/generate.py _site`. كل تعديلات الفهرس والتاريخ
+محصورة في `landing/` و`.github/workflows/deploy.yml` دون تعديل مجلدات الاختبارات
+القديمة.
