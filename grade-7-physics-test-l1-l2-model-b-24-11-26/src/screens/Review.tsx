@@ -2,10 +2,13 @@
  * صفحة مراجعة الإجابات قبل التسليم:
  *  · تعرض حالة كل فرع (مُجاب / ناقص) ونصّ إجابة الطالب نفسها، بلا كشف الإجابة الصحيحة.
  *  · تتيح فلترة الناقص والعودة إلى أي سؤال لتعديل إجابته.
- *  · زر التسليم يبقى معطّلاً حتى تُجاب جميع الفروع (كما في المصدر).
+ *  · زر التسليم يبقى معطّلاً حتى تُجاب جميع الفروع.
+ *
+ * تُعرض نفس هوية المصدر (كارت أبيض، شعار بنفسجي/وردي)، وتستعمل الألوان فقط كدلالات.
  */
 
 import { useMemo, useState } from "react";
+import { ChevronLeft } from "lucide-react";
 import { TOTAL_MARKS } from "../config";
 import type { Question } from "../exam/types";
 import type { Responses } from "../lib/grading";
@@ -49,116 +52,81 @@ export function Review({
     .filter(({ stat }) => (filter === "missing" ? stat.done < stat.total : true));
 
   return (
-    <div className="relative z-10 mx-auto max-w-5xl px-3 pb-10 pt-5 sm:px-4">
-      <div
-        className="rounded-[var(--r-lg)] p-5 text-[#f4ecd8] shadow-[var(--sh-3)] sm:p-7"
-        style={{ background: "linear-gradient(135deg,#10313c 0%,#174c5b 55%,#0f766e 100%)" }}
-      >
-        <p className="text-[0.72rem] font-bold uppercase tracking-[0.16em]" style={{ color: "#ffd97a" }}>
-          الخطوة قبل الأخيرة
-        </p>
-        <h1 className="mt-1 text-[clamp(1.35rem,4vw,2rem)] font-extrabold" style={{ color: "#fff8e8" }}>
-          مراجعة الإجابات قبل التسليم
-        </h1>
-        <p className="mt-2 max-w-2xl text-[0.93rem] leading-relaxed opacity-90">
+    <main className="review-page page-container" aria-labelledby="review-title">
+      <section className="review-hero">
+        <p className="review-hero-eyebrow">الخطوة قبل الأخيرة</p>
+        <h1 id="review-title">مراجعة الإجابات قبل التسليم</h1>
+        <p>
           راجعي حالة كل سؤال وإجاباتك المدخلة أدناه. يمكنك العودة إلى أي سؤال لتعديل إجابتك. عند الضغط على
           «تسليم الاختبار» يُصحَّح الاختبار تلقائياً، ويُنزَّل تقرير TXT، وتُرسَل نتيجتك إلى معلّمك.
         </p>
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-[0.88rem]">
-          <span className="badge" style={{ background: "rgba(255,217,122,0.2)", color: "#ffd97a", borderColor: "rgba(255,217,122,0.45)" }}>
-            الطالب: <strong>{studentName}</strong>
-          </span>
-          <span className="badge tnum" style={{ background: "rgba(255,248,232,0.14)", color: "#dcebee", borderColor: "rgba(255,248,232,0.24)" }}>
-            الفروع المُجابة: {num(answered)} / {num(totalParts)}
-          </span>
-          <span className="badge tnum" style={{ background: "rgba(15,118,110,0.35)", color: "#bff0e6", borderColor: "rgba(15,118,110,0.6)" }}>
-            الزمن: {formatDuration(elapsedMs)}
-          </span>
-          <span className="badge tnum" style={{ background: "rgba(255,248,232,0.1)", color: "#e7f0f1", borderColor: "rgba(255,248,232,0.2)" }}>
-            المجموع: {num(TOTAL_MARKS)}
-          </span>
+        <div className="review-chips">
+          <span className="review-chip">الطالب: <strong>{studentName}</strong></span>
+          <span className="review-chip">الفروع المُجابة: <strong dir="ltr">{num(answered)} / {num(totalParts)}</strong></span>
+          <span className="review-chip">الزمن: <strong dir="ltr">{formatDuration(elapsedMs)}</strong></span>
+          <span className="review-chip">المجموع: <strong dir="ltr">{num(TOTAL_MARKS)}</strong></span>
         </div>
-      </div>
+      </section>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex gap-2">
+      <div className="review-filters">
+        <div className="review-filter-group" role="group" aria-label="تصفية الأسئلة">
           <button
             type="button"
-            className="btn !min-h-0 !px-3 !py-1.5 text-sm"
+            className={`review-filter-button ${filter === "all" ? "is-active" : ""}`}
             onClick={() => setFilter("all")}
             aria-pressed={filter === "all"}
-            style={
-              filter === "all"
-                ? { background: "var(--navy)", color: "#ffd97a", border: "1px solid var(--navy)" }
-                : { background: "var(--surface)", color: "var(--ink-2)", border: "1px solid var(--line)" }
-            }
           >
             كل الأسئلة ({num(questions.length)})
           </button>
           <button
             type="button"
-            className="btn !min-h-0 !px-3 !py-1.5 text-sm"
+            className={`review-filter-button ${filter === "missing" ? "is-active" : ""}`}
             onClick={() => setFilter("missing")}
             aria-pressed={filter === "missing"}
-            style={
-              filter === "missing"
-                ? { background: "var(--navy)", color: "#ffd97a", border: "1px solid var(--navy)" }
-                : { background: "var(--surface)", color: "var(--ink-2)", border: "1px solid var(--line)" }
-            }
           >
             غير المكتملة ({num(stats.filter((stat) => stat.done < stat.total).length)})
           </button>
         </div>
-        <button type="button" className="btn btn-ghost !min-h-0 !px-3 !py-1.5 text-sm" onClick={onExit}>
-          رجوع إلى الأسئلة
+        <button type="button" className="secondary-button" onClick={onExit}>
+          رجوع إلى الأسئلة <ChevronLeft size={17} aria-hidden="true" />
         </button>
       </div>
 
-      <div className="mt-3 grid gap-3">
+      <div className="review-cards-list">
         {rows.map(({ question, index, stat }) => {
           const complete = stat.done === stat.total;
           return (
-            <article key={question.id} className="card overflow-hidden" data-review-question={question.id}>
-              <header className="flex flex-wrap items-center gap-3 p-3.5" style={{ background: "var(--surface-2)" }}>
-                <span
-                  className="tnum grid h-9 w-9 shrink-0 place-items-center rounded-[var(--r-sm)] font-extrabold"
-                  style={{ background: complete ? "var(--teal)" : "var(--clay-soft)", color: complete ? "#fff" : "var(--clay)" }}
-                >
-                  {num(index + 1)}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[0.98rem] font-extrabold" style={{ color: "var(--ink-1)" }}>
-                    {question.title}
-                  </p>
-                  <p className="text-[0.76rem]" style={{ color: "var(--ink-3)" }}>
-                    {question.lesson} · {question.pages}
-                  </p>
+            <article key={question.id} className="review-card">
+              <header className="review-card-head">
+                <span className="review-index">{num(index + 1)}</span>
+                <div className="review-title-wrap">
+                  <strong>{question.title}</strong>
+                  <small>{question.lesson} · {question.pages}</small>
                 </div>
-                <span className={`badge ${complete ? "badge-ok" : "badge-err"} tnum`}>
+                <span className={`review-status-chip ${complete ? "is-complete" : "is-missing"}`}>
                   {complete ? "مكتمل" : `ناقص ${num(stat.total - stat.done)}`}
                 </span>
                 <button
                   type="button"
-                  className="btn btn-ghost !min-h-0 !px-2.5 !py-1 text-[0.8rem]"
+                  className="outline-button"
+                  style={{ minHeight: 38, padding: "6px 13px", fontSize: 12.5 }}
                   onClick={() => onBackToQuestion(index)}
                 >
                   تعديل
                 </button>
               </header>
 
-              <ul className="grid gap-2 p-3.5">
+              <ul className="review-part-list">
                 {question.parts.map((part, partIndex) => {
                   const value = answers[part.id] ?? "";
                   const done = isPartAnswered(value);
                   const option = part.options?.find((item) => item.id === value);
                   return (
-                    <li key={part.id} className="flex flex-wrap items-start gap-2 text-[0.9rem]" data-review-part={part.id}>
-                      <span className="badge badge-mute shrink-0">{partLetter(partIndex)}</span>
-                      <span className="min-w-0 flex-1" style={{ color: "var(--ink-2)" }}>
-                        <Rich content={part.label} />
-                      </span>
+                    <li key={part.id} className="review-part-row" data-review-part={part.id}>
+                      <span className="review-part-chip">{partLetter(partIndex)}</span>
+                      <span className="review-part-label"><Rich content={part.label} /></span>
                       <span
-                        className={`badge ${done ? "badge-teal" : "badge-err"} shrink-0`}
+                        className={`review-part-value ${done ? "is-done" : "is-empty"}`}
                         dir={part.type === "number" || part.type === "formula" ? "ltr" : "auto"}
                       >
                         {done ? (option ? option.label : value) : "لم تُجب"}
@@ -170,35 +138,35 @@ export function Review({
             </article>
           );
         })}
+        {rows.length === 0 && (
+          <p className="review-empty">كل الأسئلة مكتملة — لا فرع ناقص.</p>
+        )}
       </div>
 
-      <div className="card mt-4 p-4 sm:p-5">
+      <div className="review-submit-bar">
         {canSubmit ? (
-          <p className="text-sm font-bold" style={{ color: "var(--ok)" }}>
+          <p className="is-ready">
             أجبتِ عن جميع الفروع ({num(totalParts)} فرعاً). اضغطي «تسليم الاختبار» للتصحيح وتنزيل التقرير تلقائياً.
           </p>
         ) : (
-          <p className="text-sm font-bold" style={{ color: "var(--warn)" }} role="status">
+          <p className="is-pending" role="status">
             {remaining > 0
               ? `تبقّى ${num(remaining)} فرعاً بلا إجابة — لا يمكن التسليم قبل إكمالها.`
               : "جارٍ تجهيز النتيجة…"}
           </p>
         )}
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <button type="button" className="btn btn-danger" onClick={onSubmit} disabled={!canSubmit} data-action="submit-exam">
+        <div className="review-actions">
+          <button type="button" className="primary-button" onClick={onSubmit} disabled={!canSubmit} data-action="submit-exam">
             {submitting ? "جارٍ التسليم…" : "تسليم الاختبار"}
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" aria-hidden>
-              <path d="M12 3v12M7 10l5 5 5-5M4 21h16" />
-            </svg>
           </button>
-          <button type="button" className="btn btn-ghost" onClick={onExit}>
+          <button type="button" className="secondary-button" onClick={onExit}>
             متابعة المراجعة
           </button>
         </div>
-        <p className="mt-2 text-[0.76rem]" style={{ color: "var(--ink-3)" }}>
+        <p className="review-submit-note">
           لا يمكن التراجع عن التسليم؛ بعد التسليم تُعرض النتيجة والتصحيح التفصيلي وتُرسَل النتيجة إلى المعلّم.
         </p>
       </div>
-    </div>
+    </main>
   );
 }

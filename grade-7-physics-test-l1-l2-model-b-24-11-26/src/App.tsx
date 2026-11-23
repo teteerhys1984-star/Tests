@@ -38,7 +38,7 @@ import {
 } from "./lib/report";
 import { playStartSound, playSubmitSound, primeAudio, resetSounds } from "./lib/audio";
 import { formatDuration } from "./lib/time";
-import { ContactBar, Footer, Header } from "./components/Chrome";
+import { Footer, Header } from "./components/Chrome";
 import { Welcome } from "./screens/Welcome";
 import { Exam } from "./screens/Exam";
 import { Review } from "./screens/Review";
@@ -319,9 +319,7 @@ export default function App() {
   const showTimer = phase === "exam" || phase === "review";
 
   return (
-    <div className="relative min-h-screen" dir="rtl">
-      <div className="ambient" aria-hidden />
-      <ContactBar />
+    <div className="app-shell" dir="rtl">
       {phase !== "teacher" && (
         <Header
           elapsedMs={elapsedMs}

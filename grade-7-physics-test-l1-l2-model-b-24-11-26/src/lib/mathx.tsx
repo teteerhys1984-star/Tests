@@ -1,31 +1,17 @@
 /**
- * عرض الترميز الرياضي: النص العربي يبقى RTL، وكل مقطع محصور بين $...$
- * يُعرض بـ KaTeX داخل حاوية LTR معزولة (unicode-bidi: isolate).
+ * عرض الترميز الرياضي (KaTeX).
+ *
+ * التطابق مع المصدر (interactive-physics-Test-L1&2-model-B-24-11-26):
+ *  · الإخراج HTML حصرياً (`output: "html"`) — لا محتوى MathML ثانٍ في DOM،
+ *    فتظهر العلامات والوحدات مرّة واحدة لا مرتين.
+ *  · قاعدة الأنماط من katex.min.css الممسوح في src/index.css — تُرسم HTML المرئي فقط.
+ *  · `SvgMath` يحوّل MathText داخل `foreignObject` ليُسحب خارج SVG (نفس المصدر).
  */
 
-import { memo } from "react";
 import katex from "katex";
 import type { RichText } from "../exam/types";
 
-function render(tex: string): string {
-  try {
-    return katex.renderToString(tex, {
-      throwOnError: false,
-      errorColor: "#a52a2a",
-      strict: "ignore",
-      trust: false,
-      output: "htmlAndMathml",
-      displayMode: false,
-    });
-  } catch {
-    return tex;
-  }
-}
-
-/**
- * تحويل نص LaTeX إلى نصّ صرف للتقرير النصي (بلا محرّك عرض).
- * ترتيب الاستبدالات مقصود: الكسور قبل الرموز المفردة.
- */
+/** تحويل نص LaTeX إلى نصّ صرف للتقرير النصي (بلا محرّك عرض). */
 export function texToPlain(tex: string): string {
   let out = tex;
   out = out.replace(/\\[dt]frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1)/($2)");
@@ -44,7 +30,15 @@ export function texToPlain(tex: string): string {
   return out.replace(/\s+/g, " ").trim();
 }
 
-/** نصّ صرف من RichText — يُستعمل في التقرير وتحميل البيانات إلى Google Sheets. */
+/** نصّ قد يكون مختلطاً عربياً ورياضياً بعلامات $...$. */
+export function texSpanPlain(source: string): string {
+  const replaced = source
+    .replace(/\$\$([^$]*)\$\$/g, (_match, tex: string) => ` ${texToPlain(tex)} `)
+    .replace(/\$([^$]*)\$/g, (_match, tex: string) => texToPlain(tex));
+  return replaced.replace(/\s+/g, " ").trim();
+}
+
+/** نصّ صرف من RichText — يُستعمل في التقرير والحمولة. */
 export function richToPlain(content: RichText | string): string {
   if (typeof content === "string") return texSpanPlain(content);
   return content
@@ -54,75 +48,20 @@ export function richToPlain(content: RichText | string): string {
     .trim();
 }
 
-/** نصّ قد يكون مختلطاً عربياً ورياضياً بعلامات $...$. */
-export function texSpanPlain(source: string): string {
-  const replaced = source
-    .replace(/\$\$([^$]*)\$\$/g, (_match, tex: string) => ` ${texToPlain(tex)} `)
-    .replace(/\$([^$]*)\$/g, (_match, tex: string) => texToPlain(tex));
-  return replaced.replace(/\s+/g, " ").trim();
-}
-
-export const MathText = memo(function MathText({
-  tex,
-  className = "",
-}: {
-  tex: string;
-  className?: string;
-}) {
+export function MathText({ tex, className = "" }: { tex: string; className?: string }) {
   return (
     <span
-      className={`mtx ${className}`}
+      className={`math-text ${className}`}
       dir="ltr"
-      dangerouslySetInnerHTML={{ __html: render(tex) }}
+      dangerouslySetInnerHTML={{
+        __html: katex.renderToString(tex, { throwOnError: false, output: "html", strict: "ignore" }),
+      }}
     />
   );
-});
+}
 
 /** نصّ مختلط: يفصل مقاطع $...$ ويعرض كل مقطع بمحرّك KaTeX. */
-export const MixedText = memo(function MixedText({
-  text,
-  as: Tag = "span",
-  className,
-}: {
-  text: string;
-  as?: "span" | "p" | "div" | "li" | "strong" | "dd";
-  className?: string;
-}) {
-  const segments: { math: boolean; value: string }[] = [];
-  let buffer = "";
-  let index = 0;
-  while (index < text.length) {
-    if (text[index] === "$") {
-      const end = text.indexOf("$", index + 1);
-      if (end !== -1) {
-        if (buffer) {
-          segments.push({ math: false, value: buffer });
-          buffer = "";
-        }
-        segments.push({ math: true, value: text.slice(index + 1, end) });
-        index = end + 1;
-        continue;
-      }
-    }
-    buffer += text[index];
-    index += 1;
-  }
-  if (buffer) segments.push({ math: false, value: buffer });
-
-  return (
-    <Tag className={className}>
-      {segments.map((segment, segmentIndex) =>
-        segment.math ? (
-          <MathText key={segmentIndex} tex={segment.value} />
-        ) : (
-          <span key={segmentIndex}>{segment.value}</span>
-        ),
-      )}
-    </Tag>
-  );
-});
-
-export const Rich = memo(function Rich({ content }: { content: RichText }) {
+export function Rich({ content }: { content: RichText }) {
   return (
     <>
       {content.map((part, index) =>
@@ -130,4 +69,23 @@ export const Rich = memo(function Rich({ content }: { content: RichText }) {
       )}
     </>
   );
-});
+}
+
+/** عرض رياضية داخل SVG: نص رياضي بنفس محرّك KaTeX عبر foreignObject (كما في المصدر). */
+export function SvgMath({
+  tex, x, y, width, height, size = 18, color = "#523e65", align = "center",
+}: {
+  tex: string; x: number; y: number; width: number; height: number; size?: number; color?: string;
+  align?: "start" | "center" | "end";
+}) {
+  return (
+    <foreignObject x={x} y={y} width={width} height={height}>
+      <div
+        className="svg-math"
+        style={{ color, fontSize: size, justifyContent: align === "start" ? "flex-start" : align === "end" ? "flex-end" : "center" }}
+      >
+        <MathText tex={tex} />
+      </div>
+    </foreignObject>
+  );
+}
