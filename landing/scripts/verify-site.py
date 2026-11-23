@@ -135,6 +135,18 @@ def main(argv):
     print("     الفصل الأول: %d اختبار · الفصل الثاني: %d اختبار"
           % (semester_counts.get("s1", 0), semester_counts.get("s2", 0)))
 
+    print("6-ب) تواريخ الإضافة (addedAt) على بطاقات الاختبارات")
+    card_blocks = re.findall(r'<a class="exam-card\b.*?</a>', page, re.S)
+    for card in card_blocks:
+        check(">Date<" not in card and "exam-card__date\">Date" not in card,
+              "بطاقة اختبار خالية من كلمة Date النصية")
+    if "grade-7-physics-l1-l2-problems" in folders:
+        g7_card = next((c for c in card_blocks if 'href="./grade-7-physics-l1-l2-problems/"' in c), "")
+        check(
+            'data-added-at="23-11-2026"' in g7_card and ">23-11-2026<" in g7_card,
+            "grade-7-physics-l1-l2-problems ← يعرض تاريخ 23-11-2026 على البطاقة",
+        )
+
     print("7) بوابة الدخول: الفهرس محجوب والاختبارات المباشرة غير محجوبة")
     app_start = page.index('<div id="app" hidden>') if '<div id="app" hidden>' in page else -1
     check(app_start > 0, "المنصة كاملة داخل #app مع hidden قبل الدخول")

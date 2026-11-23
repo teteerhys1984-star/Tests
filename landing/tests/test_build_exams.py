@@ -66,6 +66,9 @@ EXCLUDED_SOURCE_DIRS = (
     # Source upload of the Grade 7 physics exam (Model B, lessons 1&2); published
     # as grade-7-physics-test-l1-l2-model-b-24-11-26 instead (never built on its own).
     "interactive-physics-Test-L1&2-model-B-24-11-26",
+    # Source upload of the Grade 7 physics L1&L2 problems; published as
+    # grade-7-physics-l1-l2-problems instead (never built on its own).
+    "physics-7th-l1&l2-problems",
 )
 
 
