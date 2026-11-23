@@ -1,13 +1,13 @@
 /**
  * عناصر إدخال الإجابة لكل نوع فرع — بلا أي كشف للإجابة الصحيحة.
- * كل عنصر يحمل `data-part-id` لتتمكّن الاختبارات الآلية من التحقّق من التغطية الكاملة.
+ * تصميم المصدر حرفياً: الحرف والتسمية، أزرار الخيارات، حقل العدد مع الوحدة المعروضة،
+ * حقل الصيغة، وحقل الإجابة القصيرة. كل عنصر يحمل `data-part-id` وبداخله `data-opt-id` للخيارات.
  */
 
+import { Check } from "lucide-react";
 import type { Part } from "../exam/types";
 import { MathText, richToPlain, Rich } from "../lib/mathx";
 import { partLetter } from "../lib/grading";
-
-const CHOICE_LETTERS = ["أ", "ب", "ج", "د"];
 
 export function ChoiceField({
   part,
@@ -19,23 +19,20 @@ export function ChoiceField({
   onChange: (value: string) => void;
 }) {
   return (
-    <div className="grid gap-2" role="radiogroup" aria-label={plainLabel(part)} data-part-id={part.id}>
-      {(part.options ?? []).map((option, index) => (
+    <div className="options-list" role="group" aria-label={plainLabel(part)} data-part-id={part.id}>
+      {(part.options ?? []).map((option) => (
         <button
           key={option.id}
           type="button"
-          className="chip"
+          className={`answer-option ${value === option.id ? "is-selected" : ""}`}
           data-opt-id={option.id}
-          data-on={value === option.id ? "1" : "0"}
-          role="radio"
-          aria-checked={value === option.id}
+          aria-pressed={value === option.id}
           onClick={() => onChange(value === option.id ? "" : option.id)}
         >
-          <span className="chip-dot" aria-hidden />
-          <span className="badge badge-mute !px-1.5" style={{ minWidth: 26, justifyContent: "center" }}>
-            {CHOICE_LETTERS[index] ?? String(index + 1)}
+          <span className="option-indicator" aria-hidden="true">
+            {value === option.id && <Check size={13} strokeWidth={3} />}
           </span>
-          <span className="min-w-0">{option.latex ? <MathText tex={option.latex} /> : option.label}</span>
+          <span>{option.latex ? <MathText tex={option.latex} /> : option.label}</span>
         </button>
       ))}
     </div>
@@ -52,23 +49,19 @@ export function NumberField({
   onChange: (value: string) => void;
 }) {
   return (
-    <div className="flex items-center gap-2" data-part-id={part.id}>
+    <div className="number-answer" data-part-id={part.id}>
       <input
-        className="field field-math"
-        dir="ltr"
+        id={`answer-${part.id}`}
+        type="text"
         inputMode="decimal"
         autoComplete="off"
-        type="text"
+        dir="ltr"
         value={value}
         placeholder="العدد"
         aria-label={plainLabel(part)}
         onChange={(event) => onChange(event.target.value)}
       />
-      {part.suffix && (
-        <span className="badge badge-teal shrink-0" style={{ fontSize: "0.9rem" }} dir="ltr">
-          <MathText tex={part.suffix} />
-        </span>
-      )}
+      {part.suffix && <span className="input-suffix"><MathText tex={part.suffix} /></span>}
     </div>
   );
 }
@@ -85,18 +78,17 @@ export function FormulaField({
   return (
     <div data-part-id={part.id}>
       <input
-        className="field field-math !text-start"
+        id={`answer-${part.id}`}
+        type="text"
         dir="ltr"
         autoComplete="off"
-        type="text"
+        className="text-answer formula-answer"
         value={value}
-        placeholder={part.placeholder ?? "w = m × g"}
+        placeholder={part.placeholder}
         aria-label={plainLabel(part)}
         onChange={(event) => onChange(event.target.value)}
       />
-      <p className="mt-1 text-[0.75rem]" style={{ color: "var(--ink-3)" }}>
-        اكتبي القانون بالرموز اللاتينية (w, m, g) أو بكلماتها العربية.
-      </p>
+      <p className="formula-note">اكتبي القانون بالرموز اللاتينية (w, m, g) أو بكلماتها العربية.</p>
     </div>
   );
 }
@@ -113,10 +105,11 @@ export function ShortField({
   return (
     <div data-part-id={part.id}>
       <textarea
-        className="field"
-        value={value}
+        id={`answer-${part.id}`}
+        className="text-answer short-answer"
         rows={2}
-        placeholder={part.placeholder ?? "اكتبي إجابتك هنا بأسلوبك"}
+        value={value}
+        placeholder={part.placeholder}
         aria-label={plainLabel(part)}
         onChange={(event) => onChange(event.target.value)}
       />
@@ -145,30 +138,17 @@ export function AnswerWidget({
   }
 }
 
-/** عنوان الفرع: حرفه + نصّه + علامته. */
-export function PartHeading({ part, index, done }: { part: Part; index: number; done: boolean }) {
+/** عنوان الفرع: حرفه + نصّه. */
+export function PartHeading({ part, index }: { part: Part; index: number }) {
   return (
-    <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
-      <div className="flex min-w-0 flex-1 items-start gap-2.5">
-        <span
-          className="grid h-8 w-8 shrink-0 place-items-center rounded-[var(--r-xs)] text-base font-bold"
-          style={{
-            background: done ? "var(--teal)" : "var(--gold-soft)",
-            color: done ? "#fff" : "var(--gold-deep)",
-          }}
-          aria-hidden
-        >
-          {partLetter(index)}
-        </span>
-        <p className="min-w-0 flex-1 text-[0.97rem] leading-relaxed">
-          <Rich content={part.label} />
-        </p>
-      </div>
+    <div className="part-heading">
+      <span className="part-letter" aria-hidden="true">{partLetter(index)}</span>
+      <h3 id={`label-${part.id}`}><Rich content={part.label} /></h3>
     </div>
   );
 }
 
-/** نصّ صرف من أجزاء RichText — للسمات الدلالية فقط (aria-label / data). */
+/** نصّ صرف من أجزاء RichText — للسمات الدلالية فقط (aria-label). */
 export function plainLabel(part: Part): string {
   return richToPlain(part.label);
 }

@@ -9,9 +9,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * ناتج واحد مكتفٍ بذاته: dist/index.html يحمل كل CSS وJS والصور المضمّنة،
+ * ناتج واحد مكتفٍ بذاته: dist/index.html يحمل كل CSS وJS والصور والمُخدَّرات المضمّنة،
  * بلا أي مورد خارجي — وهو ما يتوقّعه نشر المنصة (نسخ dist/index.html فقط).
- * خط كاييرو المضمَّن محلياً مستورد كملف WOFF2 ضمن الحزمة.
+ * خط IBM Plex Sans Arabic المضمَّن محلياً مستورد كـ @fontsource والكاجاكس (KaTeX).
  */
 export default defineConfig({
   plugins: [react(), tailwindcss(), viteSingleFile()],
