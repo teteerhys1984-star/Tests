@@ -23,7 +23,7 @@ import {
   TrendingUp,
   User,
 } from "lucide-react";
-import { EXAM_TITLE, TOTAL_MARKS } from "@/config";
+import { TOTAL_MARKS } from "@/config";
 import { allProblems, lessonList, problemsByLesson } from "@/content/problems";
 import { allSubparts } from "@/exam/spec";
 import type { ExamAttempt } from "@/exam/types";
@@ -261,7 +261,7 @@ export function Welcome({
             </div>
 
             <h1 className="mt-4 text-[34px] font-bold leading-[1.2] tracking-[-0.03em] text-[#301545] sm:text-5xl lg:text-[50px]">
-              {EXAM_TITLE}
+              حلا <span className="text-[#b183e6]">والفيزياء</span>
               <AtomGlyph className="mx-2 h-8 w-8 align-middle sm:h-11 sm:w-11" />
               <span className="hero-underline" aria-hidden="true" />
             </h1>
