@@ -101,9 +101,6 @@ svg { flex-shrink: 0; }
 
 /* بطاقة استعادة محاولة محفوظة (إضافة تفاعلية، بتصميم المصدر) */
 .resume-note { margin: 0 0 14px; color: #7d7383; font-size: 14px; line-height: 1.9; }
-.resume-list { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 8px; }
-.resume-list li { position: relative; padding-right: 18px; color: #6a5f72; font-size: 12.5px; line-height: 1.8; }
-.resume-list li::before { content: ""; position: absolute; right: 0; top: 9px; width: 7px; height: 7px; background: #b5d4d3; border-radius: 50%; }
 .resume-note strong { color: #4d3d56; }
 
 /* ---------- التذييل (نفس تصميم المصدر) ---------- */
@@ -161,8 +158,6 @@ svg { flex-shrink: 0; }
 .formula-note { margin: 7px 42px 0 0; color: #9a8fa8; font-size: 12px; line-height: 1.8; }
 .exam-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 24px; margin-top: 16px; border-top: 1px solid #eee6ef; flex-wrap: wrap; }
 .exam-actions-start { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: flex-end; }
-.exam-actions-start { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-.submit-button { min-width: 170px; }
 .missing-note { color: #84798a; font-size: 12px; line-height: 1.9; margin: 14px 0 0; }
 .missing-note button { background: transparent; border: 0; padding: 0 5px; color: #9a5f8d; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .exam-sidebar { border-right: 1px solid #e9e1ea; padding-right: 26px; min-width: 0; }
@@ -182,11 +177,6 @@ svg { flex-shrink: 0; }
 .sidebar-note { font-size: 11px; line-height: 1.8; color: #a094a3; margin: 18px 0 0; }
 .legend-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #54a4a1; vertical-align: middle; margin-left: 4px; }
 .mobile-map { display: none; }
-
-/* شريط المراجعة والتسليم أعلى الشاشة الخلفية */
-.review-cta { margin-top: 18px; padding: 14px; border-radius: 13px; background: #f7f1f9; border: 1px dashed #d8c6de; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
-.review-cta p { margin: 0; font-size: 12px; line-height: 1.8; color: #6a5975; }
-.review-cta strong { color: #4a3757; }
 
 /* ---------- مراجعة الإجابات قبل التسليم (إضافة تفاعلية) ---------- */
 .review-page { flex: 1; padding: 34px 0 80px; }
@@ -245,17 +235,15 @@ svg { flex-shrink: 0; }
 .result-clarifier { margin: 14px 0 0; color: #9a8f9f; font-size: 11.5px; line-height: 1.7; }
 .review-section { margin-top: 62px; }
 .review-heading h2 { margin: 8px 0 27px; color: #473551; font-size: clamp(25px, 3vw, 33px); line-height: 1.45; }
-.review-list-meta { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 12px; }
 .review-list { border-top: 1px solid #e9e0ea; }
 .review-question { border-bottom: 1px solid #e9e0ea; }
 .review-question > summary { list-style: none; display: flex; align-items: center; gap: 20px; min-height: 88px; cursor: pointer; }
-.review-question > summary::-webkit-details-marker, .teacher-question > summary::-webkit-details-marker, .mobile-map > summary::-webkit-details-marker { display: none; }
-.review-question .review-index { font-size: 15px; color: #bc80a8; font-weight: 700; width: 28px; flex: none; direction: ltr; }
+.review-question > summary::-webkit-details-marker, .mobile-map > summary::-webkit-details-marker { display: none; }
 .review-summary-name { flex: 1; min-width: 0; font-size: 17px; font-weight: 700; color: #4d3c59; line-height: 1.4; }
 .review-summary-name small { display: block; color: #9a8e9f; font-weight: 400; font-size: 12px; margin-top: 5px; }
 .review-question > summary strong { color: #765889; font-weight: 700; font-size: 14px; white-space: nowrap; }
 .review-chevron { color: #a491ac; transition: transform .2s; }
-.review-question[open] .review-chevron, .teacher-question[open] summary svg { transform: rotate(180deg); }
+.review-question[open] .review-chevron { transform: rotate(180deg); }
 .review-body { padding: 4px 47px 34px 0; }
 .review-context { color: #786e7c; font-size: 14px; line-height: 1.9; margin: 0 0 18px; }
 .review-figure { width: min(100%, 490px); margin: 0 auto 24px; }
@@ -276,7 +264,6 @@ svg { flex-shrink: 0; }
 .full-solution p { color: #62566c; font-size: 13px; line-height: 2; margin: 5px 0; }
 .review-reference { color: #9b8d9d; font-size: 11.5px; line-height: 1.9; margin: 15px 0 0; }
 .review-reference span { padding: 0 5px; }
-.result-loading { display: grid; place-items: center; min-height: 60vh; color: #77627e; font-size: 18px; }
 
 .start-stats { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 26px; color: #8a7b93; font-size: 13.5px; font-weight: 600; }
 .start-stats > span:last-child { background: #f3e9f2; border: 1px solid #e9dce9; border-radius: 999px; padding: 5px 14px; color: #6b4d7c; }
@@ -292,7 +279,7 @@ svg { flex-shrink: 0; }
 .results-stat { background: #fff; border: 1px solid #efe8ee; border-radius: 14px; padding: 14px 8px; text-align: center; }
 .results-stat strong { display: block; color: #513a62; font-size: 24px; font-weight: 700; line-height: 1.1; }
 .results-stat span { display: block; margin-top: 5px; color: #8d8290; font-size: 11px; line-height: 1.6; }
-.results-facts-band { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.results-facts-band { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
 .results-facts-band > div { background: #fff; border: 1px solid #efe8ee; border-radius: 13px; padding: 11px 13px; }
 .results-facts-band span { display: block; color: #8d8290; font-size: 11px; margin-bottom: 4px; }
 .results-facts-band strong { color: #3f2f4b; font-size: 13px; line-height: 1.7; font-weight: 700; }
@@ -311,9 +298,6 @@ svg { flex-shrink: 0; }
 .results-contact { margin-top: 26px; border: 1px solid #efe8ee; background: #fbf9fb; border-radius: 16px; padding: 14px 16px; text-align: center; }
 .results-contact a { text-decoration: underline; text-underline-offset: 4px; }
 .results-contact-note { margin: 6px 0 0; color: #9a8f9f; font-size: 11.5px; line-height: 1.8; }
-.result-opens button { border: 1px solid #e4dae9; background: #fff; border-radius: 10px; color: #6b5c77; font-size: 12.5px; font-weight: 700; padding: 8px 14px; min-height: 38px; }
-@media (max-width: 780px) { .results-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (max-width: 380px) { .results-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* حالة الإرسال */
 .send-status { margin-top: 14px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; border-radius: 13px; padding: 12px 15px; font-size: 13px; line-height: 1.8; }
@@ -325,16 +309,12 @@ svg { flex-shrink: 0; }
 .download-note.is-ok { background: #eef8ef; border: 1px solid #c8e0cd; color: #217a55; }
 .download-note.is-blocked { background: #fdf0ee; border: 1px solid #eec9c4; color: #93403a; }
 
-.result-opens { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.result-opens { display: inline-flex; }
 .result-opens button { border: 1px solid #e4dae9; background: #fff; border-radius: 10px; color: #6b5c77; font-size: 12.5px; font-weight: 700; padding: 8px 14px; min-height: 38px; }
 
 /* ---------- بوابة المعلّم (نفس تصميم المصدر) ---------- */
 .teacher-page { flex: 1; padding-block: 40px 80px; }
 .teacher-intro { font-size: 13px; color: #75697a; line-height: 1.9; margin: 0 0 22px; }
-.teacher-question { border-top: 1px solid #eae2eb; }
-.teacher-question > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; min-height: 58px; font-size: 14px; font-weight: 700; color: #523d5d; }
-.teacher-question > summary span { font-size: 11px; color: #ad7b9d; margin-right: auto; white-space: nowrap; }
-.teacher-question > summary svg { color: #9e89aa; transition: transform .2s; }
 .teacher-question-body { padding: 0 4px 22px; font-size: 12.5px; color: #766a7a; line-height: 1.95; }
 .teacher-question-body strong { color: #554362; }
 .teacher-question-body p { margin: 8px 0; }
@@ -345,7 +325,6 @@ svg { flex-shrink: 0; }
 .teacher-rubrics ul { margin: 8px 0; padding-right: 20px; }
 .teacher-rubrics small { color: #9a879b; }
 .teacher-disclaimer { border-top: 1px solid #eee7ee; padding-top: 18px; font-size: 11px; color: #9b8f9f; line-height: 1.8; margin-top: 22px; }
-.teacher-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(39, 27, 47, .58); display: grid; place-items: center; padding: 18px; }
 .teacher-dialog { width: min(100%, 860px); max-height: min(92vh, 950px); overflow-y: auto; background: #fff; border-radius: 20px; padding: 30px; box-shadow: 0 30px 90px rgba(25, 15, 34, .22); }
 .teacher-dialog-head { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ece4ed; padding-bottom: 16px; }
 .teacher-dialog-head h2 { font-size: 25px; margin: 5px 0 0; color: #4b3858; }
@@ -366,13 +345,36 @@ svg { flex-shrink: 0; }
 .teacher-table tr:nth-child(even) td { background: #fbf8fb; }
 .teacher-table .teacher-total td { background: #f6eef6; font-weight: 700; color: #3f2f4b; }
 .teacher-lesson-block { border-top: 1px solid #eae2eb; padding-top: 14px; margin-top: 16px; }
-.teacher-lesson-block p.muted { color: #9a8f9f; font-size: 11.5px; line-height: 1.8; margin: 8px 0 0; }
 .teacher-lesson-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; padding: 9px 0; border-bottom: 1px dashed #eee5ee; }
 .teacher-lesson-row:last-child { border-bottom: 0; }
-.teacher-rubric-line { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; border-top: 1px solid #f0eaf0; padding: 9px 0; font-size: 12px; color: #766a7a; line-height: 1.85; }
-.teacher-rubric-line:first-child { border-top: 0; padding-top: 0; }
-.teacher-rubric-title { font-weight: 700; color: #554362; flex: 1; min-width: 220px; line-height: 1.8; }
-.teacher-rubric-kind { color: #b977a1; font-size: 11px; font-weight: 700; white-space: nowrap; }
+
+/* ---------- عناصر صفحة النتيجة والمعلّم (إضافات التصميم لعناصر صفحة المعلّم والنتيجة) ---------- */
+.results-summary-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 0 12px; }
+.results-summary-head h2 { margin: 0; font-size: clamp(19px, 2.4vw, 25px); color: #463551; line-height: 1.5; }
+.teacher-section-title { margin: 18px 0 10px; font-size: 16px; font-weight: 700; color: #463551; }
+.teacher-table-wrap { overflow-x: auto; margin: 8px 0 4px; -webkit-overflow-scrolling: touch; border-radius: 10px; }
+.teacher-links { display: flex; gap: 14px; flex-wrap: wrap; margin: 4px 0 8px; }
+.teacher-links a { color: #9070ad; text-decoration: underline; text-underline-offset: 3px; }
+.teacher-links a:hover { color: #6b4a86; }
+.teacher-lesson-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.teacher-lesson-name { font-size: 14px; font-weight: 700; color: #463551; line-height: 1.7; }
+.teacher-lesson-note { border: 1px solid #f0e2c9; background: #fdf8ec; border-radius: 12px; padding: 11px 14px; margin-top: 12px; color: #7d6a33; font-size: 12px; line-height: 1.85; }
+.teacher-lesson-note strong { color: #5d4c1f; }
+.teacher-policy { border-top: 1px solid #eae2eb; margin-top: 22px; padding-top: 18px; }
+.teacher-policy h2 { font-size: 17px; color: #463551; margin: 0 0 10px; }
+.teacher-policy ol { margin: 0; padding-right: 22px; display: grid; gap: 7px; font-size: 12.5px; line-height: 1.9; color: #766a7a; }
+.teacher-policy-contact { text-align: center; font-weight: 700; color: #4d4360; margin: 18px 0 0; font-size: 13px; }
+.teacher-policy-contact a { color: #2f7d78; text-decoration: underline; text-underline-offset: 3px; }
+.teacher-dialog--gate { width: min(100%, 500px); margin: 0 auto; padding: 24px; box-shadow: 0 22px 70px rgba(25, 15, 34, .16); }
+.teacher-question-card { background: #fff; border: 1px solid #eae2eb; border-radius: 14px; margin: 10px 0; overflow: hidden; }
+.teacher-question-head { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 58px; padding: 12px 14px; border: 0; background: transparent; text-align: start; cursor: pointer; color: inherit; }
+.teacher-question-head:hover { background: #fbf9fc; }
+.teacher-question-index { min-width: 36px; height: 36px; border-radius: 10px; background: #f5e8f1; color: #aa6b96; font-size: 15px; font-weight: 700; display: grid; place-items: center; flex: none; }
+.teacher-question-meta { flex: 1; min-width: 0; }
+.teacher-question-meta > .block { display: block; font-size: 14.5px; font-weight: 700; color: #463551; line-height: 1.55; }
+.teacher-sub { display: block; margin-top: 4px; color: #9a8e9d; font-size: 11px; line-height: 1.7; }
+.teacher-chevron { flex: none; color: #9a8e9d; font-size: 17px; line-height: 1; transition: transform .22s; }
+.teacher-chevron.is-open { transform: rotate(180deg); }
 
 /* ---------- تعريفات ---------- */
 @keyframes question-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -444,7 +446,6 @@ svg { flex-shrink: 0; }
   .formula-note { margin-right: 0; }
   .exam-actions { position: static; padding-top: 18px; }
   .exam-actions .primary-button, .exam-actions .secondary-button { min-height: 49px; padding-inline: 14px; font-size: 13px; }
-  .submit-button { min-width: 145px; }
   .results-page { padding-top: 35px; }
   .results-hero { display: flex; flex-direction: column-reverse; align-items: flex-start; gap: 13px; padding-bottom: 28px; }
   .score-visual { width: 165px; height: 165px; align-self: center; }
@@ -488,7 +489,6 @@ svg { flex-shrink: 0; }
 }
 
 @media print {
-  .no-print { display: none !important; }
   .site-footer, .header-wrap { display: none !important; }
   body { background: #fff; }
 }

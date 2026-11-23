@@ -72,7 +72,7 @@ export function Results({
             لتري خطوات كل إجابة.
           </p>
 
-          <div className="results-actions-row">
+          <div className="results-actions">
             <button type="button" className="primary-button" onClick={download} data-action="download-report">
               <Download size={18} aria-hidden="true" /> تنزيل تقرير TXT
             </button>
@@ -156,7 +156,6 @@ export function Results({
         <div className="results-facts-band">
           <div><span>بداية الاختبار</span><strong>{formatLong(meta.startAt)}</strong></div>
           <div><span>تسليم الاختبار</span><strong>{formatLong(meta.submitAt)}</strong></div>
-          <div><span>المدة المنقضية</span><strong>{formatDuration(meta.elapsedMs)}</strong></div>
         </div>
 
         <div className="lesson-breakdown" data-lesson-breakdown>
