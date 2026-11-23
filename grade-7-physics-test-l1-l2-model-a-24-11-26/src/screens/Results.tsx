@@ -1,19 +1,16 @@
 /**
- * صفحة النتيجة: العلامة والنسبة والتقدير، تفصيل كل سؤال وفرع (بما فيه العلامة
- * الجزئية والمعايير والتفسير وخطوات الحل)، توزيع الدرسين مع بيان التداخل،
- * تنزيل تقرير TXT، وحالة الإرسال إلى Google Sheets.
+ * صفحة النتيجة — نفس تركيبة صفحة النتيجة في المصدر الأصلي
+ * (grade-7-physics-test-Model-A-24-11-26/src/components/ResultScreen.tsx):
+ * بطاقة النتيجة المتدرجة باللون البرقوقي مع العلامة الكبيرة والنسبة،
+ * صفّ إحصاءات الفروع، أزرار التنزيل والمحاولة الجديدة، ثم بطاقات تفاصيل
+ * الأسئلة القابلة للطيّ (الإجابة النموذجية والمعايير والتفسير).
+ *
+ * أُضيف داخل الهوية نفسها: توزيع الدرسين مع بيان التداخل، وحالة الإرسال
+ * إلى Google Sheets وزر إعادة الإرسال، وزر دليل المعلّم.
  */
 
-import { useEffect, useMemo, useState } from "react";
-import type { ReactElement } from "react";
-import {
-  CONTACT,
-  EXAM_TITLE,
-  GRADE_LABEL,
-  SEMESTER_LABEL,
-  SUBJECT_LABEL,
-  TOTAL_MARKS,
-} from "../config";
+import { useMemo, useState, type ReactElement } from "react";
+import { CONTACT } from "../config";
 import type { Question } from "../exam/types";
 import type { ExamResult, InputResult, Responses, Rubric } from "../lib/grading";
 import { lessonOverlap, lessonTotals, partLetter, partStatus, STATUS_AR } from "../lib/grading";
@@ -30,6 +27,9 @@ import {
 import type { SendStatus } from "../exam/submit";
 import { formatDuration, formatDurationWords, formatLong, num, pct } from "../lib/time";
 import { Figure } from "../exam/figures";
+import { answerKey } from "../data/answerKey";
+import { Button, Card } from "../components/ui";
+import { cn } from "../utils/cn";
 
 const SEND_TEXT: Record<Exclude<SendStatus, "idle">, string> = {
   sending: "جارٍ إرسال نتيجتك إلى معلّمك…",
@@ -38,74 +38,40 @@ const SEND_TEXT: Record<Exclude<SendStatus, "idle">, string> = {
     "تعذّر إرسال النتيجة تلقائياً. حُفظت النتيجة محلياً وستُعاد المحاولة عند فتح الاختبار، ويمكنك إعادة إرسالها الآن أو تسليم ملف التقرير لمعلّمك.",
 };
 
-function ScoreRing({ value, max }: { value: number; max: number }) {
-  const ratio = Math.max(0, Math.min(1, max ? value / max : 0));
-  const radius = 68;
-  const circumference = 2 * Math.PI * radius;
-  const [dash, setDash] = useState(circumference);
-  useEffect(() => {
-    const timer = window.setTimeout(() => setDash(circumference * (1 - ratio)), 80);
-    return () => window.clearTimeout(timer);
-  }, [circumference, ratio]);
-  const stroke = ratio >= 0.85 ? "#14713f" : ratio >= 0.65 ? "#0f766e" : ratio >= 0.5 ? "#b5851d" : "#e8a08f";
+function Stat({
+  icon,
+  label,
+  value,
+  cls,
+}: {
+  icon: ReactElement;
+  label: string;
+  value: string | number;
+  cls?: string;
+}) {
   return (
-    <div className="relative grid place-items-center" style={{ width: 176, height: 176 }}>
-      <svg width="176" height="176" viewBox="0 0 176 176" aria-hidden>
-        <circle cx="88" cy="88" r={radius} fill="none" stroke="#2a5b68" strokeWidth="12" />
-        <circle
-          cx="88"
-          cy="88"
-          r={radius}
-          fill="none"
-          stroke={stroke}
-          strokeWidth="12"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={dash}
-          transform="rotate(-90 88 88)"
-          style={{ transition: "stroke-dashoffset .8s ease" }}
-        />
-      </svg>
-      <div className="absolute text-center">
-        <div className="tnum text-[2.4rem] font-extrabold leading-none" style={{ color: "#fff8e8" }}>
-          {num(value)}
-        </div>
-        <div className="tnum text-[0.8rem] font-bold" style={{ color: "#cfe3e6" }}>
-          من {num(max)}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Stat({ label, value, tone }: { label: string; value: string; tone: string }) {
-  return (
-    <div
-      className="rounded-[var(--r-sm)] border p-2.5 text-center"
-      style={{ borderColor: "var(--line-soft)", background: "var(--surface-2)" }}
-    >
-      <div className="tnum text-[1.5rem] font-extrabold leading-none" style={{ color: tone }}>
+    <div className="bg-white px-4 py-4 text-center">
+      <span className={cn("mx-auto mb-1 block", cls ?? "text-plum-500")}>{icon}</span>
+      <p className="tabular text-xl font-bold" dir="auto">
         {value}
-      </div>
-      <div className="mt-1 text-[0.74rem] leading-tight" style={{ color: "var(--ink-3)" }}>
-        {label}
-      </div>
+      </p>
+      <p className="text-xs text-ink-soft">{label}</p>
     </div>
   );
 }
 
-const STATUS_CLASS: Record<ReturnType<typeof partStatus>, string> = {
-  correct: "badge-ok",
-  partial: "badge-part",
-  wrong: "badge-err",
-  empty: "badge-mute",
+const STATUS_TEXT: Record<ReturnType<typeof partStatus>, string> = {
+  correct: "text-mint-700",
+  partial: "text-sun-600",
+  wrong: "text-[#a9374b]",
+  empty: "text-ink-faint",
 };
 
-const STATUS_TONE: Record<ReturnType<typeof partStatus>, string> = {
-  correct: "var(--ok)",
-  partial: "var(--warn)",
-  wrong: "var(--err)",
-  empty: "var(--ink-3)",
+const STATUS_DOT: Record<ReturnType<typeof partStatus>, string> = {
+  correct: "bg-mint-500",
+  partial: "bg-sun-600",
+  wrong: "bg-coral-500",
+  empty: "bg-ink-faint",
 };
 
 /** عرض نصّ الإجابة النموذجية (يحوي $...$) */
@@ -117,33 +83,22 @@ function ModelAnswer({ input, rubric }: { input: Question["parts"][number]["inpu
 function CriteriaList({ input }: { input: InputResult }) {
   if (!input.criteria.length && !input.rows?.length) return null;
   return (
-    <ul className="mt-2 grid gap-1 rounded-[var(--r-xs)] p-2 text-[0.78rem]" style={{ background: "var(--surface-2)" }}>
+    <ul className="mt-2 grid gap-1 rounded-xl bg-blush-50/60 p-2 text-xs leading-6">
       {input.criteria.map((criterion, index) => (
         <li key={index} className="flex items-start gap-1.5">
-          <span
-            className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
-            style={{ background: criterion.earned > 0 ? "var(--ok)" : "var(--ink-faint)" }}
-          />
-          <span className="flex-1" style={{ color: criterion.earned > 0 ? "var(--ok)" : "var(--ink-3)" }}>
-            {criterion.label}
-          </span>
-          <span className="tnum shrink-0 font-bold" dir="ltr">
+          <span className={cn("mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full", criterion.earned > 0 ? "bg-mint-500" : "bg-ink-faint")} />
+          <span className={cn("flex-1", criterion.earned > 0 ? "text-mint-700" : "text-ink-faint")}>{criterion.label}</span>
+          <span className="tabular shrink-0" dir="ltr">
             {num(criterion.earned)} / {num(criterion.marks)}
           </span>
         </li>
       ))}
       {(input.rows ?? []).map((row, index) => (
         <li key={`r${index}`} className="flex items-start gap-1.5">
-          <span
-            className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
-            style={{ background: row.earned > 0 ? "var(--ok)" : "var(--err)" }}
-          />
-          <span className="flex-1" style={{ color: row.earned > 0 ? "var(--ok)" : "var(--ink-3)" }}>
-            {row.label}: <strong>{row.student}</strong>
-            {row.earned === 0 && <span style={{ color: "var(--ink-3)" }}> — الصحيح: {row.correct}</span>}
-          </span>
-          <span className="tnum shrink-0 font-bold" dir="ltr">
-            {num(row.earned)} / {num(row.marks)}
+          <span className={cn("mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full", row.earned > 0 ? "bg-mint-500" : "bg-coral-500")} />
+          <span className="flex-1">
+            {row.label}: <b>{row.student}</b>
+            {row.earned === 0 && <span className="text-ink-soft"> — الصحيح: {row.correct}</span>}
           </span>
         </li>
       ))}
@@ -162,6 +117,8 @@ export function Results({
   onResend,
   onRetry,
   onTeacher,
+  muted,
+  onToggleMute,
 }: {
   meta: AttemptMeta;
   questions: Question[];
@@ -173,169 +130,292 @@ export function Results({
   onResend: () => void;
   onRetry: () => void;
   onTeacher: () => void;
+  muted: boolean;
+  onToggleMute: () => void;
 }): ReactElement {
   const summary = useMemo(() => summarize(questions, answers, result), [questions, answers, result]);
-  const [open, setOpen] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(questions.map((question) => [question.id, true])),
-  );
+  const [open, setOpen] = useState<Record<string, boolean>>(() => Object.fromEntries(questions.map((question) => [question.id, true])));
   const allOpen = questions.every((question) => open[question.id] !== false);
   const filename = reportFilename(meta.studentName);
   const lessons = useMemo(() => lessonTotals(questions, result), [questions, result]);
   const overlap = useMemo(() => lessonOverlap(questions, result), [questions, result]);
+  const partStats = useMemo(() => {
+    const parts = result.questions.flatMap((question) => question.parts);
+    return {
+      correct: parts.filter((part) => part.possible > 0 && part.earned >= part.possible).length,
+      partial: parts.filter((part) => part.earned > 0 && part.earned < part.possible).length,
+      wrong: parts.filter((part) => part.earned === 0).length,
+    };
+  }, [result]);
 
   return (
-    <div className="relative z-10 mx-auto max-w-6xl px-3 pb-10 pt-5 sm:px-4">
+    <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:py-8">
       {/* ===== بطاقة النتيجة ===== */}
-      <section
-        className="relative overflow-hidden rounded-[var(--r-lg)] shadow-[var(--sh-3)]"
-        style={{ background: "linear-gradient(135deg,#10313c 0%,#174c5b 52%,#0f766e 100%)" }}
-      >
-        <div className="relative grid gap-6 p-5 sm:p-8 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-10">
-          <div className="mx-auto">
-            <ScoreRing value={summary.total} max={summary.max} />
+      <Card className="overflow-hidden">
+        <div className="bg-gradient-to-l from-plum-700 via-plum-600 to-blush-500 p-6 text-white sm:flex sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm opacity-90">نتيجة الطالبة</p>
+            <h1 className="text-2xl font-bold">{meta.studentName}</h1>
+            <p className="mt-1 text-sm opacity-90">اختبار الفيزياء — الصف السابع — النموذج A</p>
           </div>
-          <div className="text-[#f4ecd8]">
-            <p className="text-[0.72rem] font-bold uppercase tracking-[0.16em]" style={{ color: "#ffd97a" }}>
-              تم تسليم الاختبار وتصحيحه — النموذج A
+          <div className="mt-4 sm:mt-0 sm:text-end">
+            <p className="tabular text-5xl font-bold" dir="ltr">
+              {num(summary.total)}
+              <span className="text-xl font-semibold opacity-80"> / {num(summary.max)}</span>
             </p>
-            <h1 className="mt-1 text-[clamp(1.35rem,4vw,2.1rem)] font-extrabold leading-snug" style={{ color: "#fff8e8" }}>
-              {meta.studentName}
-            </h1>
-            <p className="mt-1 text-[0.9rem] opacity-85">{EXAM_TITLE}</p>
-            <p className="mt-0.5 text-[0.82rem] opacity-75">
-              {GRADE_LABEL} · {SEMESTER_LABEL} · {SUBJECT_LABEL} · مجموع {num(TOTAL_MARKS)} علامة
+            <p className="mt-1 flex items-center gap-1.5 opacity-95 sm:justify-end">
+              <AwardIcon />
+              النسبة المئوية: <span className="tabular">{pct(summary.percentage, Number.isInteger(summary.percentage) ? 0 : 1)}</span>
             </p>
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              <span
-                className="badge tnum"
-                style={{ background: "rgba(255,217,122,0.2)", color: "#ffd97a", borderColor: "rgba(255,217,122,0.45)" }}
-              >
-                النسبة: <strong>{pct(summary.percentage)}</strong>
-              </span>
-              <span
-                className="badge"
-                style={{ background: "rgba(255,248,232,0.14)", color: "#dcebee", borderColor: "rgba(255,248,232,0.24)" }}
-              >
-                التقدير: <strong>{gradeLabel(summary.percentage)}</strong>
-              </span>
-              <span
-                className="badge tnum"
-                style={{ background: "rgba(15,118,110,0.35)", color: "#bff0e6", borderColor: "rgba(15,118,110,0.6)" }}
-              >
-                المدة: <strong>{formatDuration(meta.elapsedMs)}</strong>
-              </span>
-            </div>
-
-            {sendStatus !== "idle" && (
-              <div
-                className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-[var(--r-sm)] p-2.5 text-[0.85rem] leading-relaxed"
-                role="status"
-                aria-live="polite"
-                data-send-status={sendStatus}
-                style={{
-                  backgroundColor:
-                    sendStatus === "success"
-                      ? "rgba(20,113,63,0.24)"
-                      : sendStatus === "failed"
-                        ? "rgba(180,71,47,0.26)"
-                        : "rgba(255,217,122,0.2)",
-                  border: `1px solid ${
-                    sendStatus === "success"
-                      ? "rgba(160,230,180,0.45)"
-                      : sendStatus === "failed"
-                        ? "rgba(255,200,180,0.5)"
-                        : "rgba(255,217,122,0.45)"
-                  }`,
-                }}
-              >
-                <p className="min-w-[12rem] flex-1 font-bold" style={{ color: sendStatus === "failed" ? "#fde3da" : "#e7f6ef" }}>
-                  {SEND_TEXT[sendStatus]}
-                </p>
-                {sendStatus === "failed" && (
-                  <button
-                    type="button"
-                    className="btn shrink-0 !min-h-0 !px-3 !py-1.5"
-                    style={{ background: "rgba(255,248,232,0.16)", color: "#fff8e8", border: "1px solid rgba(255,248,232,0.3)" }}
-                    onClick={onResend}
-                    data-action="resend-result"
-                  >
-                    إعادة إرسال النتيجة
-                  </button>
-                )}
-              </div>
-            )}
-
-            <div
-              className="mt-3 rounded-[var(--r-sm)] p-2.5 text-[0.84rem] leading-relaxed"
-              role="status"
-              aria-live="polite"
-              style={{
-                backgroundColor: autoDownloaded ? "rgba(20,113,63,0.22)" : "rgba(180,71,47,0.24)",
-                border: `1px solid ${autoDownloaded ? "rgba(160,230,180,0.4)" : "rgba(255,200,180,0.45)"}`,
-                color: autoDownloaded ? "#dcf0e2" : "#fde3da",
-              }}
-            >
-              {autoDownloaded ? (
-                <p>
-                  <strong>✓ بدأ تنزيل التقرير تلقائياً</strong> باسم{" "}
-                  <span dir="ltr" className="font-mono">
-                    {filename}
-                  </span>
-                  . إن لم يظهر الملف فراجعي مجلد التنزيلات أو استخدمي الزر الاحتياطي أدناه.
-                </p>
-              ) : (
-                <p>
-                  <strong>! منع المتصفح التنزيل التلقائي</strong> — استخدمي زر «تنزيل التقرير TXT» أدناه لتنزيل الملف نفسه.
-                </p>
-              )}
-            </div>
-
-            <div className="mt-3 flex flex-wrap gap-2">
-              <button type="button" className="btn btn-gold" onClick={() => triggerDownload(reportText, filename)} data-action="download-report">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" aria-hidden>
-                  <path d="M12 3v12M7 10l5 5 5-5M4 21h16" />
-                </svg>
-                تنزيل التقرير TXT
-              </button>
-              <button
-                type="button"
-                className="btn"
-                style={{ background: "rgba(255,248,232,0.14)", color: "#fff8e8", border: "1px solid rgba(255,248,232,0.3)" }}
-                onClick={onRetry}
-                data-action="retry-exam"
-              >
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" aria-hidden>
-                  <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
-                  <path d="M3 3v5h5" />
-                </svg>
-                محاولة جديدة
-              </button>
-              <button
-                type="button"
-                className="btn"
-                style={{ background: "transparent", color: "#cfe3e6", border: "1px dashed rgba(255,248,232,0.35)" }}
-                onClick={onTeacher}
-                data-action="open-teacher-results"
-              >
-                دليل المعلّم
-              </button>
-            </div>
           </div>
         </div>
-      </section>
+        <div className="grid grid-cols-2 gap-px bg-blush-100 sm:grid-cols-4">
+          <Stat icon={<ClockIcon />} label="الوقت المستغرق" value={formatDuration(meta.elapsedMs)} />
+          <Stat icon={<CircleCheckIcon />} label="فروع صحيحة كلياً" value={partStats.correct} cls="text-mint-500" />
+          <Stat icon={<CircleMinusIcon />} label="فروع بعلامة جزئية" value={partStats.partial} cls="text-sun-600" />
+          <Stat icon={<CircleXIcon />} label="فروع خاطئة" value={partStats.wrong} cls="text-coral-500" />
+        </div>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-blush-100 bg-white px-4 py-2.5 text-xs leading-6 text-ink-soft">
+          <span className="rounded-full bg-lilac-100 px-2.5 py-0.5 font-semibold text-plum-700">
+            النسبة: <b>{pct(summary.percentage, Number.isInteger(summary.percentage) ? 0 : 1)}</b>
+          </span>
+          <span className="rounded-full bg-lilac-100 px-2.5 py-0.5 font-semibold text-plum-700">
+            التقدير: <b>{gradeLabel(summary.percentage)}</b>
+          </span>
+          {sendStatus !== "idle" && (
+            <p
+              className="flex flex-wrap items-center gap-2"
+              role="status"
+              aria-live="polite"
+              data-send-status={sendStatus}
+            >
+              <span className="font-semibold text-ink">{SEND_TEXT[sendStatus]}</span>
+              {sendStatus === "failed" && (
+                <Button variant="secondary" size="sm" onClick={onResend} data-action="resend-result">
+                  إعادة إرسال النتيجة
+                </Button>
+              )}
+            </p>
+          )}
+          {autoDownloaded !== null && (
+            <p role="status" aria-live="polite">
+              {autoDownloaded ? (
+                <>
+                  <b>✓ بدأ تنزيل التقرير تلقائياً</b> باسم <span dir="ltr">{filename}</span>. إن لم يظهر الملف فراجعي مجلد
+                  التنزيلات أو استخدمي زر التنزيل أدناه.
+                </>
+              ) : (
+                <>
+                  <b>! منع المتصفح التنزيل التلقائي</b> — استخدمي زر «تنزيل التقرير (TXT)» أدناه لتنزيل الملف نفسه.
+                </>
+              )}
+            </p>
+          )}
+        </div>
+      </Card>
 
-      {/* ===== الملخّص ===== */}
-      <section className="card mt-4 p-4 sm:p-5">
-        <h2 className="mb-3 text-xl font-extrabold" style={{ color: "var(--navy)" }}>
-          ملخّص النتيجة
-        </h2>
+      <div className="mt-5 flex flex-wrap items-center gap-3">
+        <Button onClick={() => triggerDownload(reportText, filename)} data-action="download-report">
+          <DownloadIcon />
+          تنزيل التقرير (TXT)
+        </Button>
+        <Button variant="secondary" onClick={onRetry} data-action="retry-exam">
+          <RotateIcon />
+          محاولة جديدة
+        </Button>
+        <Button variant="ghost" onClick={onTeacher} data-action="open-teacher-results">
+          دليل المعلّم
+        </Button>
+        <button
+          type="button"
+          onClick={onToggleMute}
+          className="ms-auto flex cursor-pointer items-center gap-2 text-sm text-ink-soft transition-colors hover:text-ink"
+          data-action="toggle-sound"
+        >
+          {muted ? <VolumeOffIcon /> : <VolumeOnIcon />}
+          الصوت: {muted ? "مكتوم" : "مفعّل"}
+        </button>
+      </div>
+
+      {/* ===== تفاصيل الأسئلة ===== */}
+      <div className="mt-6 flex items-center justify-between">
+        <h2 className="text-lg font-bold">تفاصيل الأسئلة</h2>
+        <Button variant="ghost" size="sm" onClick={() => setOpen(Object.fromEntries(questions.map((question) => [question.id, !allOpen])))}>
+          {allOpen ? "طي الكل" : "عرض الكل"}
+        </Button>
+      </div>
+
+      <div className="mt-3 space-y-4">
+        {questions.map((question, index) => {
+          const graded = result.questions[index];
+          const isOpen = open[question.id] !== false;
+          const ratio = graded.possible ? graded.earned / graded.possible : 0;
+          const qtone: ReturnType<typeof partStatus> = ratio >= 0.999 ? "correct" : ratio > 0 ? "partial" : "wrong";
+          return (
+            <Card key={question.id} data-result-question={question.id}>
+              <button
+                type="button"
+                onClick={() => setOpen((state) => ({ ...state, [question.id]: !isOpen }))}
+                className="flex w-full cursor-pointer items-center gap-3 p-4 text-start"
+                aria-expanded={isOpen}
+              >
+                <span className="rounded-xl bg-lilac-100 px-3 py-1.5 text-sm font-bold text-plum-700">السؤال {num(index + 1)}</span>
+                <span className="min-w-0 flex-1 font-semibold leading-6">{question.title}</span>
+                <span className={cn("tabular text-sm font-bold", STATUS_TEXT[qtone])} dir="ltr">
+                  {num(graded.earned)} / {num(graded.possible)}
+                </span>
+                <ChevronDownIcon isOpen={isOpen} />
+              </button>
+              {isOpen && (
+                <div className="space-y-4 border-t border-blush-100 p-4 sm:p-6">
+                  <p className="text-sm leading-7 text-ink-soft">
+                    <MixedText as="span" text={question.intro} />
+                  </p>
+                  {question.table && (
+                    <div className="overflow-hidden rounded-2xl border border-blush-100">
+                      <table className="w-full text-sm">
+                        <thead className="bg-lilac-100/70">
+                          <tr>
+                            {question.table.head.map((head, headIndex) => (
+                              <th key={headIndex} className="px-2 py-2 text-start font-semibold sm:px-3">
+                                <MixedText as="span" text={head} />
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {question.table.rows.map((row, rowIndex) => (
+                            <tr key={rowIndex} className={rowIndex % 2 ? "bg-white" : "bg-blush-50/50"}>
+                              {row.map((cell, cellIndex) => (
+                                <td key={cellIndex} className="px-2 py-2 sm:px-3">
+                                  {cellIndex === 0 ? <MixedText as="span" text={cell} /> : <span dir="ltr">{cell}</span>}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                  {question.figure && (
+                    <div className="mt-4">
+                      <Figure type={question.figure} variant="question" />
+                    </div>
+                  )}
+
+                  {graded.parts.map((partResult, partIndex) => {
+                    const part = question.parts[partIndex];
+                    if (!part) return null;
+                    const ptone: ReturnType<typeof partStatus> =
+                      partResult.earned >= partResult.possible ? "correct" : partResult.earned > 0 ? "partial" : "wrong";
+                    return (
+                      <div
+                        key={part.id}
+                        className="rounded-2xl bg-blush-50/60 p-4"
+                        data-result-part={part.id}
+                        data-part-earned={partResult.earned}
+                        data-part-possible={partResult.possible}
+                      >
+                        <div className="mb-2 flex items-start gap-2">
+                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-lilac-100 text-sm font-bold text-plum-700">
+                            {partLetter(partIndex)}
+                          </span>
+                          <p className="flex-1 leading-7">
+                            <MixedText as="span" text={part.label} />
+                          </p>
+                          <span className={cn("tabular shrink-0 text-sm font-bold", STATUS_TEXT[ptone])} dir="ltr">
+                            {num(partResult.earned)} / {num(partResult.possible)}
+                          </span>
+                        </div>
+                        {part.figure && <Figure type={part.figure} variant="part" />}
+                        {part.inputs.map((input) => {
+                          const gradedInput = graded.inputs.find((item) => item.inputId === input.id);
+                          if (!gradedInput) return null;
+                          const rubric = rubricOf(input.id, question);
+                          const itone = partStatus(gradedInput.earned, gradedInput.possible, !!gradedInput.response.trim());
+                          return (
+                            <div key={input.id} className="mt-3 rounded-xl border border-blush-100 bg-white p-3" data-result-input={input.id}>
+                              {input.prompt && (
+                                <p className="mb-1 text-sm font-medium">
+                                  <MixedText as="span" text={inputLabel(input)} />
+                                </p>
+                              )}
+                              {input.kind === "tf" && (
+                                <p className="mb-1 text-sm leading-7">
+                                  <MixedText as="span" text={input.statement} />
+                                </p>
+                              )}
+                              <div className="flex items-center gap-2">
+                                <span className={cn("h-2.5 w-2.5 rounded-full", STATUS_DOT[itone])} />
+                                <span className={cn("text-xs font-semibold", STATUS_TEXT[itone])}>{STATUS_AR[itone]}</span>
+                                <span className="tabular ms-auto text-sm font-bold" dir="ltr">
+                                  {num(gradedInput.earned)} / {num(gradedInput.possible)}
+                                </span>
+                              </div>
+                              <div className="mt-2 flex items-start gap-2 text-sm leading-7">
+                                <span className="shrink-0 rounded-full bg-lilac-100 px-2.5 py-0.5 text-xs font-semibold text-plum-700">إجابتك</span>
+                                <span className="min-w-0 flex-1 break-words" dir="auto">
+                                  {gradedInput.response.trim() ? gradedInput.response : <span className="text-ink-faint">—</span>}
+                                </span>
+                              </div>
+                              {rubric && (
+                                <div className="mt-2 flex items-start gap-2 text-sm leading-7">
+                                  <span className="shrink-0 rounded-full bg-mint-100 px-2.5 py-0.5 text-xs font-semibold text-mint-700">الإجابة النموذجية</span>
+                                  <span className="min-w-0 flex-1 break-words">
+                                    <ModelAnswer input={input} rubric={rubric} />
+                                  </span>
+                                </div>
+                              )}
+                              <CriteriaList input={gradedInput} />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+
+                  <div className="rounded-2xl bg-lilac-100/60 p-4 text-sm leading-7">
+                    <p className="font-semibold">تفسير الحل الصحيح:</p>
+                    <p>
+                      <MixedText as="span" text={questionExplanation(question.id)} />
+                    </p>
+                    {answerKey[question.id]?.solution?.length ? (
+                      <ol className="mt-2 list-inside list-decimal space-y-1 text-ink-soft">
+                        {(answerKey[question.id]?.solution ?? []).map((step, stepIndex) => (
+                          <li key={stepIndex}>
+                            <MixedText as="span" text={step} />
+                          </li>
+                        ))}
+                      </ol>
+                    ) : null}
+                  </div>
+                  <p className="text-xs leading-6 text-ink-soft">
+                    <b>المرجع:</b> {question.lesson} — ص {question.pages} — المهارة: {question.skill}
+                  </p>
+                </div>
+              )}
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* ===== الملخّص وتوزيع الدرسين ===== */}
+      <Card className="mt-5 p-4 sm:p-5">
+        <h2 className="mb-3 text-lg font-bold">ملخّص النتيجة</h2>
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
-          <Stat label="أسئلة صحيحة بالكامل" value={num(summary.fullQuestions)} tone="var(--ok)" />
-          <Stat label="أسئلة صحيحة جزئياً" value={num(summary.partialQuestions)} tone="var(--warn)" />
-          <Stat label="أسئلة خاطئة" value={num(summary.wrongQuestions)} tone="var(--err)" />
-          <Stat label="فروع لم يُجب عنها" value={num(summary.unansweredSubparts)} tone="var(--ink-3)" />
-          <Stat label="فروع صحيحة" value={num(summary.correctSubparts)} tone="var(--teal)" />
-          <Stat label="فروع بعلامة جزئية" value={num(summary.partialSubparts)} tone="var(--gold-deep)" />
+          {[
+            { label: "أسئلة صحيحة بالكامل", value: summary.fullQuestions, tone: "text-mint-700" },
+            { label: "أسئلة صحيحة جزئياً", value: summary.partialQuestions, tone: "text-sun-600" },
+            { label: "أسئلة خاطئة", value: summary.wrongQuestions, tone: "text-[#a9374b]" },
+            { label: "فروع لم يُجب عنها", value: summary.unansweredSubparts, tone: "text-ink-soft" },
+            { label: "فروع صحيحة", value: summary.correctSubparts, tone: "text-mint-700" },
+            { label: "فروع بعلامة جزئية", value: summary.partialSubparts, tone: "text-peach-500" },
+          ].map((item) => (
+            <div key={item.label} className="rounded-2xl border border-blush-100 bg-blush-50/50 p-2.5 text-center">
+              <div className={cn("tabular text-xl font-bold leading-none", item.tone)}>{num(item.value)}</div>
+              <div className="mt-1 text-xs leading-5 text-ink-soft">{item.label}</div>
+            </div>
+          ))}
         </div>
 
         <div className="mt-4 grid gap-2.5 sm:grid-cols-3">
@@ -344,284 +424,175 @@ export function Results({
             { label: "تسليم الاختبار", value: formatLong(meta.submitAt) },
             { label: "المدة المنقضية", value: `${formatDuration(meta.elapsedMs)} — ${formatDurationWords(meta.elapsedMs)}` },
           ].map((item) => (
-            <div
-              key={item.label}
-              className="rounded-[var(--r-sm)] border p-2.5"
-              style={{ borderColor: "var(--line-soft)", background: "var(--surface-2)" }}
-            >
-              <p className="text-[0.72rem] font-bold" style={{ color: "var(--ink-3)" }}>
-                {item.label}
-              </p>
-              <p className="tnum mt-0.5 text-[0.88rem] font-bold" style={{ color: "var(--ink-1)" }}>
-                {item.value}
-              </p>
+            <div key={item.label} className="rounded-2xl border border-blush-100 bg-blush-50/50 p-2.5">
+              <p className="text-xs font-semibold text-ink-soft">{item.label}</p>
+              <p className="tabular mt-0.5 text-sm font-semibold">{item.value}</p>
             </div>
           ))}
         </div>
 
-        {/* توزيع الدرسين مع بيان التداخل */}
         <div className="mt-4" data-lesson-breakdown>
-          <p className="mb-1.5 text-[0.78rem] font-bold" style={{ color: "var(--ink-3)" }}>
-            توزيع العلامات على الدرسين (درسان فقط — لا فئة ثالثة)
-          </p>
+          <p className="mb-1.5 text-sm font-semibold text-ink-soft">توزيع العلامات على الدرسين (درسان فقط — لا فئة ثالثة)</p>
           <ul className="grid gap-1.5">
             {lessons.map((row) => (
               <li
                 key={row.lesson}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-[var(--r-sm)] border p-2 text-[0.86rem]"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-blush-100 bg-blush-50/50 p-2.5 text-sm"
                 data-lesson={row.lesson}
-                style={{ borderColor: "var(--line-soft)", background: "var(--surface-2)" }}
               >
-                <span className="font-bold" style={{ color: "var(--ink-1)" }}>
+                <span className="font-semibold">
                   {row.lesson}
-                  <span className="ms-1.5 text-[0.72rem] font-normal" style={{ color: "var(--ink-3)" }}>
-                    ({num(row.questions)} أسئلة)
-                  </span>
+                  <span className="ms-1.5 text-xs font-normal text-ink-faint">({num(row.questions)} أسئلة)</span>
                 </span>
                 <span className="flex flex-wrap items-center gap-1.5">
                   {row.sharedQuestions > 0 && (
-                    <span className="badge badge-part tnum" title="حصّة السؤال التركيبي المضافة إلى هذا الدرس">
+                    <span className="tabular rounded-full bg-sun-100 px-3 py-1 text-xs font-semibold text-sun-600" title="حصّة السؤال التركيبي المضافة إلى هذا الدرس">
                       منها تركيبي: {num(row.sharedEarned)}/{num(row.sharedPossible)}
                     </span>
                   )}
-                  <span className="badge badge-teal tnum">
+                  <span className="tabular rounded-full bg-mint-100 px-3 py-1 text-xs font-semibold text-mint-700">
                     {num(row.earned)}/{num(row.possible)}
                   </span>
                 </span>
               </li>
             ))}
           </ul>
-          <p
-            className="mt-1.5 rounded-[var(--r-xs)] p-2 text-[0.74rem] leading-relaxed"
-            style={{ background: "var(--warn-soft)", color: "var(--warn)" }}
-          >
-            مجموع الدرسين أعلاه <strong className="tnum">{num(overlap.possible)}</strong> علامة وليس{" "}
-            <strong className="tnum">{num(overlap.examPossible)}</strong>: السؤال التركيبي (السؤال {num(questions.length)})
-            يُحتسب في الدرسين معاً، فتظهر <strong className="tnum">{num(overlap.sharedPossible)}</strong> علامة مرتين.
-            مجموع الاختبار الحقيقي ومقام النسبة والتقدير هو{" "}
-            <strong className="tnum">{num(overlap.examTotal)} / {num(overlap.examPossible)}</strong> فقط.
+          <p className="mt-1.5 rounded-xl bg-sun-100/70 p-2 text-xs leading-6 text-sun-600">
+            مجموع الدرسين أعلاه <b className="tabular">{num(overlap.possible)}</b> علامة وليس{" "}
+            <b className="tabular">{num(overlap.examPossible)}</b>: السؤال التركيبي (السؤال {num(questions.length)}) يُحتسب في
+            الدرسين معاً، فتظهر <b className="tabular">{num(overlap.sharedPossible)}</b> علامة مرتين. مجموع الاختبار الحقيقي
+            ومقام النسبة والتقدير هو <b className="tabular">{num(overlap.examTotal)} / {num(overlap.examPossible)}</b> فقط.
           </p>
         </div>
-      </section>
+      </Card>
 
-      {/* ===== المراجعة التفصيلية ===== */}
-      <section className="mt-4">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-xl font-extrabold" style={{ color: "var(--navy)" }}>
-            التصحيح التفصيلي لكل سؤال وفرع
-          </h2>
-          <button
-            type="button"
-            className="btn btn-ghost !min-h-0 !px-3 !py-1.5 text-sm"
-            onClick={() => setOpen(Object.fromEntries(questions.map((question) => [question.id, !allOpen])))}
-          >
-            {allOpen ? "طيّ كل الأسئلة" : "فتح كل الأسئلة"}
-          </button>
-        </div>
-
-        <div className="mt-3 grid gap-3">
-          {questions.map((question, index) => {
-            const graded = result.questions[index];
-            const isOpen = open[question.id] !== false;
-            const ratio = graded.possible ? graded.earned / graded.possible : 0;
-            const tone = ratio >= 0.999 ? "var(--ok)" : ratio > 0 ? "var(--warn)" : "var(--err)";
-            return (
-              <article key={question.id} className="card overflow-hidden" data-result-question={question.id}>
-                <button
-                  type="button"
-                  className="flex w-full items-start gap-3 p-3.5 text-start"
-                  onClick={() => setOpen((state) => ({ ...state, [question.id]: !isOpen }))}
-                  aria-expanded={isOpen}
-                >
-                  <span
-                    className="tnum grid h-10 w-10 shrink-0 place-items-center rounded-[var(--r-sm)] font-extrabold"
-                    style={{ background: "var(--navy)", color: "#ffd97a" }}
-                  >
-                    {num(index + 1)}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-[1rem] font-extrabold" style={{ color: "var(--ink-1)" }}>
-                      {question.title}
-                    </span>
-                    <span className="mt-1 flex flex-wrap items-center gap-1.5">
-                      <span className="badge tnum" style={{ background: `${tone}1a`, color: tone, borderColor: `${tone}55` }}>
-                        {num(graded.earned)} / {num(graded.possible)} علامة
-                      </span>
-                      <span className="badge badge-mute">{question.lesson}</span>
-                      <span className="badge badge-mute">{question.pages}</span>
-                    </span>
-                  </span>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.4"
-                    className="mt-1 shrink-0 transition-transform duration-300"
-                    style={{ color: "var(--ink-3)", transform: isOpen ? "rotate(180deg)" : "none" }}
-                    aria-hidden
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-
-                {isOpen && (
-                  <div className="border-t p-3.5 sm:p-4" style={{ borderColor: "var(--line-soft)" }}>
-                    <p
-                      className="mb-3 rounded-[var(--r-sm)] border p-3 text-[0.92rem] leading-relaxed"
-                      style={{ borderColor: "#e3d9c5", background: "var(--surface-2)" }}
-                    >
-                      <MixedText as="span" text={question.intro} />
-                    </p>
-                    {question.figure && (
-                      <div className="mb-3">
-                        <Figure type={question.figure} />
-                      </div>
-                    )}
-                    <p className="mb-3 text-[0.76rem]" style={{ color: "var(--ink-3)" }}>
-                      المهارة: {question.skill} · المرجع: {question.pages}
-                    </p>
-
-                    <div className="grid gap-2.5">
-                      {question.parts.map((part, partIndex) => {
-                        const partResult = graded.parts[partIndex];
-                        const answered = part.inputs.some((input) =>
-                          Object.keys(answers).some(
-                            (key) => key === input.id || (key.startsWith(`${input.id}:`) && (answers[key] ?? "").trim()),
-                          ),
-                        );
-                        const status = partStatus(partResult.earned, partResult.possible, answered);
-                        return (
-                          <div
-                            key={part.id}
-                            className="rounded-[var(--r-sm)] border p-3"
-                            data-result-part={part.id}
-                            data-part-earned={partResult.earned}
-                            data-part-possible={partResult.possible}
-                            style={{
-                              borderColor: "var(--line-soft)",
-                              borderInlineStartColor: STATUS_TONE[status],
-                              borderInlineStartWidth: 4,
-                              background: "#fff",
-                            }}
-                          >
-                            <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                              <span className="flex items-start gap-2 text-[0.95rem] font-bold" style={{ color: "var(--navy)" }}>
-                                <span className="badge badge-mute">{partLetter(partIndex)}</span>
-                                <span>
-                                  <MixedText as="span" text={part.label} />
-                                </span>
-                              </span>
-                              <span className="flex items-center gap-1.5">
-                                <span className={`badge ${STATUS_CLASS[status]}`}>{STATUS_AR[status]}</span>
-                                <span className="badge badge-mute tnum">
-                                  {num(partResult.earned)} / {num(partResult.possible)}
-                                </span>
-                              </span>
-                            </div>
-
-                            <div className="grid gap-2">
-                              {part.inputs.map((input) => {
-                                const gradedInput = graded.inputs.find((item) => item.inputId === input.id);
-                                if (!gradedInput) return null;
-                                const rubric = rubricOf(input.id, question);
-                                const tone2 = STATUS_TONE[partStatus(gradedInput.earned, gradedInput.possible, !!gradedInput.response.trim())];
-                                return (
-                                  <div
-                                    key={input.id}
-                                    className="rounded-[var(--r-xs)] border p-2.5"
-                                    style={{ borderColor: "var(--line-soft)", background: "var(--surface-2)" }}
-                                    data-result-input={input.id}
-                                  >
-                                    <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
-                                      <span className="text-[0.85rem] font-bold" style={{ color: "var(--ink-2)" }}>
-                                        <MixedText as="span" text={inputLabel(input)} />
-                                      </span>
-                                      <span className="tnum badge badge-mute" style={{ color: tone2 }}>
-                                        {num(gradedInput.earned)} / {num(gradedInput.possible)}
-                                      </span>
-                                    </div>
-                                    <dl className="grid gap-1 text-[0.85rem]">
-                                      <div className="grid grid-cols-[92px_1fr] gap-2">
-                                        <dt className="font-bold" style={{ color: "var(--ink-3)" }}>
-                                          إجابتك
-                                        </dt>
-                                        <dd style={{ color: tone2 }} dir="auto">
-                                          {gradedInput.response.trim() ? (
-                                            gradedInput.response
-                                          ) : (
-                                            <span style={{ color: "var(--ink-3)" }}>لم تُجب</span>
-                                          )}
-                                        </dd>
-                                      </div>
-                                      {rubric && (
-                                        <div className="grid grid-cols-[92px_1fr] gap-2">
-                                          <dt className="font-bold" style={{ color: "var(--ink-3)" }}>
-                                            الإجابة الصحيحة
-                                          </dt>
-                                          <dd style={{ color: "var(--ok)" }}>
-                                            <ModelAnswer input={input} rubric={rubric} />
-                                          </dd>
-                                        </div>
-                                      )}
-                                    </dl>
-                                    <CriteriaList input={gradedInput} />
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div
-                      className="mt-3 border-s-[3px] p-2.5 ps-3"
-                      style={{ borderColor: "#7ebfb8", background: "var(--surface-2)" }}
-                    >
-                      <p className="text-[0.78rem] font-bold" style={{ color: "var(--teal)" }}>
-                        خطوات الحل والتفسير
-                      </p>
-                      <p className="text-[0.88rem] leading-relaxed" style={{ color: "var(--ink-2)" }}>
-                        <MixedText as="span" text={questionExplanation(question.id)} />
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="card mt-5 p-4 text-center text-sm" style={{ background: "var(--surface-2)" }}>
-        <p className="font-bold" style={{ color: "var(--ink-2)" }}>
-          {CONTACT.name}: <span className="tnum" dir="ltr">{CONTACT.phone}</span>
-          {" · "}
+      <section className="mt-5 rounded-card border border-blush-100/70 bg-white/80 p-4 text-center text-sm shadow-card">
+        <p className="font-semibold">
+          {CONTACT.name}: <span className="tabular" dir="ltr">{CONTACT.phone}</span> ·{" "}
           <a
             href={CONTACT.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline decoration-dotted underline-offset-4"
-            style={{ color: "var(--teal)" }}
+            className="text-mint-700 underline decoration-dotted underline-offset-4"
           >
             واتساب
           </a>
         </p>
-        <p className="mt-1 text-[0.76rem]" style={{ color: "var(--ink-3)" }}>
+        <p className="mt-1 text-xs text-ink-faint">
           التقرير مُنشأ داخل متصفحك بصيغة TXT، وتُرسَل نسخة من نتيجتك وإجاباتك إلى معلّمك عند التسليم.
         </p>
       </section>
-    </div>
+    </main>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* الجسر إلى مفتاح الإجابات — يُحمَّل ديناميكياً بعد التسليم فقط         */
+/* أيقونات محلية — بديل لأيقونات lucide في المصدر (بلا اعتمادية إضافية)  */
 /* ------------------------------------------------------------------ */
 
-import { answerKey } from "../data/answerKey";
+function AwardIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="8" r="6" />
+      <path d="M15.5 13 17 22l-5-3-5 3 1.5-9" />
+    </svg>
+  );
+}
+
+function ClockIcon({ size = 22 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </svg>
+  );
+}
+
+function CircleCheckIcon({ size = 22 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="m8.5 12 2.5 2.5 4.5-5" />
+    </svg>
+  );
+}
+
+function CircleMinusIcon({ size = 22 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8 12h8" />
+    </svg>
+  );
+}
+
+function CircleXIcon({ size = 22 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="m9 9 6 6M15 9l-6 6" />
+    </svg>
+  );
+}
+
+function DownloadIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 3v12M7 10l5 5 5-5M4 21h16" />
+    </svg>
+  );
+}
+
+function RotateIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+      <path d="M3 3v5h5" />
+    </svg>
+  );
+}
+
+function ChevronDownIcon({ isOpen, size = 20 }: { isOpen: boolean; size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={cn("shrink-0 text-ink-soft transition-transform", isOpen && "rotate-180")}
+      aria-hidden="true"
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
+function VolumeOnIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M11 5 6 9H3v6h3l5 4V5Z" />
+      <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+      <path d="M18.5 5.5a9 9 0 0 1 0 13" />
+    </svg>
+  );
+}
+
+function VolumeOffIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M11 5 6 9H3v6h3l5 4V5Z" />
+      <path d="m16 9 6 6M22 9l-6 6" />
+    </svg>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* الجسر إلى مفتاح الإجابات — يُستعمل بعد التسليم فقط                   */
+/* ------------------------------------------------------------------ */
 
 function rubricOf(inputId: string, question: Question): Rubric | null {
   return answerKey[question.id]?.rubric[inputId] ?? null;

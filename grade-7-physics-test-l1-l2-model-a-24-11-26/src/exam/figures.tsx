@@ -75,10 +75,10 @@ export function cdSamples(steps = 32): { t: number; d: number }[] {
 /* أدوات الرسم                                                         */
 /* ------------------------------------------------------------------ */
 
-const INK = "#12262e";
-const PLUM = "#6b4a9e";
-const BLUSH = "#c8568c";
-const TEAL = "#0f766e";
+const INK = "#3d2b4f";
+const PLUM = "#7a52b5";
+const BLUSH = "#e8709f";
+const TEAL = "#2fae94";
 const LILAC = "#a98bdd";
 const GRAY = "#b9a9c7";
 
@@ -151,14 +151,10 @@ export function PathsBoard() {
     { n: 3, variant: "circular" },
   ];
   return (
-    <div className="mx-auto grid max-w-xl grid-cols-3 gap-2 sm:gap-3">
+    <div className="mx-auto grid max-w-md grid-cols-3 gap-2 sm:gap-4">
       {items.map((item) => (
-        <figure
-          key={item.n}
-          className="rounded-[var(--r-sm)] border p-2"
-          style={{ borderColor: "var(--line-soft)", background: "#fff" }}
-        >
-          <figcaption className="mb-1 text-center text-sm font-bold" style={{ color: "var(--navy)" }}>
+        <figure key={item.n} className="rounded-2xl border border-blush-100 bg-white p-2">
+          <figcaption className="mb-1 text-center text-sm font-bold text-plum-700">
             ({item.n})
           </figcaption>
           <PathFigure variant={item.variant} />
@@ -273,11 +269,10 @@ function DtGraph() {
     { key: "D", letter: "د", dx: -9, dy: -4, anchor: "end" },
   ];
   return (
-    <div dir="ltr" className="mx-auto flex w-full max-w-md items-stretch gap-1">
+    <div dir="ltr" className="mx-auto flex w-full max-w-sm items-stretch gap-1">
       <div className="flex items-center justify-center">
         <span
-          className="whitespace-nowrap text-[0.8rem] font-semibold"
-          style={{ color: "var(--ink-3)", writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+          className="whitespace-nowrap text-sm font-semibold text-ink-soft [writing-mode:vertical-rl] rotate-180"
         >
           المسافة d (m)
         </span>
@@ -351,7 +346,7 @@ function DtGraph() {
             );
           })}
         </svg>
-        <p className="mt-1 text-center text-[0.8rem] font-semibold" style={{ color: "var(--ink-3)" }} dir="rtl">
+        <p className="mt-1 text-center text-sm font-semibold text-ink-soft" dir="rtl">
           الزمن t (s)
         </p>
       </div>
@@ -376,7 +371,7 @@ function EarthMoon() {
         <circle cx="240" cy="54" r="3.5" fill="#c7bfd1" />
         <circle cx="222" cy="84" r="4" fill="#c7bfd1" />
       </svg>
-      <div className="grid grid-cols-2 text-center text-sm font-semibold" dir="rtl" style={{ color: "var(--ink-3)" }}>
+      <div className="grid grid-cols-2 text-center text-sm font-semibold text-ink-soft" dir="rtl">
         <span>الأرض</span>
         <span>القمر</span>
       </div>
@@ -390,12 +385,12 @@ function EarthMoon() {
 
 export function DataTable({ head, rows }: { head: string[]; rows: string[][] }) {
   return (
-    <div className="overflow-hidden rounded-[var(--r-sm)] border" style={{ borderColor: "var(--line-soft)" }}>
+    <div className="mt-4 overflow-hidden rounded-2xl border border-blush-100">
       <table className="w-full text-sm sm:text-base">
-        <thead style={{ background: "var(--surface-2)" }}>
+        <thead className="bg-lilac-100/70">
           <tr>
             {head.map((cell, index) => (
-              <th key={index} className="px-2 py-2 text-start font-bold" style={{ color: "var(--navy)" }}>
+              <th key={index} className="px-2 py-2 text-start font-semibold sm:px-3">
                 <MixedCell text={cell} />
               </th>
             ))}
@@ -403,7 +398,7 @@ export function DataTable({ head, rows }: { head: string[]; rows: string[][] }) 
         </thead>
         <tbody>
           {rows.map((row, rowIndex) => (
-            <tr key={rowIndex} style={{ background: rowIndex % 2 ? "#fff" : "var(--surface-2)" }}>
+            <tr key={rowIndex} className={rowIndex % 2 ? "bg-white" : "bg-blush-50/50"}>
               {row.map((cell, cellIndex) => (
                 <td key={cellIndex} className="px-2 py-2 sm:px-3">
                   {cellIndex === 0 ? <MixedCell text={cell} /> : <span dir="ltr" className="tnum">{cell}</span>}
@@ -438,18 +433,35 @@ const FIGURES: Record<FigureId, () => ReactElement> = {
 };
 
 /** رسوم تُدير إطارها بنفسها (شبكة مسارات/مخطط بإطار خاص). */
-const FRAMELESS = new Set<FigureId>(["paths", "dt-graph", "earth-moon", "force-opt-1", "force-opt-2", "force-opt-3", "force-opt-4"]);
-
 /**
- * غلاف عرض الرسم: الرسوم المستقلّة تُعرض داخل إطار `.figure-stage` الموحّد،
- * وشبكة المسارات والمخطط وخيارات القوة تُعرض بإطارها الخاص.
+ * غلاف عرض الرسم — مطابق للمصدر الأصلي:
+ * الرسم على مستوى السؤال يُعرض داخل إطار `bg-blush-50/50`،
+ * والرسم داخل الفرع داخل إطار أبيض `p-2 sm:p-3`،
+ * وخيار الرسم داخل الإجابة داخل إطار `rounded-xl bg-white p-1`.
  */
-export function Figure({ type }: { type: FigureId }) {
+export function Figure({
+  type,
+  variant = "question",
+}: {
+  type: FigureId;
+  variant?: "question" | "part" | "option";
+}) {
   const Component = FIGURES[type];
-  const framed = !FRAMELESS.has(type);
+  const frame =
+    variant === "question"
+      ? "rounded-2xl bg-blush-50/50 p-2 sm:p-3"
+      : variant === "part"
+        ? "mb-4 rounded-2xl bg-white p-2 sm:p-3"
+        : "rounded-xl bg-white p-1";
   return (
-    <div className={framed ? "figure-stage" : "figure-plain"} data-figure={type}>
-      <Component />
+    <div className={frame} data-figure={type}>
+      {type === "force" ? (
+        <div className="mx-auto max-w-lg">
+          <Component />
+        </div>
+      ) : (
+        <Component />
+      )}
     </div>
   );
 }

@@ -40,14 +40,14 @@ import {
 } from "./lib/report";
 import { playStartSound, playSubmitSound, primeAudio, resetSounds, setSoundEnabled } from "./lib/audio";
 import { formatDuration } from "./lib/time";
-import { ContactBar, Footer, Header } from "./components/Chrome";
+import { Footer } from "./components/Chrome";
 import { Welcome } from "./screens/Welcome";
 import { Exam } from "./screens/Exam";
 import { Review } from "./screens/Review";
 import { Results } from "./screens/Results";
 import { Teacher } from "./screens/Teacher";
 
-type Phase = "welcome" | "exam" | "review" | "results" | "teacher";
+type Phase = "welcome" | "exam" | "review" | "results";
 
 const totalParts = countParts(questions);
 
@@ -55,6 +55,7 @@ export default function App() {
   const [attempt, setAttempt] = useState<Attempt | null>(null);
   const [restorable, setRestorable] = useState<Attempt | null>(null);
   const [phase, setPhase] = useState<Phase>("welcome");
+  const [teacherOpen, setTeacherOpen] = useState(false);
   const [elapsedMs, setElapsedMs] = useState(0);
   const [result, setResult] = useState<ExamResult | null>(null);
   const [meta, setMeta] = useState<AttemptMeta | null>(null);
@@ -312,42 +313,21 @@ export default function App() {
     });
   }, []);
 
-  const answeredParts = useMemo(() => {
-    if (!attempt) return 0;
-    return questions
-      .flatMap((question) => question.parts)
-      .filter((part) => part.inputs.every((input) => hasAnyAnswer(attempt.responses, input)))
-      .length;
-  }, [attempt]);
-
   const summary = useMemo(
     () => (result ? summarize(questions, attempt?.responses ?? {}, result) : null),
     [result, attempt],
   );
 
-  const showTimer = phase === "exam" || phase === "review";
-
   return (
-    <div className="relative min-h-screen" dir="rtl">
-      <div className="ambient" aria-hidden />
-      <ContactBar />
-      {phase !== "teacher" && (
-        <Header
-          elapsedMs={elapsedMs}
-          answered={answeredParts}
-          totalParts={totalParts}
-          muted={muted}
-          onToggleMute={toggleMute}
-          showTimer={showTimer}
-        />
-      )}
-
+    <div className="flex min-h-screen flex-col" dir="rtl">
       {phase === "welcome" && (
         <Welcome
           storedAttempt={restorable}
           onStart={handleStart}
           onResume={handleResume}
           onDiscard={handleDiscard}
+          muted={muted}
+          onToggleMute={toggleMute}
         />
       )}
 
@@ -362,6 +342,8 @@ export default function App() {
           initialIndex={attempt.questionIndex}
           onNavigate={handleNavigate}
           onReview={handleReview}
+          muted={muted}
+          onToggleMute={toggleMute}
         />
       )}
 
@@ -379,7 +361,7 @@ export default function App() {
         />
       )}
 
-      {phase === "results" && meta && result && summary && attempt && (
+      {phase === "results" && !teacherOpen && meta && result && summary && attempt && (
         <Results
           meta={meta}
           questions={questions}
@@ -390,28 +372,19 @@ export default function App() {
           sendStatus={sendStatus}
           onResend={handleResend}
           onRetry={handleRetry}
-          onTeacher={() => setPhase("teacher")}
+          onTeacher={() => setTeacherOpen(true)}
+          muted={muted}
+          onToggleMute={toggleMute}
         />
       )}
 
-      {phase === "teacher" && <Teacher onClose={() => setPhase(result ? "results" : "welcome")} />}
+      {teacherOpen && <Teacher onClose={() => setTeacherOpen(false)} />}
 
-      <Footer onTeacher={() => setPhase("teacher")} />
+      <Footer onTeacher={() => setTeacherOpen(true)} />
 
       <p className="sr-only" data-testid="exam-meta">
         {EXAM_ID} · {TOTAL_MARKS} علامة · {formatDuration(elapsedMs)}
       </p>
     </div>
   );
-}
-
-/** هل ثمّة أي إجابة في حقل إدخال؟ (لشريط التقدّم فقط، لا للتصحيح) */
-function hasAnyAnswer(responses: Responses, input: { id: string; kind: string }): boolean {
-  if (input.kind === "matrix") {
-    return Object.keys(responses).some((key) => key.startsWith(`${input.id}:`));
-  }
-  if (input.kind === "tf" || input.kind === "number") {
-    return Object.keys(responses).some((key) => key.startsWith(`${input.id}:`) && responses[key].trim().length > 0);
-  }
-  return (responses[input.id] ?? "").trim().length > 0;
 }
