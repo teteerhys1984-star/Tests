@@ -1,0 +1,234 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #faf6ec;
+  --color-paper: #fffdf6;
+  --color-ink: #21333b;
+  --color-ink-soft: #4c5f66;
+
+  --color-pine-50: #f0f6f4;
+  --color-pine-100: #e0ecea;
+  --color-pine-200: #c2d8d4;
+  --color-pine-500: #2f7d8c;
+  --color-pine-700: #1f7186;
+  --color-pine-800: #175e6e;
+  --color-pine-900: #114b5f;
+  --color-pine-950: #0c3e46;
+
+  --color-coral-100: #fbe3d8;
+  --color-coral-200: #f6c3b1;
+  --color-coral-400: #ec7a52;
+  --color-coral-500: #e4572e;
+  --color-coral-600: #d14a24;
+  --color-coral-700: #b53c1b;
+
+  --color-gold-100: #fbf0d9;
+  --color-gold-200: #f6dcae;
+  --color-gold-400: #f2a541;
+  --color-gold-500: #e8930c;
+  --color-gold-600: #c97a06;
+
+  --color-leaf-100: #dff0e2;
+  --color-leaf-600: #2e7d5b;
+  --color-leaf-700: #236247;
+
+  --font-display: "Baloo 2", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Decorative dot texture used on hero surfaces */
+.texture-dots {
+  background-image: radial-gradient(rgba(17, 75, 95, 0.14) 1.6px, transparent 1.6px);
+  background-size: 22px 22px;
+}
+.texture-dots-light {
+  background-image: radial-gradient(rgba(250, 246, 236, 0.22) 1.6px, transparent 1.6px);
+  background-size: 22px 22px;
+}
+
+/* Arabic prompt typography (only used for the 15 vocabulary prompts) */
+.arabic-prompt {
+  font-family: "Noto Naskh Arabic", "Noto Kufi Arabic", "Geeza Pro", "Traditional Arabic", serif;
+  direction: rtl;
+  unicode-bidi: plaintext;
+  letter-spacing: 0;
+}
+
+/* Focus visibility for accessibility */
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-gold-400);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Large comfortable touch targets on coarse pointers */
+@media (pointer: coarse) {
+  input,
+  select,
+  button {
+    min-height: 44px;
+  }
+}
+
+/* Inputs */
+.field {
+  width: 100%;
+  border-radius: 0.9rem;
+  border: 2px solid var(--color-pine-200);
+  background: #fff;
+  padding: 0.7rem 0.9rem;
+  font-size: 1rem;
+  color: var(--color-ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.field::placeholder {
+  color: #9fb0b5;
+}
+.field:hover {
+  border-color: var(--color-pine-500);
+}
+.field:focus {
+  outline: none;
+  border-color: var(--color-pine-700);
+  box-shadow: 0 0 0 4px rgba(31, 113, 134, 0.18);
+}
+
+.field-inline {
+  border-radius: 0.75rem;
+  border: 2px solid var(--color-pine-200);
+  background: #fff;
+  padding: 0.45rem 0.6rem;
+  min-width: 7rem;
+  max-width: 100%;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-pine-900);
+}
+.field-inline:focus {
+  outline: none;
+  border-color: var(--color-pine-700);
+  box-shadow: 0 0 0 4px rgba(31, 113, 134, 0.18);
+}
+
+/* Cards and buttons */
+.card {
+  background: var(--color-paper);
+  border: 1.5px solid rgba(17, 75, 95, 0.12);
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px rgba(12, 62, 70, 0.08);
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-weight: 800;
+  border-radius: 9999px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease, opacity 0.15s ease;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+.btn-primary {
+  background: linear-gradient(160deg, var(--color-coral-400), var(--color-coral-500) 55%, var(--color-coral-600));
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(228, 87, 46, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 10px 26px rgba(228, 87, 46, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+.btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.btn-pine {
+  background: var(--color-pine-900);
+  color: var(--color-cream);
+  box-shadow: 0 8px 20px rgba(12, 62, 70, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+.btn-pine:hover:not(:disabled) {
+  background: var(--color-pine-800);
+  transform: translateY(-1px);
+}
+.btn-ghost {
+  background: rgba(17, 75, 95, 0.08);
+  color: var(--color-pine-900);
+  border: 1.5px solid rgba(17, 75, 95, 0.16);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(17, 75, 95, 0.14);
+}
+.btn-gold {
+  background: linear-gradient(160deg, var(--color-gold-400), var(--color-gold-500));
+  color: #4a2c04;
+  box-shadow: 0 8px 20px rgba(232, 147, 12, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Animations */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes floaty-slow {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-14px) rotate(1.2deg); }
+}
+.animate-floaty { animation: floaty 4.5s ease-in-out infinite; }
+.animate-floaty-slow { animation: floaty-slow 6.5s ease-in-out infinite; }
+
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.92) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.animate-pop-in { animation: pop-in 0.4s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+
+@keyframes ring-draw {
+  from { stroke-dashoffset: var(--ring-circ); }
+  to { stroke-dashoffset: var(--ring-target); }
+}
+.animate-ring { animation: ring-draw 1.4s cubic-bezier(0.3, 0.9, 0.3, 1) forwards; }
+
+@keyframes progress-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Tabular numerals for the timer */
+.tnum {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Thin elegant scrollbars */
+.nice-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
+.nice-scroll::-webkit-scrollbar-thumb { background: var(--color-pine-200); border-radius: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-floaty, .animate-floaty-slow, .animate-pop-in, .animate-ring {
+    animation: none !important;
+  }
+}
