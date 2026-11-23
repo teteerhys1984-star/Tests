@@ -5,7 +5,7 @@
  * لا يُكشف أي تصحيح هنا.
  */
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronDown } from "lucide-react";
 import type { Question } from "../exam/types";
 import { isPartAnswered, isQuestionComplete, progressOf } from "../lib/grading";
@@ -37,7 +37,6 @@ export function Exam({
   onReview: () => void;
 }) {
   const [index, setIndex] = useState(() => Math.max(0, Math.min(questions.length - 1, initialIndex)));
-  const topRef = useRef<HTMLDivElement | null>(null);
 
   const status = useMemo(
     () =>
@@ -58,8 +57,8 @@ export function Exam({
     .map(({ i }) => i + 1);
   const question = questions[index];
 
-  useEffect(() => {
-    topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
   }, [index]);
 
   const goto = (next: number) => {
@@ -70,7 +69,6 @@ export function Exam({
 
   return (
     <main className="exam-page page-container">
-      <div ref={topRef} />
       <div className="exam-intro-line">
         <span>الوحدة الأولى <span className="small-divider">/</span> النموذج B</span>
         <span>أُجيب عن {num(answeredParts)} من {num(totalParts)} فرعاً</span>
