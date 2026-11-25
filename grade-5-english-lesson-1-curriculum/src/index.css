@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Segoe UI", ui-rounded, system-ui, -apple-system, "Helvetica Neue", Roboto, Arial, sans-serif;
+  --font-arabic: "Segoe UI", "Noto Naskh Arabic", Tahoma, "Arial Unicode MS", sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    color: #3b2a4a;
+    font-family: var(--font-sans);
+    background-color: #fdf8ff;
+    background-image:
+      radial-gradient(circle at 8% 4%, rgba(251, 207, 232, 0.55) 0, transparent 28%),
+      radial-gradient(circle at 96% 10%, rgba(186, 230, 253, 0.55) 0, transparent 30%),
+      radial-gradient(circle at 50% 100%, rgba(254, 240, 138, 0.35) 0, transparent 32%),
+      linear-gradient(165deg, #fff7fb 0%, #f7f3ff 45%, #effbff 100%);
+    background-attachment: fixed;
+  }
+
+  /* Prevent iOS zoom on focus and keep answer text comfortable. */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+    font-family: inherit;
+  }
+
+  button {
+    cursor: pointer;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  :focus-visible {
+    outline: 3px solid #f472b6;
+    outline-offset: 2px;
+    border-radius: 12px;
+  }
+
+  [lang="ar"] {
+    font-family: var(--font-arabic);
+    unicode-bidi: isolate;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -131,6 +131,13 @@
       "semester": 1,
       "title": "مسائل الدرسين الأول والثاني",
       "addedAt": "23-11-2026"
+    },
+    "grade-5-english-lesson-1-curriculum": {
+      "grade": 5,
+      "subject": "english",
+      "semester": 1,
+      "title": "Lesson 1 Curriculum",
+      "addedAt": "25-11-2026"
     }
   }
 }

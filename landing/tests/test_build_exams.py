@@ -69,6 +69,9 @@ EXCLUDED_SOURCE_DIRS = (
     # Source upload of the Grade 7 physics L1&L2 problems; published as
     # grade-7-physics-l1-l2-problems instead (never built on its own).
     "physics-7th-l1&l2-problems",
+    # Source upload of the Grade 5 English L1 curriculum test; published as
+    # grade-5-english-lesson-1-curriculum instead (never built on its own).
+    "grade-5-english-L1-test",
 )
 
 
