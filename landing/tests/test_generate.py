@@ -235,6 +235,18 @@ class Presentation(Landing):
         self.assertNotRegex(page, r"<script[^>]*\bsrc=")
 
 
+class Grade5MathNewExamIndex(Landing):
+    def test_card_placement_title_and_fixed_added_date(self):
+        folder = "grade-5-math-test-u1-u2-l1-l2"
+        page = self.build([(folder, "placeholder")])
+        self.assertEqual(self.exam_cards(page, 5, "s1", "math"), [folder])
+        card = re.search(r'<a class="exam-card\b[^>]*href="\./' + re.escape(folder) + r'/".*?</a>', page, re.S).group(0)
+        self.assertIn("Maths Test Unit 1 and L1&amp;2 U2", card)
+        self.assertIn('data-added-at="27-11-2026"', card)
+        self.assertIn('class="exam-card__date" dir="ltr">27-11-2026<', card)
+        self.assertNotIn(folder, self.exam_cards(page, 5, "s2", "math"))
+
+
 class Grade5EnglishExamIndex(Landing):
     """اختبار اللغة الإنجليزية للصف الخامس — المسار: الصف الخامس ← الفصل الأول ← الإنجليزية."""
 

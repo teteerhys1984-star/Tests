@@ -23,6 +23,10 @@ DEPLOY_YML = os.path.join(ROOT, ".github", "workflows", "deploy.yml")
 BUILD_EXAMS_SH = os.path.join(ROOT, "landing", "scripts", "build-exams.sh")
 
 EXCLUDED_SOURCE_DIRS = (
+    "grade-5-math-test-U1-U2L1&2",
+    # Already excluded by both build scripts before this exam was added.
+    "grade-8-geometry-test-Unit 1",
+    "English-Grammar-Test-L1t5a18",
     "grade-4-english-curriculum-exam-L1-5-A",
     "English Curriculum Lessons 3&4",
     "English_L1L2 Test",
