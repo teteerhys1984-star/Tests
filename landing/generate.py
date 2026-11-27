@@ -225,6 +225,12 @@ def as_semester(value):
 
 def valid_date(value):
     text = num(str(value or "")).strip()
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", text):
+        try:
+            from datetime import date
+            return date.fromisoformat(text).strftime("%d-%m-%Y")
+        except ValueError:
+            return ""
     return text if DATE_RE.match(text) else ""
 
 

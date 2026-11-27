@@ -1,0 +1,258 @@
+@import "katex/dist/katex.min.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "IBM Plex Sans Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+
+  --color-ink-950: #050a16;
+  --color-ink-900: #080f21;
+  --color-ink-850: #0b1428;
+  --color-ink-800: #0f1a33;
+  --color-ink-700: #16233f;
+  --color-ink-600: #1e2d4d;
+  --color-ink-500: #2a3c62;
+
+  --color-volt-300: #7dd3fc;
+  --color-volt-400: #38bdf8;
+  --color-volt-500: #0ea5e9;
+
+  --color-cyan-glow: #22d3ee;
+  --color-turq: #2dd4bf;
+  --color-indigo-soft: #6366f1;
+  --color-violet-soft: #a78bfa;
+  --color-amber-soft: #fbbf24;
+  --color-rose-soft: #fb7185;
+  --color-emerald-soft: #34d399;
+}
+
+:root {
+  --grid-line: rgba(125, 211, 252, 0.07);
+  --hairline: rgba(125, 211, 252, 0.16);
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #050a16;
+  color: #e8eefc;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── App background: layered navy field + geometry grid + drifting light ── */
+.app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(1100px 620px at 88% -8%, rgba(56, 189, 248, 0.16), transparent 62%),
+    radial-gradient(900px 520px at 6% 8%, rgba(167, 139, 250, 0.15), transparent 60%),
+    radial-gradient(800px 600px at 50% 110%, rgba(45, 212, 191, 0.1), transparent 62%),
+    linear-gradient(178deg, #071021 0%, #050a16 45%, #070c1c 100%);
+}
+
+.app-grid {
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 78%);
+  mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 78%);
+  animation: gridDrift 46s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes gridDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(46px, 46px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-grid {
+    animation: none;
+  }
+}
+
+/* ── Scrollbars drawn in the artifact's own language ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.45) rgba(8, 15, 33, 0.65);
+}
+*::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+*::-webkit-scrollbar-track {
+  background: rgba(8, 15, 33, 0.72);
+  border-radius: 99px;
+}
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #38bdf8, #6366f1);
+  border-radius: 99px;
+  border: 2px solid rgba(8, 15, 33, 0.9);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #7dd3fc, #a78bfa);
+}
+
+/* ── KaTeX inside Arabic RTL: always isolated LTR ── */
+.ktx {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+  white-space: nowrap;
+}
+.ktx-block {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: block;
+  text-align: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.35rem 0.15rem;
+}
+.katex {
+  font-size: 1.05em;
+}
+.ktx-block .katex-display {
+  margin: 0;
+}
+
+/* ── Motion ── */
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: riseIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes sheen {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+.sheen {
+  background-image: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgba(125, 211, 252, 0.22) 45%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: sheen 5.5s linear infinite;
+}
+
+@keyframes pulseRing {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.32);
+  }
+  50% {
+    box-shadow: 0 0 0 9px rgba(56, 189, 248, 0);
+  }
+}
+.pulse-ring {
+  animation: pulseRing 2.6s ease-out infinite;
+}
+
+/* ── Entry banner: the unit's core idea, looping quietly ── */
+@keyframes slideShape {
+  0%,
+  12% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  55%,
+  88% {
+    transform: translate(184px, -60px);
+    opacity: 0.15;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+@keyframes fadeVectors {
+  0%,
+  10% {
+    opacity: 0;
+  }
+  30%,
+  80% {
+    opacity: 1;
+  }
+  96%,
+  100% {
+    opacity: 0;
+  }
+}
+.banner-fig .slide-shape {
+  animation: slideShape 9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+.banner-fig .slide-vectors {
+  animation: fadeVectors 9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .sheen,
+  .pulse-ring,
+  .banner-fig .slide-shape,
+  .banner-fig .slide-vectors {
+    animation: none !important;
+  }
+  .banner-fig .slide-vectors {
+    opacity: 1;
+  }
+}
+
+/* ── Focus visibility ── */
+:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* ── Diagram text must never be selectable-draggable ── */
+svg text {
+  user-select: none;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+select option {
+  background: #0f1a33;
+  color: #e8eefc;
+}
