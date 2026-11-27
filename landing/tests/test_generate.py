@@ -235,6 +235,29 @@ class Presentation(Landing):
         self.assertNotRegex(page, r"<script[^>]*\bsrc=")
 
 
+class Grade8ChemistryU1L3Index(Landing):
+    """اختبار الكيمياء للصف الثامن (الدرس الثالث) — الصف الثامن ← الفصل الأول ← الكيمياء."""
+
+    FOLDER = "grade-8-chemistry-u1-l3-test"
+    TITLE = "Chemistry U1 L3 Test"
+
+    def test_card_placement_title_and_fixed_added_date(self):
+        page = self.build([(self.FOLDER, "placeholder")])
+        self.assertEqual(self.exam_cards(page, 8, "s1", "chemistry"), [self.FOLDER])
+        card = re.search(
+            r'<a class="exam-card\b[^>]*href="\./' + re.escape(self.FOLDER) + r'/".*?</a>',
+            page,
+            re.S,
+        ).group(0)
+        self.assertIn(self.TITLE, card)
+        self.assertIn('data-added-at="27-11-2026"', card)
+        self.assertIn('class="exam-card__date" dir="ltr">27-11-2026<', card)
+        self.assertNotIn(self.FOLDER, self.exam_cards(page, 8, "s2", "chemistry"))
+        for grade in range(1, 10):
+            if grade != 8:
+                self.assertNotIn(self.FOLDER, self.exam_cards(page, grade, "s1", "chemistry"))
+
+
 class Grade5MathNewExamIndex(Landing):
     def test_card_placement_title_and_fixed_added_date(self):
         folder = "grade-5-math-test-u1-u2-l1-l2"
@@ -361,12 +384,18 @@ class RealSite(unittest.TestCase):
             os.path.exists(os.path.join(site, "grade-5-english-curriculum-exam-L1-5 (25Q) A")),
             "the Grade 5 English (25Q) A source folder must never be built into _site",
         )
+        self.assertFalse(
+            os.path.exists(os.path.join(site, "grade-8-chemistry-test-U1L3")),
+            "the Grade 8 Chemistry U1L3 source folder must never be built into _site",
+        )
         with open(index, "r", encoding="utf-8") as fh:
             page = fh.read()
         self.assertNotIn('href="./grade-5-english-curriculum-exam-L1-5-A/"', page)
         self.assertNotIn('href="./grade-5-english-curriculum-exam-L1-5 (25Q) A/"', page)
+        self.assertNotIn('href="./grade-8-chemistry-test-U1L3/"', page)
         self.assertIn('href="./grade5-english-curriculum-exam-l1-5-a/"', page)
         self.assertIn('href="./grade5-english-curriculum-exam-l1-5-25q-a/"', page)
+        self.assertIn('href="./grade-8-chemistry-u1-l3-test/"', page)
 
 
 class SemesterStructure(Landing):

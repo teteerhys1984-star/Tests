@@ -159,6 +159,13 @@
       "semester": 1,
       "title": "Lesson 1 Curriculum",
       "addedAt": "25-11-2026"
+    },
+    "grade-8-chemistry-u1-l3-test": {
+      "grade": 8,
+      "semester": 1,
+      "subject": "chemistry",
+      "title": "Chemistry U1 L3 Test",
+      "addedAt": "27-11-2026"
     }
   }
 }

@@ -1,0 +1,171 @@
+import { describe, expect, it } from 'vitest';
+import { ALL_PARTS, EXPECTED_MARKS, OBJECTIVES, QUESTIONS, TOTAL_MARKS, validateExam } from '../data/exam';
+import { correctAnswers } from '../test/helpers';
+import {
+  answerText,
+  firstIncompletePartId,
+  firstIncompleteQuestion,
+  gradeExam,
+  gradePart,
+  isExamComplete,
+  isPartComplete,
+} from './grading';
+import { buildReport, reportFilename } from './report';
+import { startAttempt, submitAttempt } from './session';
+import type { Answers } from './types';
+
+const find = (id: string) => ALL_PARTS.find(p => p.id === id)!;
+
+describe('assessment structure and full credit', () => {
+  it('has exactly seven original main questions and exactly 100 marks', () => {
+    expect(QUESTIONS).toHaveLength(7);
+    expect(TOTAL_MARKS).toBe(100);
+    expect(QUESTIONS.map(q => q.marks)).toEqual(EXPECTED_MARKS);
+    expect(validateExam()).toEqual([]);
+  });
+
+  it('allocates every subpart and criterion explicitly and assesses all five objectives', () => {
+    ALL_PARTS.forEach(p => {
+      const result = gradePart(p, correctAnswers());
+      expect(result.criteria.reduce((s, c) => s + c.available, 0)).toBe(p.marks);
+      expect(result.earned).toBe(p.marks);
+      expect(p.rubric.length).toBeGreaterThan(0);
+      expect(p.reference.pages.every(n => n >= 18 && n <= 23)).toBe(true);
+    });
+    OBJECTIVES.forEach(o => expect(ALL_PARTS.some(p => p.objectiveIds.includes(o.id))).toBe(true));
+  });
+
+  it('awards exactly 100 for independently verified correct responses', () => {
+    const result = gradeExam(correctAnswers());
+    expect(result.earned).toBe(100);
+    expect(result.percentage).toBe(100);
+    expect(result.questions.map(q => q.earned)).toEqual(EXPECTED_MARKS);
+  });
+
+  it('awards zero for empty or unrelated answers and formats unanswered text cleanly', () => {
+    const empty = gradeExam({});
+    expect(empty.earned).toBe(0);
+    expect(empty.questions.every(q => q.parts.every(p => p.studentText === 'لم تُحدّد إجابة'))).toBe(true);
+    expect(gradePart(find('q1-3'), { 'q1-3': '12 ذرة' }).earned).toBe(0);
+    expect(gradePart(find('q1-3'), { 'q1-3': '١٢' }).earned).toBe(3);
+  });
+});
+
+describe('partial credit and scientific error diagnosis', () => {
+  it('separates correct formula credit from incorrect neutrality calculations', () => {
+    const a = correctAnswers();
+    a['q4-4'] = { ...(a['q4-4'] as Record<string, string>), countPositive: '3', countNegative: '2' };
+    const r = gradePart(find('q4-4'), a);
+    expect(r.earned).toBe(4);
+    expect(r.available).toBe(6);
+    expect(r.diagnosis.join(' ')).toContain('الصيغة النهائية صحيحة');
+  });
+
+  it('does not award full marks for a correct final formula with wrong valencies', () => {
+    const a = correctAnswers();
+    a['q4-3'] = { ...(a['q4-3'] as Record<string, string>), valencePositive: '1' };
+    expect(gradePart(find('q4-3'), a).earned).toBe(3.5);
+  });
+
+  it('rejects an unbalanced final formula but retains correct reasoning marks', () => {
+    const a = correctAnswers();
+    a['q4-4'] = { ...(a['q4-4'] as Record<string, string>), formula: 'AlO' };
+    const r = gradePart(find('q4-4'), a);
+    expect(r.earned).toBe(4);
+    expect(r.diagnosis.join(' ')).toContain('لا تتوافق');
+  });
+
+  it('grades matching rows independently', () => {
+    const a = correctAnswers();
+    a['q3-2'] = { ...(a['q3-2'] as Record<string, string>), nitrate: 'sulfate', sulfate: 'nitrate' };
+    expect(gradePart(find('q3-2'), a).earned).toBe(4);
+  });
+
+  it('requires a correction only for a false judgement', () => {
+    const a = correctAnswers();
+    a['q2-2'] = { nitrogen: 'true', magnesium: 'false', 'magnesium.correction': 'gain2' };
+    expect(gradePart(find('q2-2'), a).earned).toBe(3);
+    a['q2-2'] = { nitrogen: 'true', magnesium: 'true', 'magnesium.correction': 'lose2' };
+    expect(gradePart(find('q2-2'), a).earned).toBe(2);
+  });
+
+  it('checks both Roman numerals in iron compound naming', () => {
+    const a = correctAnswers();
+    a['q6-1'] = { feo: 'iron3', fe2o3: 'iron2', naoh: 'sodium', nh4cl: 'ammonium' };
+    expect(gradePart(find('q6-1'), a).earned).toBe(2);
+  });
+
+  it('awards error-identification credit separately from the corrected formula', () => {
+    const a = correctAnswers();
+    a['q5-5'] = { error: 'parentheses', formula: 'CaOH2' };
+    const r = gradePart(find('q5-5'), a);
+    expect(r.earned).toBe(1);
+    expect(r.diagnosis.join(' ')).toContain('ذرّة أكسجين واحدة');
+  });
+
+  it('recognizes a neutral but unreduced integrated-challenge mistake', () => {
+    const a = correctAnswers();
+    a['q7-2'] = { formula: 'Al3(PO4)3' };
+    a['q7-3'] = { positive: '9', negative: '9', net: '0' };
+    expect(gradePart(find('q7-2'), a).earned).toBe(0);
+    const balance = gradePart(find('q7-3'), a);
+    expect(balance.earned).toBe(1);
+    expect(balance.diagnosis.join(' ')).toContain('غير مبسّطة');
+  });
+
+  it('gives partial credit for correct ordering positions', () => {
+    const a = correctAnswers();
+    a['q4-1'] = ['symbols', 'valencies', 'final', 'exchange'];
+    expect(gradePart(find('q4-1'), a).earned).toBe(1);
+  });
+
+  it('formats field formulas without stray separators when a label is empty', () => {
+    const text = answerText(find('q2-1'), undefined, true);
+    expect(text).not.toContain(' — ');
+  });
+});
+
+describe('completion and local report', () => {
+  it('allows completion with wrong but structurally complete answers and locates first incomplete part', () => {
+    const a: Answers = correctAnswers();
+    a['q1-1'] = 'd';
+    a['q1-3'] = '999';
+    expect(isExamComplete(a)).toBe(true);
+    expect(gradeExam(a).earned).toBe(94);
+    delete a['q2-2'];
+    expect(isExamComplete(a)).toBe(false);
+    expect(firstIncompleteQuestion(a)).toBe(1);
+    expect(firstIncompletePartId(a)).toBe('q2-2');
+  });
+
+  it('requires a false-statement correction before completion', () => {
+    expect(isPartComplete(find('q2-2'), { nitrogen: 'true', magnesium: 'false' })).toBe(false);
+    expect(isPartComplete(find('q2-2'), correctAnswers()['q2-2'])).toBe(true);
+  });
+
+  it('allows an incorrect false judgement on a true statement without forcing the correct answer', () => {
+    const a = correctAnswers();
+    a['q2-2'] = { nitrogen: 'false', 'nitrogen.correction': 'four', magnesium: 'false', 'magnesium.correction': 'lose2' };
+    expect(isPartComplete(find('q2-2'), a['q2-2'])).toBe(true);
+    expect(gradePart(find('q2-2'), a).earned).toBe(2);
+  });
+
+  it('includes every subpart, both answers, rubrics, references, clean formulas, and timing in UTF-8', () => {
+    const attempt = submitAttempt({ ...startAttempt('سمر شاهين', 1000), answers: correctAnswers() }, 3662000);
+    const report = buildReport(attempt, gradeExam(attempt.answers));
+    expect(report.charCodeAt(0)).toBe(0xfeff);
+    expect(report).toContain('سمر شاهين');
+    expect(report).toContain('01:01:01');
+    expect(report).toContain('100 / 100');
+    expect(report).not.toContain('{{');
+    expect(report).not.toContain('}}');
+    ALL_PARTS.forEach(p => {
+      expect(report).toContain(p.title);
+      expect(report).toContain(p.reference.item);
+    });
+    expect(report).toContain('إجابة الطالب');
+    expect(report).toContain('الإجابة الصحيحة');
+    expect(report).toContain('معايير التصحيح');
+    expect(reportFilename('سمر / شاهين')).toBe('تقرير-سمر-شاهين.txt');
+  });
+});
