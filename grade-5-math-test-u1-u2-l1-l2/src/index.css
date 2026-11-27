@@ -1,0 +1,154 @@
+@import "tailwindcss";
+@import "katex/dist/katex.min.css";
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2') format('woff2'),
+    url('./assets/fonts/ibm-plex-sans-arabic-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./assets/fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2') format('woff2'),
+    url('./assets/fonts/ibm-plex-sans-arabic-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./assets/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2') format('woff2'),
+    url('./assets/fonts/ibm-plex-sans-arabic-latin-700-normal.woff2') format('woff2');
+}
+
+@theme {
+  --font-sans: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --color-sky-50: #eef9ff;
+  --color-sky-100: #d8f0ff;
+  --color-sky-400: #38bdf8;
+  --color-sky-500: #1aa7e8;
+  --color-sky-600: #0d8ccb;
+  --color-sky-700: #0a6fa3;
+  --color-turq-100: #d2f7f1;
+  --color-turq-400: #2dd4bf;
+  --color-turq-500: #14b8a6;
+  --color-turq-600: #0d9488;
+  --color-mint-100: #dcfce7;
+  --color-mint-400: #4ade80;
+  --color-mint-500: #22c55e;
+  --color-mint-600: #16a34a;
+  --color-sun-100: #fef3c7;
+  --color-sun-300: #fcd34d;
+  --color-sun-400: #fbbf24;
+  --color-sun-500: #f59e0b;
+  --color-peach-100: #ffedd5;
+  --color-peach-400: #fb923c;
+  --color-peach-500: #f97316;
+  --color-peach-600: #ea580c;
+  --color-ink: #1e293b;
+  --color-ink-soft: #475569;
+}
+
+html {
+  font-family: var(--font-sans);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--color-ink);
+  background:
+    radial-gradient(circle at 10% 0%, #d8f0ff 0, transparent 45%),
+    radial-gradient(circle at 90% 20%, #dcfce7 0, transparent 40%),
+    radial-gradient(circle at 50% 100%, #fef3c7 0, transparent 45%),
+    #f4fbff;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* KaTeX must always be LTR, even inside RTL paragraphs */
+.katex,
+.math-ltr {
+  direction: ltr !important;
+  unicode-bidi: isolate;
+  display: inline-block;
+  white-space: nowrap;
+}
+.katex {
+  font-size: 1.08em;
+}
+.katex-display {
+  margin: 0.35rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+}
+.katex-display > .katex {
+  white-space: normal;
+}
+
+input,
+textarea,
+button {
+  font-family: inherit;
+}
+
+input[type='text'],
+input[type='search'] {
+  font-size: 16px; /* avoid iOS zoom */
+}
+
+.card {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 30px -12px rgba(14, 116, 174, 0.25);
+}
+
+.btn-press:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.animate-pop {
+  animation: pop 0.25s ease-out;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+svg text {
+  font-family: var(--font-sans);
+}
