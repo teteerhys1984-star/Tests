@@ -1,0 +1,129 @@
+{
+  "checks": [
+    {
+      "name": "entry renders seven questions, local fonts, and no timer before start",
+      "data": true
+    },
+    {
+      "name": "entry layout 320",
+      "data": "320px"
+    },
+    {
+      "name": "entry layout 360",
+      "data": "360px"
+    },
+    {
+      "name": "entry layout 375",
+      "data": "375px"
+    },
+    {
+      "name": "entry layout 390",
+      "data": "390px"
+    },
+    {
+      "name": "entry layout 430",
+      "data": "430px"
+    },
+    {
+      "name": "entry layout 768",
+      "data": "768px"
+    },
+    {
+      "name": "entry layout 1024",
+      "data": "1024px"
+    },
+    {
+      "name": "entry layout 1440",
+      "data": "1440px"
+    },
+    {
+      "name": "full-name validation and immediate start with disabled incomplete submission",
+      "data": true
+    },
+    {
+      "name": "refresh restores question four, all answers, and the original timestamp",
+      "data": true
+    },
+    {
+      "name": "exam layout 320",
+      "data": "320px"
+    },
+    {
+      "name": "exam layout 375",
+      "data": "375px"
+    },
+    {
+      "name": "exam layout 390",
+      "data": "390px"
+    },
+    {
+      "name": "exam layout 430",
+      "data": "430px"
+    },
+    {
+      "name": "exam layout 768",
+      "data": "768px"
+    },
+    {
+      "name": "exam layout 1024",
+      "data": "1024px"
+    },
+    {
+      "name": "exam layout 1440",
+      "data": "1440px"
+    },
+    {
+      "name": "exam landscape 844x390",
+      "data": "844px"
+    },
+    {
+      "name": "formula keypad inserts a complete repeated radical",
+      "data": true
+    },
+    {
+      "name": "all 31 subparts completed through real controls; immediate submission; 100/100",
+      "data": true
+    },
+    {
+      "name": "UTF-8 TXT report downloads locally with the student filename attribute and full rubric",
+      "data": {
+        "requestedFilename": "تقرير-سمر-شاهين.txt",
+        "headlessSuggestedFilename": "download"
+      }
+    },
+    {
+      "name": "results layout 320",
+      "data": "320px"
+    },
+    {
+      "name": "results layout 390",
+      "data": "390px"
+    },
+    {
+      "name": "results layout 768",
+      "data": "768px"
+    },
+    {
+      "name": "results layout 1440",
+      "data": "1440px"
+    },
+    {
+      "name": "new attempt clears the previous name and does not start automatically",
+      "data": true
+    },
+    {
+      "name": "teacher key layout 320",
+      "data": "320px"
+    },
+    {
+      "name": "teacher password rejects wrong input and reveals all seven worked solutions",
+      "data": true
+    },
+    {
+      "name": "no external requests, runtime errors, raw TeX, or student-facing source downloads",
+      "data": true
+    }
+  ],
+  "errors": [],
+  "externalRequests": []
+}
